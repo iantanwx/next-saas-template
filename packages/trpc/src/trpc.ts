@@ -1,5 +1,4 @@
-import { prisma } from '@superscale/prisma';
-import { Organization as OrganizationInput } from '@superscale/prisma/client';
+import { organizations } from '@superscale/crud';
 import { TRPCError, initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { z } from 'zod';
@@ -14,47 +13,27 @@ export const middleware = t.middleware;
 export const publicProcedure = t.procedure;
 
 const authMiddleware = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.session || !ctx.user) {
+  if (!ctx.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
 
   // ensure that user is non-null, only for typing purposes
-  return next({ ctx: { ...ctx, user: ctx.user, session: ctx.session } });
+  return next({ ctx: { ...ctx, user: ctx.user } });
 });
 
 export const protectedProcedure = t.procedure.use(authMiddleware);
 
-const OrganizationInput = z
-  .object({
-    organizationId: z.string(),
-    organizationName: z.string(),
-  })
-  .partial()
-  .refine(({ organizationId, organizationName }) => {
-    if (!organizationId && !organizationName) {
-      throw new Error('Either organizationId or organizationName is required');
-    }
-    return true;
-  });
+const OrganizationInput = z.object({ organizationId: z.string() });
 
 export const memberProcedure = protectedProcedure
   .input(OrganizationInput)
   .use(async ({ next, ctx, input, ...rest }) => {
-    const { organizationId, organizationName } = input;
-    const { user } = ctx.session;
-    const organization = await prisma.organization.findFirst({
-      where: {
-        OR: [{ id: organizationId }, { name: organizationName }],
-        members: {
-          some: {
-            userId: user.id,
-          },
-        },
-      },
-      include: {
-        members: true,
-      },
-    });
+    const { organizationId } = input;
+    const { user } = ctx;
+    const organization = await organizations.getMemberById(
+      organizationId,
+      user.id
+    );
     if (!organization) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
     return next({ ...rest, ctx: { ...ctx, organization } });
@@ -63,23 +42,26 @@ export const memberProcedure = protectedProcedure
 export const adminProcedure = protectedProcedure
   .input(OrganizationInput)
   .use(async ({ next, ctx, input, ...rest }) => {
-    const { organizationId, organizationName } = input;
+    const { organizationId } = input;
     const { user } = ctx;
-    const organization = await prisma.organization.findFirst({
-      where: {
-        OR: [{ id: organizationId }, { name: organizationName }],
-        members: {
-          some: {
-            userId: user.id,
-            role: { in: ['ADMIN', 'OWNER'] },
-          },
-        },
-      },
-      include: {
-        members: true,
-      },
-    });
-    if (!organization) throw new TRPCError({ code: 'UNAUTHORIZED' });
+    try {
+      const membership = await organizations.getMemberById(
+        organizationId,
+        user.id
+      );
+      if (
+        !membership ||
+        (membership.role !== 'owner' && membership.role !== 'admin')
+      ) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      }
 
-    return next({ ...rest, ctx: { ...ctx, organization } });
+      return next({
+        ...rest,
+        ctx: { ...ctx, organization: membership.organization },
+      });
+    } catch (err) {
+      console.error('Error in adminProcedure: ', err);
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+    }
   });

@@ -1,9 +1,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { InvitationWithOrgAndInviter } from '@/crud/invitation';
-import { UserWithMemberships } from '@/crud/user';
-import { t } from '@/lib/trpc';
+import {
+  InvitationWithOrgAndInviter,
+  UserWithMemberships,
+} from '@superscale/crud/types';
+import { t } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -40,7 +42,7 @@ export function InvitationCard({ invitation, user }: Props) {
         <p className="text-foreground text-sm">
           {isRightUser
             ? `You will be added to ${invitation.organization.name} once you accept the invitation.`
-            : `To accept the invitation, please sign in or create an account with ${invitation.email}`}
+            : `To accept the invitation, please sign in or sign up with ${invitation.email}`}
         </p>
         <Button onClick={handleClick}>Accept Invitation</Button>
       </CardContent>

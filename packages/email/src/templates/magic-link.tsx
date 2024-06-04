@@ -14,6 +14,8 @@ import {
   Hr,
 } from '@react-email/components';
 
+import * as React from 'react';
+
 interface MagicLinkEmailProps {
   link?: string;
 }
@@ -48,9 +50,7 @@ export const MagicLinkEmail = ({
           </Text>
           <Section className="mb-[32px] mt-[32px] text-center">
             <Button
-              pX={20}
-              pY={12}
-              className="rounded bg-[#000000] text-center text-[12px] font-semibold text-white no-underline"
+              className="rounded bg-[#000000] px-6 py-4 text-center text-[12px] font-semibold text-white no-underline"
               href={link}
             >
               Login

@@ -1,18 +1,21 @@
-import { getProviders } from 'next-auth/react';
 import Image from 'next/image';
 import SignInForm from './form';
 import Oauth from './oauth';
+import { getCurrentSession } from '@superscale/lib/auth';
+import { redirect } from 'next/navigation';
 
 interface Props {
-  searchParams: {
-    email?: string;
-    invitationId?: string;
-  };
+  searchParams: { email?: string; invitationId?: string };
 }
 
 export default async function SignInPage({ searchParams }: Props) {
-  const providers = await getProviders();
   const { email, invitationId } = searchParams;
+  const { user } = await getCurrentSession();
+
+  // we don't redirect the user if they are trying to log in to accept the correct invitation.
+  if (!invitationId && user && user.memberships.length > 0) {
+    redirect(`/${user.memberships[0].organization.slug}`);
+  }
 
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
@@ -36,7 +39,7 @@ export default async function SignInPage({ searchParams }: Props) {
           </p>
         </div>
         <div className="flex w-full flex-col">
-          <Oauth invitationId={invitationId} />
+          <Oauth />
           <div className="relative my-4">
             <div
               className="absolute inset-0 flex items-center"
@@ -50,11 +53,7 @@ export default async function SignInPage({ searchParams }: Props) {
               </span>
             </div>
           </div>
-          <SignInForm
-            providers={providers}
-            email={email}
-            invitationId={invitationId}
-          />
+          <SignInForm email={email} invitationId={invitationId} />
         </div>
       </div>
     </div>

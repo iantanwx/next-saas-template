@@ -16,9 +16,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { canRemove, getRole } from '@superscale/lib/auth/authn';
-import { OrganizationRole } from '@superscale/prisma/client';
-import { trpc } from '@superscale/trpc/client';
+import { canRemove, getRole } from '@superscale/lib/auth/utils';
+import { OrganizationRole } from '@superscale/crud/types';
+import { t } from '@superscale/trpc/client';
 import { createColumnHelper } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -45,9 +45,9 @@ export type RowData = MemberRowData | InvitationRowData;
 const columnHelper = createColumnHelper<RowData>();
 
 const roleMap: Record<OrganizationRole, string> = {
-  [OrganizationRole.OWNER]: 'Owner',
-  [OrganizationRole.ADMIN]: 'Admin',
-  [OrganizationRole.MEMBER]: 'Member',
+  owner: 'Owner',
+  admin: 'Admin',
+  member: 'Member',
 };
 
 export const columns = [
@@ -102,7 +102,7 @@ export const columns = [
     cell(props) {
       const router = useRouter();
       const { toast } = useToast();
-      const updateRole = trpc.organization.updateMemberRole.useMutation();
+      const updateRole = t.organization.updateMemberRole.useMutation();
       const { user: currentUser, organization } = props.table.options.meta!;
       const organizationRole = currentUser.memberships.find(
         (m) => m.organization.id === organization.id
@@ -110,7 +110,7 @@ export const columns = [
       const handleChange = async (value: OrganizationRole) => {
         if (
           value === props.row.original.role ||
-          value === OrganizationRole.OWNER ||
+          value === 'owner' ||
           props.row.original.type === 'invitation'
         )
           return;
@@ -137,8 +137,8 @@ export const columns = [
               defaultValue={props.row.original.role}
               value={props.row.original.role}
               disabled={
-                props.row.original.role === OrganizationRole.OWNER ||
-                organizationRole === OrganizationRole.MEMBER
+                props.row.original.role === 'owner' ||
+                organizationRole === 'member'
               }
             >
               <SelectTrigger>
@@ -146,17 +146,13 @@ export const columns = [
               </SelectTrigger>
               <SelectContent>
                 <SelectItem
-                  disabled={organizationRole !== OrganizationRole.OWNER}
-                  value={OrganizationRole.OWNER}
+                  disabled={organizationRole !== 'owner'}
+                  value="owner"
                 >
-                  {roleMap[OrganizationRole.OWNER]}
+                  {roleMap['owner']}
                 </SelectItem>
-                <SelectItem value={OrganizationRole.ADMIN}>
-                  {roleMap[OrganizationRole.ADMIN]}
-                </SelectItem>
-                <SelectItem value={OrganizationRole.MEMBER}>
-                  {roleMap[OrganizationRole.MEMBER]}
-                </SelectItem>
+                <SelectItem value="admin">{roleMap['admin']}</SelectItem>
+                <SelectItem value="member">{roleMap['member']}</SelectItem>
               </SelectContent>
             </Select>
           ) : null}
@@ -181,11 +177,10 @@ export const columns = [
       const row = props.row;
       const { user: currentUser, organization } = props.table.options.meta!;
       const organizationRole = getRole(currentUser, organization.id)!;
-      const removeMember = trpc.organization.removeMember.useMutation();
-      const leaveOrganization =
-        trpc.organization.leaveOrganization.useMutation();
-      const revokeInvitation = trpc.organization.revokeInvitation.useMutation();
-      const resendInvitation = trpc.organization.resendInvitation.useMutation();
+      const removeMember = t.organization.removeMember.useMutation();
+      const leaveOrganization = t.organization.leaveOrganization.useMutation();
+      const revokeInvitation = t.organization.revokeInvitation.useMutation();
+      const resendInvitation = t.organization.resendInvitation.useMutation();
       const router = useRouter();
       const { toast } = useToast();
       const handleRemove = async () => {
@@ -245,7 +240,7 @@ export const columns = [
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={handleLeave}
-                  disabled={row.original.role === OrganizationRole.OWNER}
+                  disabled={row.original.role === 'owner'}
                 >
                   Leave
                 </DropdownMenuItem>

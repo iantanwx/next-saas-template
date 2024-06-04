@@ -1,9 +1,9 @@
 'use client';
 
-import { User } from 'next-auth';
-import { signOut } from 'next-auth/react';
+import { UserWithMemberships } from '@superscale/crud/types';
+import { createClient } from '@superscale/lib/supabase/browser';
 import Link from 'next/link';
-
+import { useParams, useRouter } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,21 +11,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-
-import { useParams } from 'next/navigation';
 import { UserAvatar } from './user-avatar';
 
 interface Props {
-  user: User;
+  user: UserWithMemberships;
 }
 
 export function AccountNav({ user }: Props) {
   const { organization } = useParams();
+  const router = useRouter();
+  const supabase = createClient();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
-          user={{ name: user.name || null, image: user.image || null }}
+          user={{ name: user.name || null, image: user.avatarUrl || null }}
           className="h-8 w-8"
         />
       </DropdownMenuTrigger>
@@ -34,7 +35,7 @@ export function AccountNav({ user }: Props) {
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}
             {user.email && (
-              <p className="w-[200px] truncate text-sm text-muted-foreground">
+              <p className="text-muted-foreground w-[200px] truncate text-sm">
                 {user.email}
               </p>
             )}
@@ -53,11 +54,10 @@ export function AccountNav({ user }: Props) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer"
-          onSelect={(event) => {
+          onSelect={async (event) => {
             event.preventDefault();
-            signOut({
-              callbackUrl: `${window.location.origin}/auth/sign-in`,
-            });
+            await supabase.auth.signOut();
+            router.push('/auth/sign-in');
           }}
         >
           Sign out

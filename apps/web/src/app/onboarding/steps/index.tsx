@@ -3,12 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { UserWithMemberships } from '@/crud/user';
+import { UserWithMemberships } from '@superscale/crud/types';
 import { useState } from 'react';
 import { Wizard, useWizard } from 'react-use-wizard';
 import NameStep from './name';
 import OrganizationStep from './organization';
-import ShopifyStep from './shopify';
 
 interface FooterProps {
   loading: boolean;
@@ -24,9 +23,6 @@ const onboardingConfig: Record<number, OnboardingStepConfig> = {
   },
   1: {
     renderNext: true,
-  },
-  2: {
-    renderNext: false,
   },
 };
 
@@ -67,7 +63,6 @@ function Footer({ loading }: FooterProps) {
 
 interface OnboardingProps {
   user: UserWithMemberships;
-  shopifyAppStoreUrl: string;
 }
 
 function getOnboardingStep(user: UserWithMemberships) {
@@ -75,15 +70,11 @@ function getOnboardingStep(user: UserWithMemberships) {
     return 0;
   }
 
-  if (!user.memberships?.[0]?.organization.name) {
-    return 1;
-  }
-
-  return 2;
+  return 1;
 }
 
 export default function Onboarding(props: OnboardingProps) {
-  const { user, shopifyAppStoreUrl } = props;
+  const { user } = props;
 
   const initialStep = getOnboardingStep(user);
   const [loading, setLoading] = useState(false);
@@ -96,12 +87,9 @@ export default function Onboarding(props: OnboardingProps) {
         footer={<Footer loading={loading} />}
       >
         <NameStep user={user} setLoading={setLoading} />
-        <OrganizationStep user={user} setLoading={setLoading} />
-        <ShopifyStep
-          user={user}
-          setLoading={setLoading}
-          shopifyAppStoreUrl={shopifyAppStoreUrl}
-        />
+        {!user.memberships.length && (
+          <OrganizationStep user={user} setLoading={setLoading} />
+        )}
       </Wizard>
     </Card>
   );

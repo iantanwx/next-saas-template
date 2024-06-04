@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { signIn } from 'next-auth/react';
 import GoogleLogo from './google_logo.svg';
+import { createClient } from '@superscale/lib/supabase/browser';
 
 interface Props {
   invitationId?: string;
@@ -13,11 +13,16 @@ export default function Oauth({ invitationId }: Props) {
     <div>
       <Button
         className="w-full"
-        onClick={() => {
-          signIn('google', {
-            callbackUrl: invitationId
-              ? `/auth/invitation/${invitationId}?accept=true`
-              : '/',
+        onClick={async () => {
+          const supabase = createClient();
+          await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: 'http://localhost:3000/api/auth/supabase/callback',
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
+              queryParams: { invitationId: invitationId ?? undefined },
+            },
           });
         }}
       >

@@ -10,26 +10,21 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getProviders, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { signInWithEmail } from './action';
 
 const formSchema = z.object({
   email: z.string().email(),
 });
 
 interface Props {
-  providers: Awaited<ReturnType<typeof getProviders>>;
   email?: string;
   invitationId?: string;
 }
 
-export default function SignInForm({
-  providers,
-  invitationId,
-  email = '',
-}: Props) {
+export default function SignInForm({ email = '', invitationId }: Props) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,23 +32,7 @@ export default function SignInForm({
   });
   const handleSubmit = async ({ email }: z.infer<typeof formSchema>) => {
     try {
-      const emailProvider = providers?.email.id;
-      if (!emailProvider) {
-        return;
-      }
-
-      const data = new URLSearchParams();
-      await signIn(
-        emailProvider,
-        {
-          email,
-          redirect: false,
-          callbackUrl: invitationId
-            ? `/auth/invitation/${invitationId}?accept=true`
-            : '/',
-        },
-        data
-      );
+      await signInWithEmail(email, invitationId);
       router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
       console.error('Error sending email: ', err);

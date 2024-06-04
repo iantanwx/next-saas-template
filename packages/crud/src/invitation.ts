@@ -1,85 +1,79 @@
-import { prisma } from '@superscale/prisma';
-import { OrganizationRole, Prisma as P } from '@superscale/prisma/client';
+import { eq } from 'drizzle-orm';
+import { db } from './db/connection';
+import { organizationMembers, userInvitations } from './db/schema';
+import { OrganizationRole } from './organization';
+import { users } from '.';
 
 export async function findOrCreate(
   email: string,
   organizationId: string,
   role: OrganizationRole,
-  createdByUserId: string
+  createdById: string
 ) {
-  const data = {
-    email,
-    organization: {
-      connect: {
-        id: organizationId,
-      },
-    },
-    createdBy: {
-      connect: {
-        id: createdByUserId,
-      },
-    },
-    role,
-  };
-
-  // 2. find or create an invitation
-  return prisma.userInvitation.upsert({
-    where: {
-      email_organizationId: {
-        email,
-        organizationId,
-      },
-    },
-    update: {},
-    create: data,
-    include: { organization: true, createdBy: true },
-  });
+  const [{ id }] = await db
+    .insert(userInvitations)
+    .values({
+      email,
+      organizationId,
+      createdById,
+      role,
+    })
+    .onConflictDoUpdate({
+      target: [userInvitations.email, userInvitations.organizationId],
+      set: { role: role },
+    })
+    .returning({ id: userInvitations.id });
+  return await findById(id);
 }
 
-export type InvitationWithOrgAndInviter = P.PromiseReturnType<typeof findById>;
+export type InvitationWithOrgAndInviter = Awaited<ReturnType<typeof findById>>;
 
 export async function findById(id: string) {
-  return await prisma.userInvitation.findUnique({
-    where: { id },
-    include: { organization: true, createdBy: true },
+  const invitation = await db.query.userInvitations.findFirst({
+    where: eq(userInvitations.id, id),
+    with: {
+      createdBy: true,
+      organization: true,
+    },
   });
+  if (!invitation) {
+    throw new Error('Invitation not found');
+  }
+  return invitation;
 }
 
 export async function accept(invitationId: string) {
   const invitation = await findById(invitationId);
   if (!invitation) {
-    return;
+    throw new Error('Invitation not found');
+  }
+  const invitee = await users.findByEmail(invitation.email);
+  if (!invitee) {
+    throw new Error('Invitee not found');
   }
 
-  const associateUserWithOrg = prisma.user.update({
-    where: { email: invitation.email },
-    data: {
-      memberships: {
-        create: {
-          role: invitation.role,
-          organization: {
-            connect: {
-              id: invitation.organizationId,
-            },
-          },
-        },
-      },
-    },
+  await db.transaction(async (tx) => {
+    await tx.insert(organizationMembers).values({
+      userId: invitee.id,
+      organizationId: invitation.organizationId,
+      role: invitation.role,
+    });
+    await tx
+      .delete(userInvitations)
+      .where(eq(userInvitations.id, invitationId));
   });
-  const deleteInvitation = prisma.userInvitation.delete({
-    where: { id: invitationId },
-  });
-
-  await prisma.$transaction([associateUserWithOrg, deleteInvitation]);
 }
 
 export async function listByOrganization(organizationId: string) {
-  return await prisma.userInvitation.findMany({
-    where: { organizationId },
-    include: { organization: true, createdBy: true },
+  return await db.query.userInvitations.findMany({
+    where: eq(userInvitations.organizationId, organizationId),
+    with: {
+      organization: true,
+      createdBy: true,
+    },
   });
 }
 
 export async function deleteById(id: string) {
-  return await prisma.userInvitation.delete({ where: { id } });
+  await db.delete(userInvitations).where(eq(userInvitations.id, id));
 }

@@ -7,18 +7,24 @@
     "./types": "./src/types.ts"
   },
   "scripts": {
-    "db:generate": "prisma generate",
-    "db:start": "supabase db start",
-    "db:push": "prisma db push"
+    "supabase": "supabase",
+    "supabase:start": "supabase start -x realtime,imgproxy,storage-api,edge-runtime,logflare",
+    "supabase:stop": "supabase stop",
+    "drizzle": "drizzle-kit",
+    "drizzle:gen": "drizzle-kit generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@superscale/prisma": "workspace:^",
-    "@superscale/tsconfig": "workspace:^"
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@superscale/tsconfig": "workspace:^",
+    "drizzle-orm": "^0.31.1",
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
-    "@types/node": "20.4.9"
+    "@types/node": "20.4.9",
+    "drizzle-kit": "^0.22.4",
+    "supabase": "1.172.2"
   }
 }

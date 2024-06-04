@@ -1,5 +1,18 @@
-import { prisma } from '@superscale/prisma';
-import { OrganizationRole, Prisma } from '@superscale/prisma/client';
+import {
+  InferSelectModel,
+  and,
+  count,
+  eq,
+  inArray,
+  or,
+  sql,
+} from 'drizzle-orm';
+import { db } from './db/connection';
+import {
+  organizationMembers,
+  organizations,
+  userInvitations,
+} from './db/schema';
 
 /**
  * Creates a new organization and adds the user as an admin.
@@ -7,35 +20,74 @@ import { OrganizationRole, Prisma } from '@superscale/prisma/client';
  * @param userId
  * @returns
  */
-export async function create(organizationName: string, userId: string) {
-  const organization = await prisma.organization.create({
-    data: {
-      name: organizationName,
-      slug: organizationName.toLowerCase().replace(/\s/g, '-'),
+export async function create(
+  organizationName: string,
+  userId: string,
+  completedOnboarding = false
+) {
+  const id = await db.transaction(async (tx) => {
+    const [{ organizationId }] = await tx
+      .insert(organizations)
+      .values({
+        name: organizationName,
+        slug: organizationName.toLowerCase().replace(/\s/g, '-'),
+        completedOnboarding,
+      })
+      .returning({ organizationId: organizations.id });
+    await tx.insert(organizationMembers).values({
+      role: 'owner',
+      userId,
+      organizationId: organizationId,
+    });
+
+    return organizationId;
+  });
+
+  return await getById(id);
+}
+
+export type Organization = InferSelectModel<typeof organizations>;
+
+export type OrganizationWithMembers = Awaited<ReturnType<typeof getById>>;
+
+export async function getById(id: string) {
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.id, id),
+    with: {
       members: {
-        create: {
-          role: OrganizationRole.OWNER,
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
-        },
+        with: { user: true },
       },
     },
   });
-  return organization;
+  if (!org) {
+    throw new Error('Organization not found');
+  }
+  return org;
 }
 
-export type OrganizationWithMembers = Prisma.PromiseReturnType<
-  typeof getBySlug
->;
-
 export async function getBySlug(slug: string) {
-  return await prisma.organization.findUniqueOrThrow({
-    where: { slug },
-    include: { members: { include: { user: true } } },
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.slug, slug),
+    with: {
+      members: {
+        with: { user: true },
+      },
+    },
   });
+  if (!org) {
+    throw new Error('Organization not found');
+  }
+  return org;
+}
+
+export async function getByNameOrId(nameOrId: string) {
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.id, nameOrId),
+  });
+  if (!org) {
+    throw new Error('Organization not found');
+  }
+  return org;
 }
 
 /**
@@ -44,23 +96,14 @@ export async function getBySlug(slug: string) {
  * @returns
  */
 export async function exists(nameOrSlug: string) {
-  const filter = { OR: [{ name: nameOrSlug }, { slug: nameOrSlug }] };
-  const [active, deleted] = await Promise.all([
-    prisma.organization.count({
-      where: { ...filter, deletedAt: { not: null } },
-    }),
-    prisma.organization.count({
-      where: filter,
-    }),
-  ]);
-  return active + deleted > 0;
-}
+  const [{ n }] = await db
+    .select({ n: count() })
+    .from(organizations)
+    .where(
+      sql`${organizations.name} = ${nameOrSlug} OR ${organizations.slug} = ${nameOrSlug} AND ${organizations.deletedAt} IS NOT NULL`
+    );
 
-export async function getById(id: string) {
-  return await prisma.organization.findUniqueOrThrow({
-    where: { id },
-    include: { members: { include: { user: true } } },
-  });
+  return n > 0;
 }
 
 export async function update(
@@ -68,10 +111,10 @@ export async function update(
   name?: string,
   slug?: string
 ) {
-  await prisma.organization.update({
-    where: { id: organizationId },
-    data: { name, slug },
-  });
+  await db
+    .update(organizations)
+    .set({ name, slug })
+    .where(eq(organizations.id, organizationId));
 }
 
 /**
@@ -80,27 +123,18 @@ export async function update(
  *  - UserInvitation
  */
 export async function softDelete(organizationId: string) {
-  await prisma.$transaction([
-    prisma.organizationMembership.deleteMany({
-      where: { organizationId },
-    }),
-    prisma.userInvitation.deleteMany({
-      where: { organizationId },
-    }),
-    prisma.organization.delete({
-      where: { id: organizationId },
-    }),
-  ]);
+  await db.transaction(async (tx) => {
+    await tx
+      .delete(organizationMembers)
+      .where(eq(organizationMembers.organizationId, organizationId));
+    await tx
+      .delete(userInvitations)
+      .where(eq(userInvitations.organizationId, organizationId));
+    await tx.delete(organizations).where(eq(organizations.id, organizationId));
+  });
 }
 
-const memberWithUser =
-  Prisma.validator<Prisma.OrganizationMembershipDefaultArgs>()({
-    include: { user: true },
-  });
-
-export type MemberWithUser = Prisma.OrganizationMembershipGetPayload<
-  typeof memberWithUser
->;
+export type OrganizationRole = 'owner' | 'member' | 'admin';
 
 /**
  * Returns an organization with its members.
@@ -108,25 +142,40 @@ export type MemberWithUser = Prisma.OrganizationMembershipGetPayload<
  * @returns
  */
 export async function members(organizationId: string) {
-  return await prisma.organizationMembership.findMany({
-    where: { organizationId },
-    include: { user: { include: { accounts: true } } },
+  return await db.query.organizationMembers.findMany({
+    where: eq(organizationMembers.organizationId, organizationId),
+    with: { user: true },
   });
 }
 
 export async function getMemberById(organizationId: string, userId: string) {
-  return await prisma.organizationMembership.findUnique({
-    where: {
-      userId_organizationId: { organizationId, userId },
+  return await db.query.organizationMembers.findFirst({
+    where: and(
+      eq(organizationMembers.organizationId, organizationId),
+      eq(organizationMembers.userId, userId)
+    ),
+    with: {
+      organization: true,
+      user: true,
     },
   });
 }
 
-export async function getMembersByRole(orgId: string, role: OrganizationRole) {
-  return await prisma.organizationMembership.findMany({
-    where: {
-      organizationId: orgId,
-      role,
+export async function getMembersByRole(
+  orgNameOrId: string,
+  ...roles: OrganizationRole[]
+) {
+  return await db.query.organizationMembers.findMany({
+    where: and(
+      or(
+        eq(organizations.id, orgNameOrId),
+        eq(organizations.name, orgNameOrId)
+      ),
+      inArray(organizationMembers.role, roles)
+    ),
+    with: {
+      organization: true,
+      user: true,
     },
   });
 }
@@ -136,12 +185,15 @@ export async function updateMemberRole(
   userId: string,
   role: OrganizationRole
 ) {
-  return await prisma.organizationMembership.update({
-    where: {
-      userId_organizationId: { userId, organizationId },
-    },
-    data: { role },
-  });
+  await db
+    .update(organizationMembers)
+    .set({ role })
+    .where(
+      and(
+        eq(organizationMembers.userId, userId),
+        eq(organizationMembers.organizationId, organizationId)
+      )
+    );
 }
 
 export async function removeMember(
@@ -149,14 +201,24 @@ export async function removeMember(
   userId: string,
   hardDelete = false
 ) {
-  // Soft delete middleware doesn't support hard deleting, so we have to use raw SQL
   if (hardDelete) {
-    return await prisma.$executeRaw`DELETE FROM "OrganizationMembership" WHERE "userId" = ${userId} AND "organizationId" = ${organizationId}`;
+    return await db
+      .delete(organizationMembers)
+      .where(
+        and(
+          eq(organizationMembers.organizationId, organizationId),
+          eq(organizationMembers.userId, userId)
+        )
+      );
   }
 
-  return await prisma.organizationMembership.delete({
-    where: {
-      userId_organizationId: { userId, organizationId },
-    },
-  });
+  return await db
+    .update(organizationMembers)
+    .set({ deletedAt: new Date() })
+    .where(
+      and(
+        eq(organizationMembers.organizationId, organizationId),
+        eq(organizationMembers.userId, userId)
+      )
+    );
 }

@@ -1,38 +1,40 @@
-import * as crud from '@superscale/crud';
-import { OrganizationRole } from '@superscale/prisma/client';
+import { users } from '@superscale/crud';
+import { InvitationWithOrgAndInviter } from '../../../crud/src/invitation';
+import { createClient } from '../supabase/server';
 import { baseUrl } from '../utils';
 
-export function getRole(
-  user: crud.user.UserWithMemberships,
-  organizationId: string
-) {
-  const membership = user.memberships.find(
-    (membership) => membership.organization.id === organizationId
-  );
-  return membership?.role;
-}
+export async function getMagicLink(email: string, invitationId?: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.admin.generateLink({
+    type: 'magiclink',
+    email,
+  });
 
-/**
- * Returns true if a can remove b from the organization.
- * @param a - the user who is trying to remove b
- * @param b - the user who is being removed
- * @param orgId - the organization id
- */
-export function canRemove(a: OrganizationRole, b: OrganizationRole) {
-  // Members cannot remove anyone
-  if (a === OrganizationRole.MEMBER) return false;
-
-  // Owners and admins can remove others owners and admins
-  if (a === b) return true;
-
-  // Admin cannot remove Owner
-  if (a === OrganizationRole.ADMIN) {
-    return b !== OrganizationRole.OWNER;
+  if (error) {
+    console.error('Error generating magic link', error);
+    throw new Error(error.message);
   }
 
-  return true;
+  const link = `${baseUrl()}/api/auth/supabase/callback?token_hash=${data.properties.hashed_token}&type=magiclink${invitationId ? `&invitationId=${invitationId}` : ''}`;
+  return link;
 }
 
-export function getInviteLink(inviteId: string) {
-  return `${baseUrl()}/auth/invitation/${inviteId}`;
+export async function getInviteLink({
+  id,
+  email,
+}: InvitationWithOrgAndInviter) {
+  const supabase = createClient();
+  const invitee = await users.findByEmail(email);
+  const { data, error } = await supabase.auth.admin.generateLink({
+    type: invitee ? 'magiclink' : 'invite',
+    email,
+    options: {
+      redirectTo: `${baseUrl()}/auth/invitation/${id}`,
+    },
+  });
+  if (error) {
+    console.error('Error generating invite link', error);
+    throw new Error(error.message);
+  }
+  return data.properties.action_link;
 }

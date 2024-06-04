@@ -1,8 +1,0 @@
-name = "remix"
-roles = ["frontend", "backend"]
-webhooks_path = "/api/webhook/shopify"
-
-[commands]
-dev = "pnpm run dev"
-build = "pnpm run build"
-install = "pnpm install"

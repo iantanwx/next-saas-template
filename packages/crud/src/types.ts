@@ -1,2 +1,7 @@
 export type { UserWithMemberships } from './user';
-export type { OrganizationWithMembers } from './organization';
+export {
+  type OrganizationWithMembers,
+  type OrganizationRole,
+  type Organization,
+} from './organization';
+export type { InvitationWithOrgAndInviter } from './invitation';

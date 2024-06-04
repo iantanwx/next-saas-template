@@ -1,4 +1,4 @@
-import * as invitationCrud from '@/crud/invitation';
+import { invitations } from '@superscale/crud';
 import { getCurrentUser } from '@superscale/lib/auth/session';
 import { notFound, redirect } from 'next/navigation';
 import { InvitationCard } from './card';
@@ -12,7 +12,7 @@ export default async function AcceptInvitationPage({
   params: { invitationId },
   searchParams: { accept },
 }: Props) {
-  const invitation = await invitationCrud.findById(invitationId);
+  const invitation = await invitations.findById(invitationId);
   if (!invitation) {
     notFound();
   }
@@ -20,7 +20,7 @@ export default async function AcceptInvitationPage({
   const user = await getCurrentUser();
   // In this case, the user was asked to sign in and redirected back here.
   if (accept && user && user.email === invitation.email) {
-    await invitationCrud.accept(invitationId);
+    await invitations.accept(invitationId);
     redirect(`/${invitation.organization.slug}`);
   }
 

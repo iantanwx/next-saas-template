@@ -21,7 +21,6 @@
     "@superscale/crud": "workspace:^",
     "@superscale/email": "workspace:^",
     "@superscale/lib": "workspace:^",
-    "@superscale/prisma": "workspace:^",
     "@superscale/tsconfig": "workspace:^",
     "@tanstack/react-query": "^5.31.0",
     "@trpc/client": "11.0.0-rc.351",

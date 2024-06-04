@@ -9,15 +9,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { UserWithMemberships } from '@/crud/user';
-import { signOut } from 'next-auth/react';
+import { UserWithMemberships } from '@superscale/crud/types';
+import { createClient } from '@superscale/lib/supabase/browser';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   user: UserWithMemberships;
 }
 
 export function WorkspaceNav({ user }: Props) {
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -48,11 +50,11 @@ export function WorkspaceNav({ user }: Props) {
         ) : null}
         <DropdownMenuItem
           className="cursor-pointer"
-          onSelect={(e) => {
+          onSelect={async (e) => {
             e.preventDefault();
-            signOut({
-              callbackUrl: `${window.location.origin}/auth/sign-in`,
-            });
+            const supabase = createClient();
+            await supabase.auth.signOut();
+            router.push('/auth/sign-in');
           }}
         >
           Sign Out

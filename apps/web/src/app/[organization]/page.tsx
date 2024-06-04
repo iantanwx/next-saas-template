@@ -9,6 +9,7 @@ export default async function Dashboard() {
 
   // Redirect to onboarding if the user doesn't yet have an organization or has not completed onboarding
   if (
+    !user.name ||
     !user.memberships?.length ||
     !user.memberships[0].organization.completedOnboarding
   ) {

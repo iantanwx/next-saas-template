@@ -19,11 +19,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { OrganizationWithMembers } from '@/crud/organization';
-import { UserWithMemberships } from '@/crud/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { OrganizationRole } from '@prisma/client';
-import { trpc, TRPCClientError } from '@superscale/trpc/client';
+import {
+  OrganizationWithMembers,
+  UserWithMemberships,
+} from '@superscale/crud/types';
+import { TRPCClientError, t } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -38,7 +39,7 @@ export function DeleteOrganization({ organization, user }: Props) {
   const isOwner = user.memberships.find(
     (membership) =>
       membership.organizationId === organization.id &&
-      membership.role === OrganizationRole.OWNER
+      membership.role === 'owner'
   );
   const [open, setOpen] = useState(false);
   const form = useForm({
@@ -55,7 +56,7 @@ export function DeleteOrganization({ organization, user }: Props) {
   });
   const router = useRouter();
   const { toast } = useToast();
-  const deleteOrganization = trpc.organization.softDelete.useMutation();
+  const deleteOrganization = t.organization.softDelete.useMutation();
   const submit = form.handleSubmit(async () => {
     try {
       await deleteOrganization.mutateAsync({

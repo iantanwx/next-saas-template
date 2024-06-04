@@ -50,6 +50,7 @@ export const Icons = {
   pizza: Pizza,
   sun: SunMedium,
   moon: Moon,
+  loader2: Loader2,
   laptop: Laptop,
   home: Home,
   gitHub: ({ ...props }: LucideProps) => (

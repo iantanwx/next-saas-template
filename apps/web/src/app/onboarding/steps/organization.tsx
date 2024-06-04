@@ -13,20 +13,22 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { user as userCrud } from '@superscale/crud';
-import { trpc } from '@superscale/trpc/client';
+import { UserWithMemberships } from '@superscale/crud/types';
+import { t } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useWizard } from 'react-use-wizard';
 import { z } from 'zod';
 
 interface Props {
-  user: userCrud.UserWithMemberships;
+  user: UserWithMemberships;
   setLoading: (loading: boolean) => void;
 }
 
 export default function OrganizationStep({ user, setLoading }: Props) {
   const currentValue = user.memberships[0]?.organization.name ?? '';
+  const { client } = t.useUtils();
+  const { activeStep } = useWizard();
   const formSchema = z.object({
     organization: z
       .string()
@@ -36,7 +38,6 @@ export default function OrganizationStep({ user, setLoading }: Props) {
           if (name === currentValue) {
             return true;
           }
-          const { client } = trpc.useUtils();
           const exists = await client.organization.exists.query({
             nameOrSlug: name,
           });
@@ -52,26 +53,19 @@ export default function OrganizationStep({ user, setLoading }: Props) {
     },
   });
 
-  const { activeStep, nextStep, isLastStep } = useWizard();
-  const createOrganization = trpc.organization.create.useMutation();
+  const createOrganization = t.organization.create.useMutation();
   const router = useRouter();
   const submit = form.handleSubmit(
     async ({ organization }: z.infer<typeof formSchema>) => {
       try {
-        if (organization === currentValue) {
-          nextStep();
-          return;
-        }
         setLoading(true);
         const org = await createOrganization.mutateAsync({
           userId: user.id,
           organizationName: organization,
+          completedOnboarding: true,
         });
-        if (isLastStep) {
-          router.push(`/${org.slug}`);
-          return;
-        }
-        nextStep();
+        router.push(`/${org.slug}`);
+        return;
       } finally {
         setLoading(false);
       }

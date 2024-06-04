@@ -37,10 +37,7 @@ export default function MarketingHeader({ className }: Props) {
       </div>
       <div className="flex items-center justify-end md:col-span-1">
         <Button variant="secondary" asChild>
-          <Link href="/login">
-            Join the waitlist
-            <Icons.arrowUpRight className="ml-2 h-4 w-4" />
-          </Link>
+          <Link href="/auth/sign-in">Login</Link>
         </Button>
       </div>
     </header>

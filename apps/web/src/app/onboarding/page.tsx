@@ -1,20 +1,19 @@
 import { Back } from '@/components/layout/back';
 import { WorkspaceNav } from '@/components/nav/workspace-nav';
-import { serverConfig } from '@/lib/config';
-import { user as userCrud } from '@superscale/crud';
-import { getServerSession } from '@superscale/lib/auth';
+import { getCurrentSession } from '@superscale/lib/auth';
+
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import Onboarding from './steps';
 
 export default async function OnboardingPage() {
-  const { session } = await getServerSession();
-  if (!session) {
+  const { user } = await getCurrentSession();
+  if (!user) {
     return redirect('/auth/sign-in');
   }
 
-  const user = await userCrud.getById(session.user.id);
   if (
+    user.name &&
     user.memberships?.length > 0 &&
     user.memberships[0].organization.completedOnboarding
   ) {
@@ -32,10 +31,7 @@ export default async function OnboardingPage() {
           <Image src="/logo.png" height={120} width={120} alt="logo" />
           <h1 className="text-4xl font-bold">Superscale</h1>
         </div>
-        <Onboarding
-          user={user}
-          shopifyAppStoreUrl={serverConfig.SHOPIFY_APP_STORE_URL}
-        />
+        <Onboarding user={user} />
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 import * as crud from '@superscale/crud';
 import { sendEmail } from '@superscale/email';
-import { getInviteLink, getRole } from '@superscale/lib/auth';
-import { OrganizationRole } from '@superscale/prisma/client';
+import { getInviteLink } from '@superscale/lib/auth';
+import { getRole } from '@superscale/lib/auth/utils';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
@@ -13,17 +13,22 @@ const exists = protectedProcedure
   .input(existsSchema)
   .query(async ({ input }) => {
     const { nameOrSlug } = input;
-    return await crud.organization.exists(nameOrSlug);
+    return await crud.organizations.exists(nameOrSlug);
   });
 
 const createOrganizationSchema = z.object({
   organizationName: z.string(),
   userId: z.string(),
+  completedOnboarding: z.boolean().optional(),
 });
 const create = protectedProcedure
   .input(createOrganizationSchema)
   .mutation(async ({ ctx, input }) => {
-    return await crud.organization.create(input.organizationName, input.userId);
+    return await crud.organizations.create(
+      input.organizationName,
+      input.userId,
+      input.completedOnboarding
+    );
   });
 
 const deleteOrganizationSchema = z.object({
@@ -33,7 +38,7 @@ const softDelete = adminProcedure
   .input(deleteOrganizationSchema)
   .mutation(async ({ input }) => {
     const { organizationId } = input;
-    await crud.organization.softDelete(organizationId);
+    await crud.organizations.softDelete(organizationId);
   });
 
 const updateOrganizationSchema = z.object({
@@ -45,7 +50,7 @@ const update = adminProcedure
   .input(updateOrganizationSchema)
   .mutation(async ({ input }) => {
     const { organizationId, name, slug } = input;
-    const organization = await crud.organization.getById(organizationId);
+    const organization = await crud.organizations.getById(organizationId);
     if (!organization) {
       throw new TRPCError({
         code: 'NOT_FOUND',
@@ -74,13 +79,13 @@ const update = adminProcedure
       });
     }
 
-    await crud.organization.update(organizationId, name, slug);
+    await crud.organizations.update(organizationId, name, slug);
   });
 
 const inviteSchema = z.object({
   email: z.string().email(),
   organizationId: z.string(),
-  role: z.enum([OrganizationRole.ADMIN, OrganizationRole.MEMBER]),
+  role: z.enum(['admin', 'member']),
 });
 const invite = adminProcedure
   .input(inviteSchema)
@@ -88,18 +93,18 @@ const invite = adminProcedure
     const { email, organizationId, role } = input;
 
     // if the user already exists and is associated with the organization, do nothing
-    const user = await crud.user.findByEmail(email);
+    const user = await crud.users.findByEmail(email);
     if (user?.memberships.some((m) => m.organizationId === organizationId)) {
       return;
     }
 
-    const invitation = await crud.invitation.findOrCreate(
+    const invitation = await crud.invitations.findOrCreate(
       email,
       organizationId,
       role,
-      ctx.session.user.id
+      ctx.user.id
     );
-    await sendInvitationEmail(ctx.session.user.id, invitation, email);
+    await sendInvitationEmail(ctx.user.id, invitation, email);
   });
 
 const acceptInvitationSchema = z.object({
@@ -109,7 +114,7 @@ const acceptInvitation = protectedProcedure
   .input(acceptInvitationSchema)
   .mutation(async ({ ctx, input }) => {
     const { invitationId } = input;
-    await crud.invitation.accept(invitationId);
+    await crud.invitations.accept(invitationId);
   });
 
 const revokeInvitationSchema = acceptInvitationSchema;
@@ -117,7 +122,7 @@ const revokeInvitation = adminProcedure
   .input(revokeInvitationSchema)
   .mutation(async ({ ctx, input }) => {
     const { invitationId } = input;
-    await crud.invitation.deleteById(invitationId);
+    await crud.invitations.deleteById(invitationId);
   });
 
 const resendInvitationSchema = acceptInvitationSchema;
@@ -125,7 +130,7 @@ const resendInvitation = adminProcedure
   .input(resendInvitationSchema)
   .mutation(async ({ ctx, input }) => {
     const { invitationId } = input;
-    const invitation = await crud.invitation.findById(invitationId);
+    const invitation = await crud.invitations.findById(invitationId);
     if (!invitation) {
       return;
     }
@@ -146,23 +151,19 @@ const removeMember = adminProcedure
         message: 'You cannot remove yourself from the organization',
       });
     }
-    await crud.organization.removeMember(organizationId, userId);
+    await crud.organizations.removeMember(organizationId, userId);
   });
 
 const updateMemberRoleSchema = z.object({
   organizationId: z.string(),
   userId: z.string(),
-  role: z.enum([
-    OrganizationRole.OWNER,
-    OrganizationRole.ADMIN,
-    OrganizationRole.MEMBER,
-  ]),
+  role: z.enum(['owner', 'admin', 'member']),
 });
 const updateMemberRole = adminProcedure
   .input(updateMemberRoleSchema)
   .mutation(async ({ ctx, input }) => {
     const { organizationId, userId, role: targetRole } = input;
-    const member = await crud.organization.getMemberById(
+    const member = await crud.organizations.getMemberById(
       organizationId,
       userId
     );
@@ -177,14 +178,13 @@ const updateMemberRole = adminProcedure
       return;
     }
 
-    const currentUser = await crud.user.getById(ctx.user.id);
+    const currentUser = await crud.users.getById(ctx.user.id);
     const currentUserRole = getRole(currentUser, organizationId);
 
     // admins cannot change the role of owners
     if (
-      currentUserRole === OrganizationRole.ADMIN &&
-      (member.role === OrganizationRole.OWNER ||
-        targetRole === OrganizationRole.OWNER)
+      currentUserRole === 'admin' &&
+      (member.role === 'owner' || targetRole === 'owner')
     ) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
@@ -193,13 +193,10 @@ const updateMemberRole = adminProcedure
     }
 
     // if the downgrading from owner to non-owner, ensure there is at least one owner left
-    if (
-      member.role === OrganizationRole.OWNER &&
-      targetRole !== OrganizationRole.OWNER
-    ) {
-      const owners = await crud.organization.getMembersByRole(
+    if (member.role === 'owner' && targetRole !== 'owner') {
+      const owners = await crud.organizations.getMembersByRole(
         organizationId,
-        OrganizationRole.OWNER
+        'owner'
       );
       if (owners.length === 1) {
         throw new TRPCError({
@@ -209,7 +206,7 @@ const updateMemberRole = adminProcedure
       }
     }
 
-    await crud.organization.updateMemberRole(
+    await crud.organizations.updateMemberRole(
       organizationId,
       userId,
       targetRole
@@ -223,7 +220,7 @@ const leaveOrganization = protectedProcedure
   .input(leaveOrganizationSchema)
   .mutation(async ({ ctx, input }) => {
     const { organizationId } = input;
-    const membership = await crud.organization.getMemberById(
+    const membership = await crud.organizations.getMemberById(
       organizationId,
       ctx.user.id
     );
@@ -233,10 +230,10 @@ const leaveOrganization = protectedProcedure
         message: 'User is not a member of this organization',
       });
     }
-    if (membership.role === OrganizationRole.OWNER) {
-      const owners = await crud.organization.getMembersByRole(
+    if (membership.role === 'owner') {
+      const owners = await crud.organizations.getMembersByRole(
         organizationId,
-        OrganizationRole.OWNER
+        'owner'
       );
       if (owners.length === 1) {
         throw new TRPCError({
@@ -245,18 +242,18 @@ const leaveOrganization = protectedProcedure
         });
       }
     }
-    await crud.organization.removeMember(organizationId, ctx.user.id, true);
+    await crud.organizations.removeMember(organizationId, ctx.user.id, true);
   });
 
 async function sendInvitationEmail(
   senderUserId: string,
-  invitation: NonNullable<crud.invitation.InvitationWithOrgAndInviter>,
+  invitation: NonNullable<crud.invitations.InvitationWithOrgAndInviter>,
   email: string
 ) {
-  const inviter = await crud.user.getById(senderUserId);
-  const link = getInviteLink(invitation.id);
+  const inviter = await crud.users.getById(senderUserId);
+  const link = await getInviteLink(invitation);
   await sendEmail(
-    'no-reply@superscale.app',
+    'notifications@transactional.superscale.app',
     email,
     `You have been invited to join ${invitation.organization.name} on Superscale`,
     'invitation',

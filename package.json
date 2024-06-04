@@ -3,19 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm -filter=@superscale/web --filter=@superscale/chat --filter=@superscale/convex dev",
+    "dev": "pnpm --filter=@superscale/web --filter=@superscale/chat --filter=@superscale/convex dev",
     "dev:web": "pnpm --filter=@superscale/web dev",
-    "dev:shopify": "pnpm --filter=@superscale/web shopify:dev",
     "dev:convex": "pnpm --filter=@superscale/convex dev",
+    "dev:email": "pnpm --filter=@superscale/email dev",
+    "supabase:start": "pnpm --filter=@superscale/crud supabase:start",
+    "supabase:stop": "pnpm --filter=@superscale/crud supabase:stop",
+    "supabase:db:reset": "pnpm --filter=@superscale/crud supabase db reset",
     "build:web": "pnpm --filter=@superscale/web build",
     "build:chat": "pnpm --filter=@superscale/chat build",
-    "build:shopify": "pnpm --filter=@superscale/web shopify:build",
     "tunnel:web": "ngrok http --domain boar-helped-mite.ngrok-free.app 3000"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "dependencies": {
     "prettier": "^3.0.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "next": "14.2.3",
+      "react": "18.2.0",
+      "@types/react": "18.2.20",
+      "@types/react-dom": "18.2.7"
+    }
   }
 }

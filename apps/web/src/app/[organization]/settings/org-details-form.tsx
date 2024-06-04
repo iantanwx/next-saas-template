@@ -1,5 +1,6 @@
 'use client';
 
+import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -12,12 +13,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { OrganizationRole } from '@prisma/client';
 import {
   OrganizationWithMembers,
   UserWithMemberships,
 } from '@superscale/crud/types';
-import { TRPCClientError, trpc } from '@superscale/trpc/client';
+import { TRPCClientError, t } from '@superscale/trpc/client';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -29,20 +29,20 @@ interface Props {
   organization: OrganizationWithMembers;
 }
 
-const checkExists = async (value: string) => {
-  const { client } = trpc.useUtils();
-  const exists = await client.organization.exists.query({
-    nameOrSlug: value,
-  });
-  return !exists;
-};
-
-const formSchema = z.object({
-  name: z.string().min(1).max(50).refine(checkExists),
-  slug: z.string().min(1).max(50).refine(checkExists),
-});
-
 export function OrganizationSettingsForm({ user, organization }: Props) {
+  const { client } = t.useUtils();
+  const checkExists = async (value: string) => {
+    const exists = await client.organization.exists.query({
+      nameOrSlug: value,
+    });
+    return !exists;
+  };
+
+  const formSchema = z.object({
+    name: z.string().min(1).max(50).refine(checkExists),
+    slug: z.string().min(1).max(50).refine(checkExists),
+  });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,9 +50,10 @@ export function OrganizationSettingsForm({ user, organization }: Props) {
       slug: organization.slug,
     },
   });
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const update = trpc.organization.update.useMutation();
+  const update = t.organization.update.useMutation();
   const { toast } = useToast();
   const submit = form.handleSubmit(async ({ name, slug }) => {
     try {
@@ -62,7 +63,6 @@ export function OrganizationSettingsForm({ user, organization }: Props) {
         name,
         slug,
       });
-      setLoading(false);
       toast({ title: 'Organization updated' });
       router.replace(`/${slug}/settings`);
     } catch (error) {
@@ -79,7 +79,7 @@ export function OrganizationSettingsForm({ user, organization }: Props) {
   });
   const isOwner =
     user.memberships.find((m) => m.organization.id === organization.id)
-      ?.role === OrganizationRole.OWNER;
+      ?.role === 'owner';
   const prefixRef = useRef<HTMLDivElement>(null);
   const [spanWidth, setSpanWidth] = useState(0);
   useEffect(() => {
@@ -144,6 +144,7 @@ export function OrganizationSettingsForm({ user, organization }: Props) {
           />
           <Button className="mb-[1px]" type="submit">
             Save
+            {loading && <Icons.loader2 className="ml-2 h-4 w-4 animate-spin" />}
           </Button>
         </form>
       </Form>

@@ -6,7 +6,10 @@
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts",
-    "./auth/*": "./src/auth/*.ts"
+    "./auth/*": "./src/auth/*.ts",
+    "./supabase/*": "./src/supabase/*.ts",
+    "./utils": "./src/utils/index.ts",
+    "./utils/*": "./src/utils/*.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,11 +19,13 @@
   "license": "ISC",
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
+    "@supabase/ssr": "^0.3.0",
+    "@supabase/supabase-js": "^2.43.4",
     "@superscale/crud": "workspace:^",
     "@superscale/email": "workspace:^",
-    "@superscale/prisma": "workspace:^",
     "@superscale/tsconfig": "workspace:^",
     "clsx": "^2.0.0",
+    "next": "14.2.3",
     "next-auth": "^4.23.0",
     "tailwind-merge": "^1.14.0",
     "zod": "^3.22.2"

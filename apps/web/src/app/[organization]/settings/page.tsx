@@ -1,6 +1,6 @@
 import { DashboardHeader } from '@/components/header';
 import { Separator } from '@/components/ui/separator';
-import { organization as organizationCrud } from '@superscale/crud';
+import { organizations } from '@superscale/crud';
 import { getCurrentUser } from '@superscale/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { DeleteOrganization } from './delete-org';
@@ -15,7 +15,7 @@ interface Props {
 export default async function SettingsPage({
   params: { organization: slug },
 }: Props) {
-  const organization = await organizationCrud.getBySlug(slug);
+  const organization = await organizations.getBySlug(slug);
   const user = await getCurrentUser();
   if (!user) {
     redirect('/auth/sign-in');

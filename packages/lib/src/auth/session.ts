@@ -1,33 +1,21 @@
-import { user as userCrud } from '@superscale/crud';
-import { Session } from 'next-auth';
-import { getServerSession as getNextAuthSession } from 'next-auth/next';
-import { authOptions } from './authOptions';
+import { users } from '@superscale/crud';
+import { createClient } from '../supabase/server';
 
-/**
- * Retrieves the current user from the session.
- * This function only works in server components.
- *
- * @returns {Promise<userCrud.UserWithMemberships | null>}
- */
-export async function getCurrentUser(): Promise<userCrud.UserWithMemberships | null> {
-  const { user } = await getServerSession();
+export async function getCurrentUser() {
+  const { user } = await getCurrentSession();
   return user;
 }
 
-/**
- * Retrieves the current session from the server.
- * This function only works in server components.
- *
- * @returns {Promise<{ session: Session | null, user: userCrud.UserWithMemberships | null }>}
- */
-export async function getServerSession(): Promise<{
-  session: Session | null;
-  user: userCrud.UserWithMemberships | null;
-}> {
-  const session = await getNextAuthSession(authOptions);
-  if (!session?.user) {
-    return { session: null, user: null };
+export async function getCurrentSession() {
+  const supabase = createClient();
+  const {
+    data: { user: _user },
+  } = await supabase.auth.getUser();
+
+  if (!_user) {
+    return { user: null };
   }
-  const user = await userCrud.getById(session.user.id);
-  return { session, user };
+
+  const user = await users.getById(_user.id);
+  return { user };
 }

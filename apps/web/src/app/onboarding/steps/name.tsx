@@ -12,8 +12,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { UserWithMemberships } from '@/crud/user';
-import { t } from '@/lib/trpc';
+import { UserWithMemberships } from '@superscale/crud/types';
+import { t } from '@superscale/trpc/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -45,7 +45,7 @@ export default function NameStep({ user, setLoading }: Props) {
         setLoading(true);
         await updateUser.mutateAsync({ name });
         router.refresh();
-        nextStep();
+        await nextStep();
       } finally {
         setLoading(false);
       }

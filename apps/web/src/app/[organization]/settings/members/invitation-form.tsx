@@ -1,5 +1,6 @@
 'use client';
 
+import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -19,9 +20,12 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UserWithMemberships } from '@superscale/crud/types';
-import { Organization, OrganizationRole } from '@superscale/prisma/client';
-import { trpc } from '@superscale/trpc/client';
+import {
+  Organization,
+  OrganizationRole,
+  UserWithMemberships,
+} from '@superscale/crud/types';
+import { t } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -29,7 +33,7 @@ import { z } from 'zod';
 
 const formSchema = z.object({
   email: z.string().email(),
-  role: z.enum([OrganizationRole.ADMIN, OrganizationRole.MEMBER]),
+  role: z.enum(['admin', 'member']),
 });
 
 interface Props {
@@ -37,17 +41,19 @@ interface Props {
   organization: Organization;
 }
 
+type Roles = Exclude<OrganizationRole, 'owner'>;
+
 export function InvitationForm({ organization }: Props) {
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      role: OrganizationRole.MEMBER,
+      role: 'member' as Roles,
     },
   });
   const [loading, setLoading] = useState(false);
-  const invite = trpc.organization.invite.useMutation();
+  const invite = t.organization.invite.useMutation();
   const { toast } = useToast();
   const submit = form.handleSubmit(async ({ email, role }) => {
     try {
@@ -109,12 +115,8 @@ export function InvitationForm({ organization }: Props) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={OrganizationRole.ADMIN}>
-                      Admin
-                    </SelectItem>
-                    <SelectItem value={OrganizationRole.MEMBER}>
-                      Member
-                    </SelectItem>
+                    <SelectItem value={'admin'}>Admin</SelectItem>
+                    <SelectItem value={'member'}>Member</SelectItem>
                   </SelectContent>
                 </Select>
               </FormItem>
@@ -122,6 +124,7 @@ export function InvitationForm({ organization }: Props) {
           />
           <Button className="mb-[1px]" type="submit">
             Invite
+            {loading && <Icons.loader2 className="ml-2 h-4 w-4 animate-spin" />}
           </Button>
         </form>
       </Form>

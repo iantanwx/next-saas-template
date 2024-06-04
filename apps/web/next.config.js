@@ -41,7 +41,7 @@ const nextConfig = {
     '@superscale/crud',
     '@superscale/trpc',
     '@superscale/lib',
-    '@superscale/prisma',
+    '@superscale/email',
   ],
 };
 

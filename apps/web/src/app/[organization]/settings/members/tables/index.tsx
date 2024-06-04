@@ -2,8 +2,7 @@
 
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { UserWithMemberships } from '@/crud/user';
-import { Organization } from '@prisma/client';
+import { UserWithMemberships, Organization } from '@superscale/crud/types';
 import {
   ColumnFiltersState,
   flexRender,

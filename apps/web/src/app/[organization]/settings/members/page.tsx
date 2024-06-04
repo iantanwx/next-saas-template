@@ -1,10 +1,10 @@
 import { DashboardHeader } from '@/components/header';
 import { Separator } from '@/components/ui/separator';
+import { invitations, organizations } from '@superscale/crud';
 import {
-  invitation as invitationCrud,
-  organization as organizationCrud,
-} from '@superscale/crud';
-import { OrganizationWithMembers } from '@superscale/crud/types';
+  OrganizationRole,
+  OrganizationWithMembers,
+} from '@superscale/crud/types';
 import { getCurrentUser } from '@superscale/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { InvitationForm } from './invitation-form';
@@ -12,7 +12,9 @@ import { MembersTable } from './tables';
 import { RowData } from './tables/columns';
 
 async function fetchData(organization: OrganizationWithMembers) {
-  const invitations = await invitationCrud.listByOrganization(organization.id);
+  const invitationRecords = await invitations.listByOrganization(
+    organization.id
+  );
 
   const data: RowData[] = [];
   for (const member of organization.members ?? []) {
@@ -21,15 +23,15 @@ async function fetchData(organization: OrganizationWithMembers) {
       userId: member.userId,
       name: member.user.name!!,
       email: member.user.email!!,
-      role: member.role,
-      imageUrl: member.user.image,
+      role: member.role as OrganizationRole,
+      imageUrl: member.user.avatarUrl,
     });
   }
-  for (const invitation of invitations ?? []) {
+  for (const invitation of invitationRecords) {
     data.push({
       type: 'invitation',
       email: invitation.email,
-      role: invitation.role,
+      role: invitation.role as OrganizationRole,
       invitationId: invitation.id,
     });
   }
@@ -49,7 +51,7 @@ export default async function MembersPage({
   if (!user) {
     redirect('/auth/sign-in');
   }
-  const organization = await organizationCrud.getBySlug(slug);
+  const organization = await organizations.getBySlug(slug);
   const data = await fetchData(organization);
   return (
     <div className="flex flex-col">

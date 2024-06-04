@@ -1,11 +1,11 @@
-import { User } from 'next-auth';
+// import { User } from 'next-auth';
 import { AvatarProps } from '@radix-ui/react-avatar';
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Icons } from '../icons';
 
 interface Props extends AvatarProps {
-  user: Pick<User, 'image' | 'name'>;
+  user: any;
 }
 
 export function UserAvatar({ user, ...props }: Props) {
