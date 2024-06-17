@@ -6,10 +6,12 @@
     "alwaysStrict": true,
     "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "noEmit": true,
     "declaration": false,
     "declarationMap": false,
     "resolveJsonModule": true
-  }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "./tailwind.config.ts"]
 }

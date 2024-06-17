@@ -3,6 +3,8 @@
   "display": "lib",
   "extends": "./base.tsconfig.json",
   "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "target": "ES5",
     "jsx": "preserve",

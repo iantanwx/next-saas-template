@@ -6,8 +6,10 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./icons": "./src/icons.tsx",
     "./atoms/*": "./src/atoms/*.tsx",
-    "./styles/*": "./src/styles/*.css"
+    "./styles/*": "./src/styles/*.css",
+    "./lib/*": "./src/lib/*.ts"
   },
   "scripts": {},
   "keywords": [],
@@ -23,7 +25,9 @@
     "typescript": "5.1.6"
   },
   "dependencies": {
+    "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.263.1",

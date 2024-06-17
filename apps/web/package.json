@@ -10,6 +10,8 @@
     "dev:email": "email dev --port 3001 --dir ./emails"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.31",
+    "@ai-sdk/react": "^0.0.3",
     "@hookform/resolvers": "^3.3.1",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -38,6 +40,7 @@
     "@types/react-dom": "18.2.7",
     "@uidotdev/usehooks": "^2.3.0",
     "add": "^2.0.6",
+    "ai": "^3.1.37",
     "autoprefixer": "10.4.14",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
@@ -60,7 +63,7 @@
     "superjson": "^1.13.1",
     "tailwind-merge": "^1.14.0",
     "typescript": "5.1.6",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@superscale/twconfig": "workspace:^",
