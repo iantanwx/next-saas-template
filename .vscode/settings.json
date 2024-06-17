@@ -1,7 +1,4 @@
 {
-	"eslint.workingDirectories": [
-		"apps/chat",
-		"apps/web"
-	]
+  "eslint.workingDirectories": ["apps/chat", "apps/web"],
+  "tailwindCSS.experimental.classRegex": ["class:\\s*?[\"'`]([^\"'`]*).*?,"]
 }
-

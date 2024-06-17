@@ -42,6 +42,8 @@ const nextConfig = {
     '@superscale/trpc',
     '@superscale/lib',
     '@superscale/email',
+    '@superscale/editor',
+    '@superscale/ui',
   ],
 };
 

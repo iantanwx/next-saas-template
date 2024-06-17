@@ -1,0 +1,14 @@
+{
+  "extends": "@superscale/tsconfig/lib.tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "tailwind.config.mts"],
+  "exclude": ["dist", "build", "node_modules"]
+}
