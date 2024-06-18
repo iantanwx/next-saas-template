@@ -26,28 +26,19 @@ const SlashMenuItems: SlashMenuItem[] = [
   {
     title: 'Prompt',
     icon: Icons.bot,
-    command: ({ editor, range }) => {
-      // console.log(editor.commands.
-      console.log(editor.state);
+    command: ({ editor }) => {
       const {
         selection: { $head },
       } = editor.state;
       const parent = $head.node($head.depth - 1);
-      console.log('parent: ', parent);
-      const parentPos = $head.before($head.depth - 1);
-      console.log('parentPos: ', parentPos);
+      const from = $head.before($head.depth - 1);
       editor
         .chain()
         .focus()
-        .deleteRange({ from: parentPos, to: parentPos + parent.nodeSize })
-        .insertContentAt(parentPos, {
+        .deleteRange({ from, to: from + parent.nodeSize })
+        .insertContentAt(from, {
           type: 'prompt',
-          content: [
-            {
-              type: 'paragraph',
-              content: [{ type: 'text', text: '' }],
-            },
-          ],
+          content: [{ type: 'paragraph' }],
         })
         .run();
     },
@@ -95,6 +86,14 @@ const fzfOptions: FzfOptions<SlashMenuItem> = {
 const fzf = new Fzf(SlashMenuItems, fzfOptions);
 
 export const suggestions: Omit<SuggestionOptions, 'editor'> = {
+  allow: ({ editor }) => {
+    const {
+      selection: { $head },
+    } = editor.state;
+    const parent = $head.node($head.depth - 1);
+    return !parent || parent.type.name === 'dBlock';
+  },
+
   items: ({ query }: { query: string }) => {
     query = query.toLowerCase().trim();
 

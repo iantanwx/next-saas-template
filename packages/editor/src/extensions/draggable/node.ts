@@ -111,6 +111,7 @@ export const DBlock = Node.create<DBlockOptions>({
         });
 
         const content = doc.slice(from, currentActiveNodeTo)?.toJSON().content;
+        console.log('content: ', content);
 
         return editor
           .chain()
