@@ -27,18 +27,35 @@ const SlashMenuItems: SlashMenuItem[] = [
     title: 'Prompt',
     icon: Icons.bot,
     command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setNode('prompt').run();
+      // console.log(editor.commands.
+      console.log(editor.state);
+      const {
+        selection: { $head },
+      } = editor.state;
+      const parent = $head.node($head.depth - 1);
+      console.log('parent: ', parent);
+      const parentPos = $head.before($head.depth - 1);
+      console.log('parentPos: ', parentPos);
+      editor
+        .chain()
+        .focus()
+        .deleteRange({ from: parentPos, to: parentPos + parent.nodeSize })
+        .insertContentAt(parentPos, {
+          type: 'prompt',
+          content: [
+            {
+              type: 'paragraph',
+              content: [{ type: 'text', text: '' }],
+            },
+          ],
+        })
+        .run();
     },
   },
   {
     title: 'Heading 1',
     command: ({ editor, range }) => {
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode('heading', { level: 1 })
-        .run();
+      editor.chain().focus().deleteRange(range).setHeading({ level: 1 }).run();
     },
     icon: Icons.heading1,
     shortcut: '#',

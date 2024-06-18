@@ -29,6 +29,7 @@ import {
   Twitter,
   User,
   X,
+  GripVertical,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -63,6 +64,7 @@ export const Icons = {
   heading1: Heading1,
   heading2: Heading2,
   heading3: Heading3,
+  draggable: GripVertical,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

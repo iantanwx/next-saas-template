@@ -1,0 +1,4 @@
+export enum PLUGIN_PRIORITY {
+  DRAGGABLE = 1000,
+  SLASH_MENU = 1001,
+}

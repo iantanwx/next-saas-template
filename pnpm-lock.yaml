@@ -380,8 +380,8 @@ importers:
         specifier: ^0.22.4
         version: 0.22.4
       supabase:
-        specifier: 1.172.2
-        version: 1.172.2
+        specifier: 1.176.10
+        version: 1.176.10
 
   packages/editor:
     dependencies:
@@ -397,6 +397,39 @@ importers:
       '@tiptap/core':
         specifier: ^2.4.0
         version: 2.4.0(@tiptap/pm@2.4.0)
+      '@tiptap/extension-bold':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-bullet-list':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-dropcursor':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)(@tiptap/pm@2.4.0)
+      '@tiptap/extension-gapcursor':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)(@tiptap/pm@2.4.0)
+      '@tiptap/extension-hard-break':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-heading':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-italic':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-list-item':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-ordered-list':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-text':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-underline':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
       '@tiptap/pm':
         specifier: ^2.4.0
         version: 2.4.0
@@ -421,6 +454,15 @@ importers:
       prosemirror-markdown:
         specifier: ^1.13.0
         version: 1.13.0
+      prosemirror-model:
+        specifier: ^1.21.1
+        version: 1.21.1
+      prosemirror-state:
+        specifier: ^1.4.3
+        version: 1.4.3
+      prosemirror-view:
+        specifier: ^1.33.8
+        version: 1.33.8
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -6898,6 +6940,14 @@ packages:
 
   /@tiptap/extension-text@2.4.0(@tiptap/core@2.4.0):
     resolution: {integrity: sha512-LV0bvE+VowE8IgLca7pM8ll7quNH+AgEHRbSrsI3SHKDCYB9gTHMjWaAkgkUVaO1u0IfCrjnCLym/PqFKa+vvg==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.4.0(@tiptap/pm@2.4.0)
+    dev: false
+
+  /@tiptap/extension-underline@2.4.0(@tiptap/core@2.4.0):
+    resolution: {integrity: sha512-guWojb7JxUwLz4OKzwNExJwOkhZjgw/ttkXCMBT0PVe55k998MMYe1nvN0m2SeTW9IxurEPtScH4kYJ0XuSm8Q==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
@@ -14466,8 +14516,8 @@ packages:
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
 
-  /supabase@1.172.2:
-    resolution: {integrity: sha512-h2J6kKEikXnZyurUcCYg215qkQpINOhdWkiclHcWAuVeqXsNrfrYaf1s0qbbcdRyMtrVW48I+VdVTw71Cnn20Q==}
+  /supabase@1.176.10:
+    resolution: {integrity: sha512-VS+dRcNk7H2+qG4hCz2WqSKFeZxrMZ0k+LQnHiUX+d9bls1QyZvpXj3qmo4Hs30VS6ZYRQ3sgNVE2tEKWv6kcA==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true

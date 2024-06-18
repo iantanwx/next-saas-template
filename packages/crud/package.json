@@ -26,6 +26,6 @@
   "devDependencies": {
     "@types/node": "20.4.9",
     "drizzle-kit": "^0.22.4",
-    "supabase": "1.172.2"
+    "supabase": "1.176.10"
   }
 }

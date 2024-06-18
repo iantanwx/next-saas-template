@@ -2,6 +2,7 @@
 
 // @ts-ignore
 import { useCompletion } from '@ai-sdk/react';
+import { Button } from '@superscale/ui/atoms/button';
 import {
   Select,
   SelectContent,
@@ -9,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@superscale/ui/atoms/select';
+import { Icons } from '@superscale/ui/icons';
 import { Node, NodeViewProps, mergeAttributes } from '@tiptap/core';
 import {
   EditorContent,
@@ -17,11 +19,8 @@ import {
   ReactNodeViewRenderer,
   useEditor,
 } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
 import { useState } from 'react';
-import { SlashMenuExtension, suggestions } from './extensions/slashmenu';
-import { Button } from '@superscale/ui/atoms/button';
-import { Icons } from '@superscale/ui/icons';
+import { getExtensions } from './extensions/starterkit';
 
 function PromptView({ node }: NodeViewProps) {
   const [model, setModel] = useState('gpt-3.5-turbo');
@@ -57,8 +56,11 @@ function PromptView({ node }: NodeViewProps) {
 
 const PromptBlock = Node.create({
   name: 'prompt',
-  group: 'block',
-  content: 'inline*',
+  group: 'dBlock',
+  content: 'block',
+  draggable: true,
+  selectable: false,
+  inline: false,
   renderHTML({ HTMLAttributes }) {
     return ['prompt-view', mergeAttributes(HTMLAttributes), 0];
   },
@@ -69,12 +71,8 @@ const PromptBlock = Node.create({
 
 export function Editor() {
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      PromptBlock,
-      SlashMenuExtension.configure({ suggestions }),
-    ],
-    content: 'hello world',
+    extensions: [...getExtensions({ openLinkModal: () => null }), PromptBlock],
+    content: '',
     editable: true,
     editorProps: {
       attributes: {

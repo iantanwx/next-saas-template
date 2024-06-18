@@ -2,29 +2,8 @@
 
 import { ScrollArea } from '@superscale/ui/atoms/scroll-area';
 import { useEffect, useState } from 'react';
-import { SlashMenuItem } from './suggestions.js';
+import { SlashMenuItem } from './suggestions';
 import { cn } from '@superscale/ui/lib/utils';
-
-const updateScrollView = (
-  container: HTMLElement | null,
-  item: HTMLElement | null
-) => {
-  if (item && container) {
-    //Get the height f the list container
-    const ContainerHeight = container.offsetHeight;
-    const itemHeight = item ? item.offsetHeight : 0;
-
-    //Calculate item distance from top and bottom
-    const top = item.offsetTop;
-    const bottom = top + itemHeight;
-
-    if (top < container.scrollTop) {
-      container.scrollTop -= container.scrollTop - top + 5;
-    } else if (bottom > ContainerHeight + container.scrollTop) {
-      container.scrollTop += bottom - ContainerHeight - container.scrollTop + 5;
-    }
-  }
-};
 
 type Props = {
   items: SlashMenuItem[];
@@ -85,7 +64,7 @@ export function SlashMenu({ items, command, event }: Props) {
   };
 
   return (
-    <ScrollArea className="relative w-48 rounded-md border">
+    <ScrollArea className="relative w-48 rounded-md border bg-white">
       {items.length ? (
         <>
           {items.map((item, index) => {
