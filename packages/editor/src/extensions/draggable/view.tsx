@@ -18,30 +18,33 @@ export function DBlockNodeView({ node, getPos, editor }: NodeViewProps) {
   };
 
   return (
-    <NodeViewWrapper as="div" className="group relative flex w-full gap-2">
+    <NodeViewWrapper
+      as="div"
+      className="group relative flex w-full flex-row gap-2"
+    >
       <section
-        className="mt-2 flex gap-1 pt-[2px]"
+        className="mt-2 flex flex-row gap-1 pt-[2px]"
         aria-label="left-menu"
         contentEditable={false}
       >
         <button
           type="button"
-          className="d-block-button group-hover:opacity-100"
+          className="flex cursor-pointer justify-center rounded border-none bg-transparent p-0.5 opacity-0 transition-all duration-200 ease-in-out group-hover:opacity-100"
           onClick={createNodeAfter}
         >
-          <i className="i-mdi-plus" />
+          <Icons.add size={18} />
         </button>
         <div
-          className="d-block-button group-hover:opacity-100"
+          className="flex cursor-grab justify-center rounded border-none bg-transparent p-0.5 opacity-0 transition-all duration-200 ease-in-out hover:cursor-grabbing group-hover:opacity-100"
           contentEditable={false}
           draggable
           data-drag-handle
         >
-          <Icons.draggable />
+          <Icons.draggable size={18} />
         </div>
       </section>
 
-      <NodeViewContent className="node-view-content w-full" />
+      <NodeViewContent className="flex" />
     </NodeViewWrapper>
   );
 }

@@ -21,6 +21,7 @@ import {
 import { useState } from 'react';
 import { PLUGIN_PRIORITY } from './constants';
 import { getExtensions } from './extensions/starterkit';
+import './styles/placeholder.css';
 
 function PromptView({ node }: NodeViewProps) {
   const [model, setModel] = useState('gpt-3.5-turbo');
@@ -119,7 +120,7 @@ export function Editor() {
     editorProps: {
       attributes: {
         class:
-          'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none w-full',
+          'prose dark:prose-invert m-5 focus:outline-none w-full prose-p:my-2 prose-h1:my-2 prose-h2:my-2 prose-h3:my-2 prose-ul:my-2 prose-ol:my-2',
       },
     },
   });
