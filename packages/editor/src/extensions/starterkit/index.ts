@@ -1,16 +1,16 @@
 import { AnyExtension } from '@tiptap/core';
+import Blockquote from '@tiptap/extension-blockquote';
 import Bold from '@tiptap/extension-bold';
 import BulletList from '@tiptap/extension-bullet-list';
+import Codeblock from '@tiptap/extension-code-block';
 import DropCursor from '@tiptap/extension-dropcursor';
 import GapCursor from '@tiptap/extension-gapcursor';
 import Italic from '@tiptap/extension-italic';
 import ListItem from '@tiptap/extension-list-item';
 import OrderedList from '@tiptap/extension-ordered-list';
-import TaskList from '@tiptap/extension-task-list';
-import TaskItem from '@tiptap/extension-task-item';
-import Blockquote from '@tiptap/extension-blockquote';
-import Codeblock from '@tiptap/extension-code-block';
 import Placeholder from '@tiptap/extension-placeholder';
+import TaskItem from '@tiptap/extension-task-item';
+import TaskList from '@tiptap/extension-task-list';
 import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
 // import History from '@tiptap/extension-history';
@@ -20,6 +20,7 @@ import Heading from '@tiptap/extension-heading';
 import { Document } from '../doc';
 import { DBlock } from '../draggable';
 import { Paragraph } from '../paragraph';
+import { Prompt } from '../prompt';
 import { SlashMenuExtension, suggestions } from '../slashmenu';
 // import { TrailingNode } from './trailingNode';
 
@@ -67,11 +68,24 @@ export const getExtensions = ({
     TaskItem,
     TaskList,
 
+    //custom
     SlashMenuExtension.configure({ suggestions }),
     Placeholder.configure({
-      placeholder: 'Type `/` for commands',
+      placeholder: ({ editor }) => {
+        const {
+          selection: { $head },
+        } = editor.state;
+        const parent = $head.node($head.depth - 1);
+
+        if (parent?.type.name === 'prompt') {
+          return 'Type your prompt here.';
+        }
+
+        return 'Type `/` for commands';
+      },
       includeChildren: true,
     }),
+    Prompt,
     // TrailingNode,
   ];
 };

@@ -25,6 +25,7 @@ import {
   Plus,
   Settings,
   SunMedium,
+  RotateCcw,
   Trash,
   Twitter,
   User,
@@ -37,6 +38,12 @@ import {
   Code,
   type LucideIcon,
 } from 'lucide-react';
+
+import OpenAI from './assets/oai.svg';
+import Anthropic from './assets/anthropic.svg';
+import HuggingFace from './assets/hf.svg';
+import Meta from './assets/meta.svg';
+import Mistral from './assets/mistral.svg';
 
 export type Icon = LucideIcon;
 
@@ -75,6 +82,7 @@ export const Icons = {
   checkList: ListChecks,
   quote: Quote,
   code: Code,
+  rotate: RotateCcw,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
@@ -92,6 +100,11 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  openAI: ({ ...props }: LucideProps) => <OpenAI {...props} />,
+  anthropic: ({ ...props }: LucideProps) => <Anthropic {...props} />,
+  huggingFace: ({ ...props }: LucideProps) => <HuggingFace {...props} />,
+  meta: ({ ...props }: LucideProps) => <Meta {...props} />,
+  mistral: ({ ...props }: LucideProps) => <Mistral {...props} />,
   twitter: Twitter,
   check: Check,
 };
