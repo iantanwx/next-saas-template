@@ -30,6 +30,11 @@ import {
   User,
   X,
   GripVertical,
+  ListOrdered,
+  List,
+  ListChecks,
+  Quote,
+  Code,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -65,6 +70,11 @@ export const Icons = {
   heading2: Heading2,
   heading3: Heading3,
   draggable: GripVertical,
+  orderedList: ListOrdered,
+  unorderedList: List,
+  checkList: ListChecks,
+  quote: Quote,
+  code: Code,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

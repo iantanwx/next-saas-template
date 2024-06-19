@@ -3,3 +3,7 @@ export enum PLUGIN_PRIORITY {
   PROMPT = 1001,
   SLASH_MENU = 1002,
 }
+
+export enum NODE_SIZES {
+  PARAGRAPH = 2,
+}

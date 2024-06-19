@@ -1,7 +1,7 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 
-import { PLUGIN_PRIORITY } from '../../constants';
+import { NODE_SIZES, PLUGIN_PRIORITY } from '../../constants';
 import { DBlockNodeView } from './view';
 
 export interface DBlockOptions {
@@ -26,7 +26,7 @@ export const DBlock = Node.create<DBlockOptions>({
 
   group: 'dBlock',
 
-  content: 'block',
+  content: '(block|list)+',
 
   draggable: true,
 
@@ -93,8 +93,11 @@ export const DBlock = Node.create<DBlockOptions>({
         } = editor.state;
 
         const parent = $head.node($head.depth - 1);
-
-        if (parent.type.name !== 'dBlock') return false;
+        const isEmptyListItem =
+          parent &&
+          parent.type.name === 'listItem' &&
+          parent.content.textBetween(0, parent.content.size).length === 0;
+        if (parent?.type.name !== 'dBlock' && !isEmptyListItem) return false;
 
         let currentActiveNodeTo = -1;
 
@@ -110,7 +113,24 @@ export const DBlock = Node.create<DBlockOptions>({
           return false;
         });
 
-        const content = doc.slice(from, currentActiveNodeTo)?.toJSON().content;
+        if (isEmptyListItem) {
+          return editor
+            .chain()
+            .toggleBulletList()
+            .insertContentAt(
+              { from, to: from },
+              {
+                type: 'dBlock',
+                content: [{ type: 'paragraph' }],
+              }
+            )
+            .focus(from + NODE_SIZES.PARAGRAPH)
+            .run();
+        }
+
+        const content = isEmptyListItem
+          ? [{ type: 'paragraph' }]
+          : doc.slice(from, currentActiveNodeTo)?.toJSON().content;
 
         return editor
           .chain()

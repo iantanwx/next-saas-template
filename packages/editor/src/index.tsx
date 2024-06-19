@@ -79,7 +79,7 @@ const PromptBlock = Node.create({
         let nextNodeTo = -1;
         const parent = $head.node($head.depth - 1);
 
-        if (parent.type.name !== 'prompt') return false;
+        if (parent?.type.name !== 'prompt') return false;
 
         doc.descendants((node, pos) => {
           if (nextNodeTo !== -1) return false;

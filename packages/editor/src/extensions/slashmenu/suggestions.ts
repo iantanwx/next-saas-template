@@ -77,6 +77,51 @@ const SlashMenuItems: SlashMenuItem[] = [
     icon: Icons.heading3,
     shortcut: '###',
   },
+  {
+    title: 'Ordered List',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).toggleOrderedList().run();
+    },
+    icon: Icons.orderedList,
+    shortcut: '1.',
+  },
+  {
+    title: 'Bullet List',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).toggleBulletList().run();
+    },
+    icon: Icons.unorderedList,
+    shortcut: '-',
+  },
+  {
+    title: 'Task List',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).toggleTaskList().run();
+    },
+    icon: Icons.checkList,
+    shortcut: '[ ]',
+  },
+  {
+    title: 'Blockquote',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setBlockquote().run();
+    },
+    icon: Icons.quote,
+    shortcut: '>',
+  },
+  {
+    title: 'Code Block',
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setCodeBlock({ language: 'auto' })
+        .run();
+    },
+    icon: Icons.code,
+    shortcut: '```',
+  },
 ];
 
 const fzfOptions: FzfOptions<SlashMenuItem> = {
