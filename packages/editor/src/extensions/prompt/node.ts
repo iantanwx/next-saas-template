@@ -6,7 +6,7 @@ import { PromptView } from './view';
 export const Prompt = Node.create({
   name: 'prompt',
   group: 'dBlock',
-  content: 'block',
+  content: 'block+',
   draggable: true,
   selectable: false,
   inline: false,
@@ -20,14 +20,33 @@ export const Prompt = Node.create({
   addKeyboardShortcuts() {
     return {
       Enter: ({ editor }) => {
-        const {
-          doc,
-          selection: { $head, from, to },
-        } = editor.state;
-        let nextNodeTo = -1;
+        const { state } = editor;
+        const { doc, selection } = state;
+        const { $head, from, $from, to, empty } = selection;
         const parent = $head.node($head.depth - 1);
 
-        if (parent?.type.name !== 'prompt') return false;
+        // If we're not in an empty node, it means we shouldn't exit the Prompt block
+        // > some_<cursor>text
+        // --> text desired here
+        // \n
+        // \n
+        console.log('$from.parent: ', $from.parent);
+        console.log('$head.node($head.depth - 1): ', parent);
+        if (!empty || parent?.type !== this.type) return false;
+
+        let nextNodeTo = -1;
+
+        const prevPos = $from.before();
+        const prevNode = doc.nodeAt(prevPos);
+        const prevNodeText = prevNode?.textContent;
+        const prevPrevPos = prevPos - (prevNode?.nodeSize ?? 0);
+        const prevPrevNode = prevPrevPos >= 0 ? doc.nodeAt(prevPrevPos) : null;
+        const prevPrevNodeText = prevPrevNode?.textContent;
+        const prevNodesEmpty = prevNodeText === '' && prevPrevNodeText === '';
+        const isAtEnd = $from.parentOffset === $from.parent.nodeSize - 2;
+        if (!isAtEnd || !prevNodesEmpty) {
+          return false;
+        }
 
         doc.descendants((node, pos) => {
           if (nextNodeTo !== -1) return false;
@@ -40,15 +59,24 @@ export const Prompt = Node.create({
           return false;
         });
 
+        const offset =
+          (prevNode?.nodeSize ?? 0) + (prevPrevNode?.nodeSize ?? 0);
+
         const content = doc.slice(from, nextNodeTo)?.toJSON()?.content ?? [
           {
             type: 'paragraph',
           },
         ];
+
         return editor
           .chain()
+          .command(({ tr }) => {
+            // remove the newlines
+            tr.delete($from.pos - offset, $from.pos);
+            return true;
+          })
           .insertContentAt(
-            { from, to: nextNodeTo },
+            { from: $from.pos - offset, to: nextNodeTo },
             {
               type: 'dBlock',
               content,
