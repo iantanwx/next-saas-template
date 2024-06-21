@@ -43,7 +43,6 @@ export function DBlockNodeView({ node, getPos, editor }: NodeViewProps) {
           <Icons.draggable size={18} />
         </div>
       </section>
-
       <NodeViewContent className="flex" />
     </NodeViewWrapper>
   );

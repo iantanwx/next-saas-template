@@ -24,7 +24,7 @@ const iconMap = {
   'gpt-4-turbo-preview': Icons.openAI,
 };
 
-export function PromptView({ node }: NodeViewProps) {
+export function PromptView({ editor, getPos, node }: NodeViewProps) {
   const [model, setModel] = useState('gpt-3.5-turbo');
 
   const { completion, complete, setCompletion } = useCompletion({
@@ -49,9 +49,44 @@ export function PromptView({ node }: NodeViewProps) {
 
   const Icon = iconMap[model as keyof typeof iconMap];
 
+  const createNodeAfter = () => {
+    const pos = getPos() + node.nodeSize;
+
+    editor.commands.insertContentAt(pos, {
+      type: 'dBlock',
+      content: [
+        {
+          type: 'paragraph',
+        },
+      ],
+    });
+  };
+
   return (
-    <NodeViewWrapper>
-      <div className="m-2 flex flex-col gap-2">
+    <NodeViewWrapper className="group relative flex w-full flex-row gap-2">
+      <section
+        className="mt-2 flex flex-row gap-1 pt-[2px]"
+        aria-label="left-menu"
+        contentEditable={false}
+      >
+        <button
+          type="button"
+          className="flex cursor-pointer justify-center rounded border-none bg-transparent p-0.5 opacity-0 transition-all duration-200 ease-in-out group-hover:opacity-100"
+          onClick={createNodeAfter}
+        >
+          <Icons.add size={18} />
+        </button>
+        <div
+          className="flex cursor-grab justify-center rounded border-none bg-transparent p-0.5 opacity-0 transition-all duration-200 ease-in-out hover:cursor-grabbing group-hover:opacity-100"
+          contentEditable={false}
+          draggable
+          data-drag-handle
+        >
+          <Icons.draggable size={18} />
+        </div>
+      </section>
+
+      <div className="m-2 ml-0 flex w-full flex-col gap-2">
         <div className="flex flex-row justify-between gap-2">
           <div className="flex">
             <Select defaultValue={model} onValueChange={setModel}>
