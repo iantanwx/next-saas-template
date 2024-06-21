@@ -18,9 +18,9 @@ export default async function Dashboard() {
   }
 
   return (
-    <main className="container flex min-h-screen flex-col items-center justify-between p-24">
-      {JSON.stringify(user, null, 2)}
-      <div className="flex h-full w-full flex-1 rounded-md border-2 border-gray-200">
+    <main className="container flex min-h-screen flex-col items-center gap-4 p-24">
+      <div className="flex w-full">{JSON.stringify(user, null, 2)}</div>
+      <div className="flex h-full w-full flex-row rounded-md border-2 border-gray-200">
         <Editor />
       </div>
     </main>

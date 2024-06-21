@@ -8,6 +8,7 @@ import GapCursor from '@tiptap/extension-gapcursor';
 import Italic from '@tiptap/extension-italic';
 import ListItem from '@tiptap/extension-list-item';
 import OrderedList from '@tiptap/extension-ordered-list';
+import Focus from '@tiptap/extension-focus';
 import Placeholder from '@tiptap/extension-placeholder';
 import TaskItem from '@tiptap/extension-task-item';
 import TaskList from '@tiptap/extension-task-list';
@@ -67,6 +68,10 @@ export const getExtensions = ({
     OrderedList,
     TaskItem,
     TaskList,
+
+    Focus.configure({
+      mode: 'shallowest',
+    }),
 
     //custom
     SlashMenuExtension.configure({ suggestions }),

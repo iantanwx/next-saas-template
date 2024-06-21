@@ -9,11 +9,12 @@ import {
 } from '@superscale/ui/atoms/select';
 import { Icons } from '@superscale/ui/icons';
 import { NodeViewProps } from '@tiptap/core';
+import { generateHTML } from '@tiptap/html';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import { useState } from 'react';
-import { generateHTML } from '@tiptap/html';
 import Turndown from 'turndown';
 import { getExtensions } from '../starterkit';
+import './styles.css';
 
 const turndown = new Turndown();
 
@@ -50,7 +51,7 @@ export function PromptView({ node }: NodeViewProps) {
 
   return (
     <NodeViewWrapper>
-      <div className="flex flex-col gap-2">
+      <div className="m-2 flex flex-col gap-2">
         <div className="flex flex-row justify-between gap-2">
           <div className="flex">
             <Select defaultValue={model} onValueChange={setModel}>
@@ -67,15 +68,15 @@ export function PromptView({ node }: NodeViewProps) {
             </Select>
           </div>
           <div className="flex flex-row gap-2">
-            <Button variant="outline" size="icon" onClick={doCompletion}>
+            <Button size="icon" onClick={doCompletion}>
               <Icons.play className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" onClick={reset}>
+            <Button size="icon" onClick={reset}>
               <Icons.rotate className="h-4 w-4" />
             </Button>
           </div>
         </div>
-        <NodeViewContent className="rounded-md border-2 border-gray-200 p-4" />
+        <NodeViewContent className="prompt-input border-input my-2 rounded-md border p-2" />
         <Icon className="h-4 w-4" />
         {completion && <div>{completion}</div>}
       </div>
