@@ -3,6 +3,8 @@ import { ReactNodeViewRenderer } from '@tiptap/react';
 
 import { NODE_SIZES, PLUGIN_PRIORITY } from '../../constants';
 import { DBlockNodeView } from './view';
+import ListItem from '@tiptap/extension-list-item';
+import TaskItem from '@tiptap/extension-task-item';
 
 export interface DBlockOptions {
   HTMLAttributes: Record<string, any>;
@@ -93,9 +95,10 @@ export const DBlock = Node.create<DBlockOptions>({
         } = editor.state;
 
         const parent = $head.node($head.depth - 1);
+        const parentType = parent?.type.name;
         const isEmptyListItem =
           parent &&
-          parent.type.name === 'listItem' &&
+          (parentType === ListItem.type || parentType === TaskItem.type) &&
           parent.content.textBetween(0, parent.content.size).length === 0;
         if (parent?.type.name !== 'dBlock' && !isEmptyListItem) return false;
 

@@ -30,8 +30,6 @@ export const Prompt = Node.create({
         // --> text desired here
         // \n
         // \n
-        console.log('$from.parent: ', $from.parent);
-        console.log('$head.node($head.depth - 1): ', parent);
         if (!empty || parent?.type !== this.type) return false;
 
         let nextNodeTo = -1;
