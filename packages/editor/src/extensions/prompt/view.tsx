@@ -11,6 +11,11 @@ import { Icons } from '@superscale/ui/icons';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import { useState } from 'react';
+import { generateHTML } from '@tiptap/html';
+import Turndown from 'turndown';
+import { getExtensions } from '../starterkit';
+
+const turndown = new Turndown();
 
 const iconMap = {
   'gpt-3.5-turbo': Icons.openAI,
@@ -25,7 +30,17 @@ export function PromptView({ node }: NodeViewProps) {
     api: '/api/completions',
   });
   const doCompletion = async () => {
-    complete(node.content.toString(), { body: { model } });
+    try {
+      const content = node.toJSON();
+      const html = generateHTML(
+        content,
+        getExtensions({ openLinkModal: () => undefined })
+      );
+      const md = turndown.turndown(html);
+      complete(md, { body: { model } });
+    } catch (error) {
+      console.error(error);
+    }
   };
   const reset = () => {
     setCompletion('');

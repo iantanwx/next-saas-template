@@ -445,6 +445,9 @@ importers:
       '@tiptap/extension-underline':
         specifier: ^2.4.0
         version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/html':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)(@tiptap/pm@2.4.0)
       '@tiptap/pm':
         specifier: ^2.4.0
         version: 2.4.0
@@ -487,6 +490,9 @@ importers:
       tippy:
         specifier: ^0.0.0
         version: 0.0.0
+      turndown:
+        specifier: ^7.2.0
+        version: 7.2.0
     devDependencies:
       '@superscale/tsconfig':
         specifier: workspace:^
@@ -500,6 +506,9 @@ importers:
       '@types/react-dom':
         specifier: 18.2.7
         version: 18.2.7
+      '@types/turndown':
+        specifier: ^5.0.4
+        version: 5.0.4
       tailwindcss:
         specifier: 3.3.3
         version: 3.3.3(ts-node@10.9.2)
@@ -3965,6 +3974,10 @@ packages:
       - supports-color
     dev: false
 
+  /@mixmark-io/domino@2.2.0:
+    resolution: {integrity: sha512-Y28PR25bHXUg88kCV7nivXrP2Nj2RueZ3/l/jdx6J9f8J4nsEGcgX0Qe6lt7Pa+J79+kPiJU3LguR6O/6zrLOw==}
+    dev: false
+
   /@next-auth/prisma-adapter@1.0.7(@prisma/client@5.15.0)(next-auth@4.24.7):
     resolution: {integrity: sha512-Cdko4KfcmKjsyHFrWwZ//lfLUbcLqlyFqjd/nYE2m3aZ7tjMNUjpks47iw7NTCnXf+5UWz5Ypyt1dSs1EP5QJw==}
     peerDependencies:
@@ -6997,6 +7010,17 @@ packages:
       '@tiptap/core': 2.4.0(@tiptap/pm@2.4.0)
     dev: false
 
+  /@tiptap/html@2.4.0(@tiptap/core@2.4.0)(@tiptap/pm@2.4.0):
+    resolution: {integrity: sha512-iM0sa6t0Hb5GTXnjdKvMDtD3KZgA4Mwx3QADeqfR10EjfPNlkh/BHU83oIhss/2JVRBXiUUDnNxW9cfpHX37/g==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.4.0(@tiptap/pm@2.4.0)
+      '@tiptap/pm': 2.4.0
+      zeed-dom: 0.10.11
+    dev: false
+
   /@tiptap/pm@2.4.0:
     resolution: {integrity: sha512-B1HMEqGS4MzIVXnpgRZDLm30mxDWj51LkBT/if1XD+hj5gm8B9Q0c84bhvODX6KIs+c6z+zsY9VkVu8w9Yfgxg==}
     dependencies:
@@ -7287,6 +7311,10 @@ packages:
     resolution: {integrity: sha512-odD/56S3B51liILSk5aXJlnYt99S6Rt9EFDDqGtJM26rKHApHcwyU/UoYHrzKkdkHMAIquGWCuHtQTbes+FRQw==}
     dependencies:
       '@types/node': 20.4.9
+    dev: true
+
+  /@types/turndown@5.0.4:
+    resolution: {integrity: sha512-28GI33lCCkU4SGH1GvjDhFgOVr+Tym4PXGBIU1buJUa6xQolniPArtUT+kv42RR2N9MsMLInkr904Aq+ESHBJg==}
     dev: true
 
   /@types/unist@2.0.10:
@@ -8794,7 +8822,6 @@ packages:
   /css-what@6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
     engines: {node: '>= 6'}
-    dev: true
 
   /cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -14971,6 +14998,12 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
+  /turndown@7.2.0:
+    resolution: {integrity: sha512-eCZGBN4nNNqM9Owkv9HAtWRYfLA4h909E/WGAWWBpmB275ehNhZyk87/Tpvjbp0jjNl9XwCsbe6bm6CqFsgD+A==}
+    dependencies:
+      '@mixmark-io/domino': 2.2.0
+    dev: false
+
   /typanion@3.14.0:
     resolution: {integrity: sha512-ZW/lVMRabETuYCd9O9ZvMhAh8GslSqaUjxmK/JLPCh6l73CvLBiuXswj/+7LdnWOgYsQ130FqLzFz5aGT4I3Ug==}
     dev: false
@@ -15712,6 +15745,13 @@ packages:
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  /zeed-dom@0.10.11:
+    resolution: {integrity: sha512-7ukbu6aQKx34OQ7PfUIxOuAhk2MvyZY/t4/IJsVzy76zuMzfhE74+Dbyp8SHiUJPTPkF0FflP1KVrGJ7gk9IHw==}
+    engines: {node: '>=14.13.1'}
+    dependencies:
+      css-what: 6.1.0
+    dev: false
 
   /zimmerframe@1.1.2:
     resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
