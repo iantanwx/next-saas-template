@@ -1,6 +1,7 @@
 import { getCurrentUser } from '@superscale/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { Editor } from '@superscale/editor';
+import { Form } from '@superscale/ui/atoms/form';
 
 export default async function Dashboard() {
   const user = await getCurrentUser();
@@ -21,6 +22,7 @@ export default async function Dashboard() {
     <main className="container flex min-h-screen flex-col items-center gap-4 p-24">
       <div className="flex w-full">{JSON.stringify(user, null, 2)}</div>
       <div className="flex h-full w-full flex-row rounded-md border-2 border-gray-200">
+        <Form></Form>
         <Editor />
       </div>
     </main>

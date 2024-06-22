@@ -1,6 +1,6 @@
 'use client';
 
-import { Icons } from '@/components/icons';
+import { Icons } from '~/components/icons';
 import cn from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';

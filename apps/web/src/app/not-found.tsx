@@ -1,4 +1,4 @@
-import { NotFoundLayout } from '@/components/layout/not-found';
+import { NotFoundLayout } from '~/components/layout/not-found';
 import Image from 'next/image';
 
 export default async function NotFound() {

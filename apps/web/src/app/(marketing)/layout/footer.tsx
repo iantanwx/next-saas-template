@@ -1,5 +1,5 @@
-import { Icons } from '@/components/util/icons';
-import { socials } from '@/config/socials';
+import { Icons } from '~/components/util/icons';
+import { socials } from '~/config/socials';
 import cn from 'classnames';
 import SocialIcon from './social-icon';
 import Link from 'next/link';

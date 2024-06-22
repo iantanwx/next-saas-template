@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardFooter } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { Button } from '~/components/ui/button';
+import { Card, CardFooter } from '~/components/ui/card';
+import { Progress } from '~/components/ui/progress';
 import { UserWithMemberships } from '@superscale/crud/types';
 import { useState } from 'react';
 import { Wizard, useWizard } from 'react-use-wizard';

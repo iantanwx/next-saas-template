@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { cn } from '@/lib/utils';
+import { cn } from '~/lib/utils';
 import { useLockBodyScroll } from '@uidotdev/usehooks';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';

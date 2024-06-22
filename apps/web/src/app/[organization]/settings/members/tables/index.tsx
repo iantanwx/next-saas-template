@@ -1,7 +1,7 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { Input } from '~/components/ui/input';
+import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
 import { UserWithMemberships, Organization } from '@superscale/crud/types';
 import {
   ColumnFiltersState,

@@ -1,4 +1,4 @@
-import { Icons, KnownIcon } from '@/components/util/icons';
+import { Icons, KnownIcon } from '~/components/util/icons';
 import cn from 'classnames';
 
 type Props = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '~/components/ui/button';
 import { ChevronLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 

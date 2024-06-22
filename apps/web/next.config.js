@@ -44,6 +44,7 @@ const nextConfig = {
     '@superscale/email',
     '@superscale/editor',
     '@superscale/ui',
+    '@superscale/twconfig',
   ],
 };
 

@@ -1,12 +1,15 @@
 'use client';
 
 import { EditorContent, useEditor } from '@tiptap/react';
+import { Provider } from 'jotai';
+import { LinkModal } from './extensions/link/modal';
 import { getExtensions } from './extensions/starterkit';
+import { store } from './store';
 import './styles/placeholder.css';
 
 export function Editor() {
   const editor = useEditor({
-    extensions: getExtensions({ openLinkModal: () => null }),
+    extensions: getExtensions(),
     editable: true,
     editorProps: {
       attributes: {
@@ -17,8 +20,9 @@ export function Editor() {
   });
 
   return (
-    <>
+    <Provider store={store}>
       <EditorContent className="h-full w-full flex-row" editor={editor} />
-    </>
+      <LinkModal editor={editor} />
+    </Provider>
   );
 }

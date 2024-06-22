@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '~/components/ui/dropdown-menu';
 import { UserWithMemberships } from '@superscale/crud/types';
 import { createClient } from '@superscale/lib/supabase/browser';
 import Link from 'next/link';

@@ -1,6 +1,6 @@
-import { Badge, badgeVariants } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Icons } from '@/components/util/icons';
+import { Badge, badgeVariants } from '~/components/ui/badge';
+import { Separator } from '~/components/ui/separator';
+import { Icons } from '~/components/util/icons';
 import { VariantProps } from 'class-variance-authority';
 import cn from 'classnames';
 

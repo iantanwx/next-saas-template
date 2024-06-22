@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/db';
-import { logger } from '@/lib/logger';
-import { shopify } from '@/lib/shopify';
+import { prisma } from '~/lib/db';
+import { logger } from '~/lib/logger';
+import { shopify } from '~/lib/shopify';
 import { IntegrationProvider } from '@prisma/client';
 import { WebhookValidationErrorReason } from '@shopify/shopify-api';
 

@@ -1,17 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "React Library",
-  "extends": "@superscale/tsconfig/base.tsconfig.json",
+  "extends": "@superscale/tsconfig/lib.tsconfig.json",
   "compilerOptions": {
-    "alwaysStrict": true,
-    "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noEmit": true,
-    "declaration": false,
-    "declarationMap": false,
-    "resolveJsonModule": true
+    "allowJs": true,
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "./tailwind.config.ts"]
+  "include": ["./**/*.ts", "./**/*.tsx", "tailwind.config.ts"],
+  "exclude": ["dist", "build", "node_modules"]
 }

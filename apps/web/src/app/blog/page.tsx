@@ -1,5 +1,5 @@
 import { allPosts } from '../../../.contentlayer/generated';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '~/components/ui/separator';
 import { format, parseISO } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';

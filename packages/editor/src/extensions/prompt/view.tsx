@@ -33,10 +33,7 @@ export function PromptView({ editor, getPos, node }: NodeViewProps) {
   const doCompletion = async () => {
     try {
       const content = node.toJSON();
-      const html = generateHTML(
-        content,
-        getExtensions({ openLinkModal: () => undefined })
-      );
+      const html = generateHTML(content, getExtensions());
       const md = turndown.turndown(html);
       complete(md, { body: { model } });
     } catch (error) {

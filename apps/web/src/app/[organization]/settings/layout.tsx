@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
-import { SideNav } from '@/components/nav/side-nav';
-import { dashboardConfig } from '@/config/dashboard';
+import { SideNav } from '~/components/nav/side-nav';
+import { dashboardConfig } from '~/config/dashboard';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
   return (

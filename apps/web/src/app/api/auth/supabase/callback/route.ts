@@ -1,4 +1,4 @@
-import { logger } from '@/lib/logger';
+import { logger } from '~/lib/logger';
 import { EmailOtpType } from '@superscale/lib/supabase';
 import { createClient } from '@superscale/lib/supabase/server';
 import { cookies } from 'next/headers';

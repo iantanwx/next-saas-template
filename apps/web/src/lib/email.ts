@@ -1,5 +1,5 @@
-import { InvitationEmail } from '@/emails/invitation';
-import { MagicLinkEmail } from '@/emails/magic-link';
+import { InvitationEmail } from '~/emails/invitation';
+import { MagicLinkEmail } from '~/emails/magic-link';
 import { Resend } from 'resend';
 import { baseUrl } from './utils';
 

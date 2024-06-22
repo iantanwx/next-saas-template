@@ -3,12 +3,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "allowJs": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    // "paths": {
+    //   "#/*": ["./src/*"]
+    // }
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "tailwind.config.mts"],
+  "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
 }

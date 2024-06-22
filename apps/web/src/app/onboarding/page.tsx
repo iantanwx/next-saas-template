@@ -1,5 +1,5 @@
-import { Back } from '@/components/layout/back';
-import { WorkspaceNav } from '@/components/nav/workspace-nav';
+import { Back } from '~/components/layout/back';
+import { WorkspaceNav } from '~/components/nav/workspace-nav';
 import { getCurrentSession } from '@superscale/lib/auth';
 
 import Image from 'next/image';

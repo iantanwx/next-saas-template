@@ -3,15 +3,15 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '~/components/ui/card';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '~/components/ui/form';
+import { Input } from '~/components/ui/input';
 import { UserWithMemberships } from '@superscale/crud/types';
 import { t } from '@superscale/trpc/client';
 import { zodResolver } from '@hookform/resolvers/zod';

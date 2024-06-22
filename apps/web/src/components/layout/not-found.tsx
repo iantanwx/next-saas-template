@@ -1,4 +1,4 @@
-import { WorkspaceNav } from '@/components/nav/workspace-nav';
+import { WorkspaceNav } from '~/components/nav/workspace-nav';
 import { getCurrentUser } from '@superscale/lib/auth/session';
 import { PropsWithChildren } from 'react';
 import { Back } from './back';

@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { Icons } from '@/components/util/icons';
-import { Social } from '@/config/socials';
+import { Button } from '~/components/ui/button';
+import { Icons } from '~/components/util/icons';
+import { Social } from '~/config/socials';
 import Link from 'next/link';
 
 type Props = {

@@ -23,15 +23,14 @@ import { DBlock } from '../draggable';
 import { Paragraph } from '../paragraph';
 import { Prompt } from '../prompt';
 import { SlashMenuExtension, suggestions } from '../slashmenu';
+import { Link } from '../link';
 // import { TrailingNode } from './trailingNode';
 
 interface GetExtensionsProps {
   openLinkModal: () => void;
 }
 
-export const getExtensions = ({
-  openLinkModal,
-}: GetExtensionsProps): AnyExtension[] => {
+export const getExtensions = (): AnyExtension[] => {
   return [
     Document,
     DBlock,
@@ -50,14 +49,12 @@ export const getExtensions = ({
     Bold,
     Italic,
     Underline,
-    // Link.configure({
-    //   autolink: true,
-    //   linkOnPaste: true,
-    //   protocols: ['mailto'],
-    //   openOnClick: false,
-    //   onModKPressed: openLinkModal,
-    // }),
-
+    Link.configure({
+      autolink: true,
+      linkOnPaste: true,
+      protocols: ['mailto'],
+      openOnClick: false,
+    }),
     Heading.configure({
       levels: [1, 2, 3],
     }),

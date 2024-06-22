@@ -4,6 +4,13 @@
   "description": "Shared UI components",
   "type": "module",
   "main": "./src/index.ts",
+  "imports": {
+    "#*": "./src/*",
+    "#icons": "./src/icons.tsx",
+    "#lib/*": "./src/lib/*.ts",
+    "#atoms/*": "./src/atoms/*.tsx",
+    "#styles/*": "./src/styles/*.css"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./icons": "./src/icons.tsx",
@@ -11,7 +18,9 @@
     "./styles/*": "./src/styles/*.css",
     "./lib/*": "./src/lib/*.ts"
   },
-  "scripts": {},
+  "scripts": {
+    "shadcn": "pnpm dlx shadcn-ui@latest"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -22,9 +31,12 @@
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "typescript": "5.5.2"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.1",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
@@ -33,7 +45,9 @@
     "lucide-react": "^0.263.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.46.1",
     "tailwind-merge": "^1.14.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
   }
 }

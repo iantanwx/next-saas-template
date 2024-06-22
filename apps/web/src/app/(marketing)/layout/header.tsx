@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { marketingPagesConfig } from '@/config/pages';
-import { Button } from '@/components/ui/button';
+import { marketingPagesConfig } from '~/config/pages';
+import { Button } from '~/components/ui/button';
 import { usePathname } from 'next/navigation';
 import cn from 'classnames';
-import { Icons } from '@/components/util/icons';
+import { Icons } from '~/components/util/icons';
 
 interface Props {
   className?: string;

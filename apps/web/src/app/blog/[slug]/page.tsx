@@ -1,5 +1,5 @@
-import { Image } from '@/components/ui/image';
-import { siteConfig } from '@/config/site';
+import { Image } from '~/components/ui/image';
+import { siteConfig } from '~/config/site';
 import {
   allAuthors,
   allPosts,
