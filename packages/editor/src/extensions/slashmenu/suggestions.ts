@@ -26,20 +26,23 @@ const SlashMenuItems: SlashMenuItem[] = [
   {
     title: 'Prompt',
     icon: Icons.bot,
-    command: ({ editor }) => {
+    command: ({ editor, range }) => {
       const {
         selection: { $head },
       } = editor.state;
       const parent = $head.node($head.depth - 1);
       const from = $head.before($head.depth - 1);
+      const to = from + parent.nodeSize;
       editor
         .chain()
         .focus()
-        .deleteRange({ from, to: from + parent.nodeSize })
-        .insertContentAt(from, {
+        // we need to insert then delete, because the `Doc` node requires at least one dBlock
+        // if we delete then insert, prosemirror/tiptap forcibly adds a dBlock at the end
+        .insertContentAt(to, {
           type: 'prompt',
           content: [{ type: 'paragraph' }],
         })
+        .deleteRange({ from, to })
         .run();
     },
   },

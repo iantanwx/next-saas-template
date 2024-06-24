@@ -74,7 +74,7 @@ export const Prompt = Node.create({
             return true;
           })
           .insertContentAt(
-            { from: $from.pos - offset, to: nextNodeTo },
+            { from: $from.pos - offset, to: nextNodeTo - offset },
             {
               type: 'dBlock',
               content,
