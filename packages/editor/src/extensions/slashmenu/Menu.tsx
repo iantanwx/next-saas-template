@@ -64,21 +64,21 @@ export function SlashMenu({ items, command, event }: Props) {
   };
 
   return (
-    <ScrollArea className="relative w-48 rounded-md border bg-white">
+    <ScrollArea className="relative w-56 rounded-md border bg-white">
       {items.length ? (
         <>
           {items.map((item, index) => {
             return (
               <article
                 className={cn(
-                  'flex w-full gap-2 rounded-md p-2',
+                  'flex-row flex w-full gap-2 rounded-md p-2 justify-between',
                   index === selectedIndex && 'bg-gray-100'
                 )}
                 key={index}
                 onClick={() => selectItem(index)}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
-                <span className="flex w-full flex-row items-center">
+                <span className="flex flex-row items-center">
                   <item.icon className="mr-2" />
                   <span
                     dangerouslySetInnerHTML={{
@@ -86,7 +86,7 @@ export function SlashMenu({ items, command, event }: Props) {
                     }}
                   />
                 </span>
-                {item.shortcut && <code>{item.shortcut}</code>}
+                {item.shortcut && <code className='flex'>{item.shortcut}</code>}
               </article>
             );
           })}
