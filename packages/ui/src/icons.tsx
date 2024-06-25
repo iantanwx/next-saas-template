@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Command,
   CreditCard,
+  ExternalLink,
   File,
   FileText,
   Heading1,
@@ -111,4 +112,5 @@ export const Icons = {
   check: Check,
   bold: Bold,
   unlink: Unlink,
+  externalLink: ExternalLink,
 };

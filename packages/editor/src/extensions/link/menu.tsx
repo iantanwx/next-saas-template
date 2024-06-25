@@ -5,12 +5,12 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@superscale/ui/atoms/form';
 import { Input } from '@superscale/ui/atoms/input';
 import { Icons } from '@superscale/ui/icons';
 import { BubbleMenu, BubbleMenuProps } from '@tiptap/react';
+import { link } from 'fs';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -24,14 +24,12 @@ export function LinkBubbleMenu({ editor }: LinkBubbleMenuProps) {
     return editor.isActive('link');
   };
 
-  const isLink = editor?.isActive('link');
-
   const schema = z.object({
     link: z.string(),
     url: z.string().url(),
   });
 
-  const linkAttributes = editor?.getAttributes('link');
+  const linkAttributes = editor?.getAttributes('link') ?? {};
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -50,8 +48,8 @@ export function LinkBubbleMenu({ editor }: LinkBubbleMenuProps) {
 
   return (
     <BubbleMenu editor={editor} shouldShow={shouldShow}>
-      {isLink && (
-        <div className="border-input bg-background rounded-sm border p-2">
+      <div className="border-input bg-background flex flex-row items-start gap-2 rounded-sm border p-2">
+        <div>
           <Form {...form}>
             <form onChange={form.handleSubmit(submit)}>
               <FormField
@@ -59,7 +57,6 @@ export function LinkBubbleMenu({ editor }: LinkBubbleMenuProps) {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>URL</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -76,17 +73,30 @@ export function LinkBubbleMenu({ editor }: LinkBubbleMenuProps) {
               />
             </form>
           </Form>
+        </div>
+        <div className="flex flex-row items-center gap-1">
           <Button
             className="gap-2"
             onClick={unlink}
             type="button"
             variant="ghost"
+            size="icon"
           >
-            <span>Unlink</span>
             <Icons.unlink className="h-4 w-4" />
           </Button>
+          <Button
+            className="gap-2"
+            asChild
+            type="button"
+            variant="ghost"
+            size="icon"
+          >
+            <a {...linkAttributes}>
+              <Icons.externalLink className="h-4 w-4" />
+            </a>
+          </Button>
         </div>
-      )}
+      </div>
     </BubbleMenu>
   );
 }

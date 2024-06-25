@@ -53,7 +53,6 @@ export function LinkModal({ editor }: LinkModalProps) {
       .extendMarkRange('link')
       .setLink({ href: data.link })
       .run();
-    // editor.commands.extendMarkRange('link').setLink({ href: data.link });
     onOpenChange(false);
   };
 
