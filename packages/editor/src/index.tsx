@@ -22,9 +22,11 @@ export function Editor() {
 
   return (
     <Provider store={store}>
-      <EditorContent className="h-full w-full flex-row" editor={editor} />
-      <LinkModal editor={editor} />
-      <LinkBubbleMenu editor={editor} />
+      <TooltipProvider>
+        <EditorContent className="h-full w-full flex-row" editor={editor} />
+        <LinkModal editor={editor} />
+        <LinkBubbleMenu editor={editor} />
+      </TooltipProvider>
     </Provider>
   );
 }
