@@ -1,19 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@superscale/ui/atoms/button';
 import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@superscale/ui/atoms/dialog';
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@superscale/ui/atoms/form';
 import { Input } from '@superscale/ui/atoms/input';
 import { Editor } from '@tiptap/react';
@@ -47,7 +47,13 @@ export function LinkModal({ editor }: LinkModalProps) {
   };
   const submit = (data: z.infer<typeof schema>) => {
     if (!editor) return;
-    editor.commands.setLink({ href: data.link });
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .setLink({ href: data.link })
+      .run();
+    // editor.commands.extendMarkRange('link').setLink({ href: data.link });
     onOpenChange(false);
   };
 
@@ -68,7 +74,7 @@ export function LinkModal({ editor }: LinkModalProps) {
                   <FormControl>
                     <Input placeholder="https://superscale.app" {...field} />
                   </FormControl>
-									<FormMessage />
+                  <FormMessage />
                 </FormItem>
               )}
             />

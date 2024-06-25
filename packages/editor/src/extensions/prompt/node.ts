@@ -6,7 +6,7 @@ import { PromptView } from './view';
 export const Prompt = Node.create({
   name: 'prompt',
   group: 'dBlock',
-  content: 'block+',
+  content: '(block|list)+',
   draggable: true,
   selectable: false,
   inline: false,

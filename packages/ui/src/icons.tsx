@@ -2,6 +2,7 @@ import {
   AlertTriangle,
   ArrowRight,
   Bot,
+  Bold,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -37,6 +38,7 @@ import {
   Quote,
   Code,
   type LucideIcon,
+  Unlink,
 } from 'lucide-react';
 
 import OpenAI from './assets/oai.svg';
@@ -107,4 +109,6 @@ export const Icons = {
   mistral: ({ ...props }: LucideProps) => <Mistral {...props} />,
   twitter: Twitter,
   check: Check,
+  bold: Bold,
+  unlink: Unlink,
 };

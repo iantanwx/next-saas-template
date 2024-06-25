@@ -3,9 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "allowJs": true,
-    // "paths": {
-    //   "#/*": ["./src/*"]
-    // }
+    "paths": {
+      "#*": ["./src/*"]
+    }
   },
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"]

@@ -1,8 +1,9 @@
 'use client';
 
+import { TooltipProvider } from '@superscale/ui/atoms/tooltip';
 import { EditorContent, useEditor } from '@tiptap/react';
 import { Provider } from 'jotai';
-import { LinkModal } from './extensions/link/modal';
+import { LinkBubbleMenu, LinkModal } from './extensions/link';
 import { getExtensions } from './extensions/starterkit';
 import { store } from './store';
 import './styles/placeholder.css';
@@ -23,6 +24,7 @@ export function Editor() {
     <Provider store={store}>
       <EditorContent className="h-full w-full flex-row" editor={editor} />
       <LinkModal editor={editor} />
+      <LinkBubbleMenu editor={editor} />
     </Provider>
   );
 }

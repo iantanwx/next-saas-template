@@ -3,6 +3,7 @@ import { atom } from 'jotai';
 import { store } from '../../store';
 
 export const Link = _Link.extend({
+  exitable: true,
   addKeyboardShortcuts() {
     return {
       'Mod-k': ({ editor }) => {

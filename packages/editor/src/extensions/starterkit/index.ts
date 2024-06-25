@@ -24,7 +24,7 @@ import { Paragraph } from '../paragraph';
 import { Prompt } from '../prompt';
 import { SlashMenuExtension, suggestions } from '../slashmenu';
 import { Link } from '../link';
-// import { TrailingNode } from './trailingNode';
+import BubbleMenu, { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu';
 
 interface GetExtensionsProps {
   openLinkModal: () => void;
