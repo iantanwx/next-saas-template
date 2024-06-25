@@ -6,7 +6,6 @@ import {
   FormField,
   FormItem,
   FormMessage,
-  useFormField,
 } from '@superscale/ui/atoms/form';
 import { Input } from '@superscale/ui/atoms/input';
 import {
@@ -16,6 +15,7 @@ import {
 } from '@superscale/ui/atoms/tooltip';
 import { Icons } from '@superscale/ui/icons';
 import { BubbleMenu, BubbleMenuProps } from '@tiptap/react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -46,6 +46,9 @@ export function LinkBubbleMenu({ editor }: LinkBubbleMenuProps) {
     editor?.chain().focus().extendMarkRange('link').unsetLink().run();
 
   const isLink = editor?.isActive('link');
+  useEffect(() => {
+    if (!isLink) form.reset();
+  }, [isLink]);
   const { formState, getFieldState } = form;
   const { error, isDirty } = getFieldState('url', formState);
 
@@ -65,7 +68,7 @@ export function LinkBubbleMenu({ editor }: LinkBubbleMenuProps) {
                         <Input
                           {...field}
                           value={
-                            field.value?.length > 0 || isDirty
+                            field.value?.length > 0 || isDirty || !isLink
                               ? field.value
                               : linkAttributes?.href
                           }
