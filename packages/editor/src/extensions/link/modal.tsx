@@ -21,7 +21,7 @@ import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { store } from '../../store';
-import { modalOpenAtom } from './node';
+import { linkModalOpenAtom } from './node';
 
 export type LinkModalProps = {
   editor: Editor | null;
@@ -32,7 +32,7 @@ const schema = z.object({
 });
 
 export function LinkModal({ editor }: LinkModalProps) {
-  const open = useAtomValue(modalOpenAtom);
+  const open = useAtomValue(linkModalOpenAtom);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -41,7 +41,7 @@ export function LinkModal({ editor }: LinkModalProps) {
   });
   const onOpenChange = (open: boolean) => {
     if (!open) {
-      store.set(modalOpenAtom, open);
+      store.set(linkModalOpenAtom, open);
       form.reset();
     }
   };

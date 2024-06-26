@@ -4,11 +4,11 @@ import Bold from '@tiptap/extension-bold';
 import BulletList from '@tiptap/extension-bullet-list';
 import Codeblock from '@tiptap/extension-code-block';
 import DropCursor from '@tiptap/extension-dropcursor';
+import Focus from '@tiptap/extension-focus';
 import GapCursor from '@tiptap/extension-gapcursor';
 import Italic from '@tiptap/extension-italic';
 import ListItem from '@tiptap/extension-list-item';
 import OrderedList from '@tiptap/extension-ordered-list';
-import Focus from '@tiptap/extension-focus';
 import Placeholder from '@tiptap/extension-placeholder';
 import TaskItem from '@tiptap/extension-task-item';
 import TaskList from '@tiptap/extension-task-list';
@@ -18,13 +18,13 @@ import Underline from '@tiptap/extension-underline';
 import HardBreak from '@tiptap/extension-hard-break';
 import Heading from '@tiptap/extension-heading';
 
+import Code from '@tiptap/extension-code';
 import { Document } from '../doc';
 import { DBlock } from '../draggable';
+import { Link } from '../link';
 import { Paragraph } from '../paragraph';
 import { Prompt } from '../prompt';
 import { SlashMenuExtension, suggestions } from '../slashmenu';
-import { Link } from '../link';
-import BubbleMenu, { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu';
 
 interface GetExtensionsProps {
   openLinkModal: () => void;
@@ -47,6 +47,7 @@ export const getExtensions = (): AnyExtension[] => {
 
     // marks
     Bold,
+    Code,
     Italic,
     Underline,
     Link.configure({

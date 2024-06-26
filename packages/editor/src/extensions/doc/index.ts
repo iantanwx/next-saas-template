@@ -5,5 +5,5 @@ export const Document = Node.create({
 
   topNode: true,
 
-  content: 'dBlock+',
+  content: '(dBlock|prompt)+',
 });

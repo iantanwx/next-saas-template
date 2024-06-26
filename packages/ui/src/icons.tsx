@@ -1,23 +1,30 @@
 import {
   AlertTriangle,
   ArrowRight,
-  Bot,
   Bold,
+  Bot,
   Check,
   ChevronLeft,
   ChevronRight,
+  Code,
   Command,
   CreditCard,
   ExternalLink,
   File,
   FileText,
+  GripVertical,
   Heading1,
   Heading2,
   Heading3,
   HelpCircle,
   Home,
   Image,
+  Italic,
   Laptop,
+  Link2,
+  List,
+  ListChecks,
+  ListOrdered,
   Loader2,
   LucideProps,
   Moon,
@@ -25,30 +32,28 @@ import {
   Pizza,
   Play,
   Plus,
+  Quote,
+  RotateCcw,
   Settings,
   SunMedium,
-  RotateCcw,
   Trash,
   Twitter,
+  Underline,
+  Unlink,
   User,
   X,
-  GripVertical,
-  ListOrdered,
-  List,
-  ListChecks,
-  Quote,
-  Code,
   type LucideIcon,
-  Unlink,
 } from 'lucide-react';
 
-import OpenAI from './assets/oai.svg';
 import Anthropic from './assets/anthropic.svg';
 import HuggingFace from './assets/hf.svg';
 import Meta from './assets/meta.svg';
 import Mistral from './assets/mistral.svg';
+import OpenAI from './assets/oai.svg';
 
 export type Icon = LucideIcon;
+
+export type IconProps = LucideProps;
 
 export const Icons = {
   bot: Bot,
@@ -113,4 +118,7 @@ export const Icons = {
   bold: Bold,
   unlink: Unlink,
   externalLink: ExternalLink,
+  link: Link2,
+  italic: Italic,
+  underline: Underline,
 };

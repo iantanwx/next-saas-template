@@ -9,11 +9,11 @@ export const Link = _Link.extend({
       'Mod-k': ({ editor }) => {
         const { selection } = editor.state;
         if (selection.empty) return false;
-        store.set(modalOpenAtom, true);
+        store.set(linkModalOpenAtom, true);
         return true;
       },
     };
   },
 });
 
-export const modalOpenAtom = atom(false);
+export const linkModalOpenAtom = atom(false);

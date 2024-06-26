@@ -7,6 +7,7 @@ import { LinkBubbleMenu, LinkModal } from './extensions/link';
 import { getExtensions } from './extensions/starterkit';
 import { store } from './store';
 import './styles/placeholder.css';
+import { BubbleMenu } from './extensions/bubble-menu';
 
 export function Editor() {
   const editor = useEditor({
@@ -26,6 +27,7 @@ export function Editor() {
         <EditorContent className="h-full w-full flex-row" editor={editor} />
         <LinkModal editor={editor} />
         <LinkBubbleMenu editor={editor} />
+        <BubbleMenu editor={editor} />
       </TooltipProvider>
     </Provider>
   );

@@ -1,3 +1,3 @@
 export { LinkModal } from './modal';
 export { LinkBubbleMenu } from './menu';
-export { Link, modalOpenAtom } from './node';
+export { Link, linkModalOpenAtom } from './node';
