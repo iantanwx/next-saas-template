@@ -1,0 +1,44 @@
+/* List styles */
+ul,
+ol {
+  padding: 0 1rem;
+  margin: 1.25rem 1rem 1.25rem 0.4rem;
+}
+
+ul li p,
+ol li p {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+/* Task list specific styles */
+ul[data-type='taskList'] {
+  list-style: none;
+  margin-left: 0;
+  padding: 0;
+}
+
+ul[data-type='taskList'] li {
+  align-items: flex-start;
+  display: flex;
+}
+
+ul[data-type='taskList'] li > label {
+  padding-top: 0.5rem;
+  align-self: stretch;
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+
+ul[data-type='taskList'] li > div {
+  flex: 1 1 auto;
+}
+
+ul[data-type='taskList'] input[type='checkbox'] {
+  cursor: pointer;
+}
+
+ul[data-type='taskList'] ul[data-type='taskList'] {
+  margin: 0;
+}

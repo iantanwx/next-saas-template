@@ -6,8 +6,9 @@ import { Provider } from 'jotai';
 import { LinkBubbleMenu, LinkModal } from './extensions/link';
 import { getExtensions } from './extensions/starterkit';
 import { store } from './store';
-import './styles/placeholder.css';
 import { BubbleMenu } from './extensions/bubble-menu';
+import './styles/placeholder.css';
+import './styles/list.css';
 
 export function Editor() {
   const editor = useEditor({

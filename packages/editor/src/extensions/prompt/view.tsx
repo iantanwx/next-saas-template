@@ -109,8 +109,12 @@ export function PromptView({ editor, getPos, node }: NodeViewProps) {
           </div>
         </div>
         <NodeViewContent className="prompt-input border-input my-2 rounded-md border p-2" />
-        <Icon className="h-4 w-4" />
-        {completion && <div>{completion}</div>}
+        {completion && (
+          <div className="flex flex-row items-start gap-2">
+            <Icon className="h-4 w-4" />
+            <div>{completion}</div>
+          </div>
+        )}
       </div>
     </NodeViewWrapper>
   );
