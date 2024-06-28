@@ -1,25 +1,6 @@
 import { useCompletion } from '@ai-sdk/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@superscale/ui/atoms/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@superscale/ui/atoms/select';
-import { Icons } from '@superscale/ui/icons';
-import { NodeViewProps } from '@tiptap/core';
-import { generateHTML } from '@tiptap/html';
-import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import Turndown from 'turndown';
-import { getExtensions } from '../starterkit';
-import './styles.css';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@superscale/ui/atoms/tooltip';
 import {
   Form,
   FormControl,
@@ -27,10 +8,29 @@ import {
   FormItem,
   FormMessage,
 } from '@superscale/ui/atoms/form';
-import { useForm } from 'react-hook-form';
 import { Input } from '@superscale/ui/atoms/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@superscale/ui/atoms/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@superscale/ui/atoms/tooltip';
+import { Icons } from '@superscale/ui/icons';
+import { NodeViewProps } from '@tiptap/core';
+import { generateHTML } from '@tiptap/html';
+import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import Turndown from 'turndown';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { getExtensions } from '../starterkit';
+import './styles.css';
 
 const turndown = new Turndown();
 
@@ -81,11 +81,16 @@ export function PromptView({
   };
 
   const [isEditingId, setIsEditingId] = useState(false);
+  const labelRef = useRef<HTMLSpanElement>(null);
   const onClickLabel = (e: React.MouseEvent<HTMLSpanElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
     setIsEditingId(true);
   };
+  const onMousedownLabel = (e: React.MouseEvent<HTMLSpanElement>) => {
+    if (labelRef.current && labelRef.current.contains(e.target as Node)) {
+      e.preventDefault();
+    }
+  };
+
   const inputRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
     if (inputRef.current && isEditingId) {
@@ -129,7 +134,10 @@ export function PromptView({
   });
 
   return (
-    <NodeViewWrapper className="group relative flex w-full flex-row gap-2">
+    <NodeViewWrapper
+      className="group relative flex w-full flex-row gap-2"
+      onMouseDown={onMousedownLabel}
+    >
       <section
         className="mt-2 flex flex-row gap-1 pt-[2px]"
         aria-label="left-menu"
@@ -182,6 +190,7 @@ export function PromptView({
                 </Form>
               ) : (
                 <span
+                  ref={labelRef}
                   onClick={onClickLabel}
                   className="cursor-pointer text-center align-middle"
                 >
@@ -189,14 +198,15 @@ export function PromptView({
                 </span>
               )}
               <TooltipTrigger>
-                <Icons.help className="h-4 w-4" />
+                <Icons.help className="text-muted-foreground h-4 w-4" />
               </TooltipTrigger>
             </div>
             <TooltipContent side="right">
               <div>
-                <span>
-                  This is the prompt's unique identifier. You can reference it
-                  from other prompts by typing <code>@</code>.
+                <span className="text-muted-foreground">
+                  This is the prompt's unique identifier.
+                  <br />
+                  Reference it from other prompts by using <code>@</code>.
                 </span>
               </div>
             </TooltipContent>
@@ -228,8 +238,10 @@ export function PromptView({
         </div>
         <NodeViewContent className="prompt-input border-input my-2 rounded-md border p-2" />
         {completion && (
-          <div className="flex flex-row items-start gap-2">
-            <Icon className="h-4 w-4" />
+          <div className="mt-4 flex flex-row items-start gap-2">
+            <div className="flex items-start ">
+              <Icon className="h-4 w-4" />
+            </div>
             <div>{completion}</div>
           </div>
         )}
