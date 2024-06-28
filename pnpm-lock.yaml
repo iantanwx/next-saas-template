@@ -100,10 +100,10 @@ importers:
         version: 2.0.1
       svelte-check:
         specifier: ^3.6.9
-        version: 3.6.9(@babel/core@7.24.4)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123)
+        version: 3.6.9(@babel/core@7.24.5)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123)
       tailwindcss:
         specifier: 3.3.3
-        version: 3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+        version: 3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2)))
@@ -160,7 +160,7 @@ importers:
         version: 1.1.5(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@sentry/nextjs':
         specifier: ^7.64.0
-        version: 7.110.1(encoding@0.1.13)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.91.0(@swc/core@1.3.101)(esbuild@0.21.5))
+        version: 7.110.1(encoding@0.1.13)(next@14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.91.0(@swc/core@1.3.101)(esbuild@0.21.5))
       '@superscale/convex':
         specifier: workspace:^
         version: link:../../packages/convex
@@ -241,13 +241,13 @@ importers:
         version: 5.0.7
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.5)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-axiom:
         specifier: ^1.0.0-rc.1
-        version: 1.1.1(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+        version: 1.1.1(next@14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       next-contentlayer:
         specifier: ^0.3.4
-        version: 0.3.4(contentlayer@0.3.4(esbuild@0.21.5))(esbuild@0.21.5)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.3.4(contentlayer@0.3.4(esbuild@0.21.5))(esbuild@0.21.5)(next@14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: ^6.9.4
         version: 6.9.13
@@ -335,7 +335,7 @@ importers:
         version: 2.0.1
       tailwindcss:
         specifier: 3.3.3
-        version: 3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+        version: 3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2)))
@@ -391,6 +391,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.1
         version: 3.3.4(react-hook-form@7.51.3(react@18.2.0))
+      '@superscale/lib':
+        specifier: workspace:^
+        version: link:../lib
       '@superscale/ui':
         specifier: workspace:^
         version: link:../ui
@@ -541,7 +544,7 @@ importers:
         version: 10.0.0
       tailwindcss:
         specifier: 3.3.3
-        version: 3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+        version: 3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
       typescript:
         specifier: 5.5.2
         version: 5.5.2
@@ -752,7 +755,7 @@ importers:
         version: 18.2.7
       tailwindcss:
         specifier: 3.3.3
-        version: 3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+        version: 3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
       typescript:
         specifier: 5.5.2
         version: 5.5.2
@@ -12252,7 +12255,7 @@ snapshots:
       '@sentry/utils': 7.110.1
       localforage: 1.10.0
 
-  '@sentry/nextjs@7.110.1(encoding@0.1.13)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.91.0(@swc/core@1.3.101)(esbuild@0.21.5))':
+  '@sentry/nextjs@7.110.1(encoding@0.1.13)(next@14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.91.0(@swc/core@1.3.101)(esbuild@0.21.5))':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
       '@sentry/core': 7.110.1
@@ -12264,7 +12267,7 @@ snapshots:
       '@sentry/vercel-edge': 7.110.1
       '@sentry/webpack-plugin': 1.21.0(encoding@0.1.13)
       chalk: 3.0.0
-      next: 14.2.3(@babel/core@7.24.5)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -12549,7 +12552,7 @@ snapshots:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+      tailwindcss: 3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
 
   '@tailwindcss/typography@0.5.12(tailwindcss@3.3.3(ts-node@10.9.2))':
     dependencies:
@@ -14342,8 +14345,8 @@ snapshots:
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.5.2)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.2))(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.1(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
@@ -14370,13 +14373,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.2))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -14387,18 +14390,18 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.5.2)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.2))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -14408,7 +14411,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -14419,7 +14422,7 @@ snapshots:
       semver: 6.3.1
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.5.2)
+      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -14475,7 +14478,7 @@ snapshots:
     dependencies:
       fast-glob: 3.3.2
       postcss: 8.4.27
-      tailwindcss: 3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+      tailwindcss: 3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
 
   eslint-plugin-turbo@1.10.12(eslint@8.57.0):
     dependencies:
@@ -16223,19 +16226,19 @@ snapshots:
     optionalDependencies:
       nodemailer: 6.9.13
 
-  next-axiom@1.1.1(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
+  next-axiom@1.1.1(next@14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
     dependencies:
-      next: 14.2.3(@babel/core@7.24.5)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       remeda: 1.60.0
       whatwg-fetch: 3.6.20
 
-  next-contentlayer@0.3.4(contentlayer@0.3.4(esbuild@0.21.5))(esbuild@0.21.5)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-contentlayer@0.3.4(contentlayer@0.3.4(esbuild@0.21.5))(esbuild@0.21.5)(next@14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@contentlayer/core': 0.3.4(esbuild@0.21.5)
       '@contentlayer/utils': 0.3.4
       contentlayer: 0.3.4(esbuild@0.21.5)
-      next: 14.2.3(@babel/core@7.24.5)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -16243,6 +16246,32 @@ snapshots:
       - esbuild
       - markdown-wasm
       - supports-color
+
+  next@14.2.3(@babel/core@7.24.4)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@next/env': 14.2.3
+      '@swc/helpers': 0.5.5
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001636
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.24.4)(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.2.3
+      '@next/swc-darwin-x64': 14.2.3
+      '@next/swc-linux-arm64-gnu': 14.2.3
+      '@next/swc-linux-arm64-musl': 14.2.3
+      '@next/swc-linux-x64-gnu': 14.2.3
+      '@next/swc-linux-x64-musl': 14.2.3
+      '@next/swc-win32-arm64-msvc': 14.2.3
+      '@next/swc-win32-ia32-msvc': 14.2.3
+      '@next/swc-win32-x64-msvc': 14.2.3
+      '@opentelemetry/api': 1.8.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
 
   next@14.2.3(@babel/core@7.24.5)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
@@ -16587,7 +16616,7 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.27
 
-  postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)):
+  postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2)):
     dependencies:
       lilconfig: 3.1.1
       yaml: 2.4.1
@@ -17580,6 +17609,13 @@ snapshots:
     dependencies:
       inline-style-parser: 0.1.1
 
+  styled-jsx@5.1.1(@babel/core@7.24.4)(react@18.2.0):
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+    optionalDependencies:
+      '@babel/core': 7.24.4
+
   styled-jsx@5.1.1(@babel/core@7.24.5)(react@18.2.0):
     dependencies:
       client-only: 0.0.1
@@ -17624,7 +17660,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@3.6.9(@babel/core@7.24.4)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123):
+  svelte-check@3.6.9(@babel/core@7.24.5)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 3.6.0
@@ -17633,7 +17669,7 @@ snapshots:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 5.0.0-next.123
-      svelte-preprocess: 5.1.4(@babel/core@7.24.4)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123)(typescript@5.5.2)
+      svelte-preprocess: 5.1.4(@babel/core@7.24.5)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123)(typescript@5.5.2)
       typescript: 5.5.2
     transitivePeerDependencies:
       - '@babel/core'
@@ -17650,7 +17686,7 @@ snapshots:
     dependencies:
       svelte: 5.0.0-next.123
 
-  svelte-preprocess@5.1.4(@babel/core@7.24.4)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123)(typescript@5.5.2):
+  svelte-preprocess@5.1.4(@babel/core@7.24.5)(postcss-load-config@4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)))(postcss@8.4.27)(svelte@5.0.0-next.123)(typescript@5.5.2):
     dependencies:
       '@types/pug': 2.0.10
       detect-indent: 6.1.0
@@ -17659,9 +17695,9 @@ snapshots:
       strip-indent: 3.0.0
       svelte: 5.0.0-next.123
     optionalDependencies:
-      '@babel/core': 7.24.4
+      '@babel/core': 7.24.5
       postcss: 8.4.27
-      postcss-load-config: 4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+      postcss-load-config: 4.0.2(postcss@8.4.27)(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
       typescript: 5.5.2
 
   svelte@5.0.0-next.123:
@@ -17715,13 +17751,13 @@ snapshots:
 
   tailwindcss-animate@1.0.7(tailwindcss@3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))):
     dependencies:
-      tailwindcss: 3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+      tailwindcss: 3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
 
   tailwindcss-animate@1.0.7(tailwindcss@3.3.3(ts-node@10.9.2)):
     dependencies:
       tailwindcss: 3.3.3(ts-node@10.9.2)
 
-  tailwindcss@3.3.3(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2)):
+  tailwindcss@3.3.3(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -17740,7 +17776,7 @@ snapshots:
       postcss: 8.4.27
       postcss-import: 15.1.0(postcss@8.4.27)
       postcss-js: 4.0.1(postcss@8.4.27)
-      postcss-load-config: 4.0.2(postcss@8.4.27)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.4.9)(typescript@5.5.2))
+      postcss-load-config: 4.0.2(postcss@8.4.27)(ts-node@10.9.2(@types/node@20.4.9)(typescript@5.5.2))
       postcss-nested: 6.0.1(postcss@8.4.27)
       postcss-selector-parser: 6.0.16
       resolve: 1.22.8

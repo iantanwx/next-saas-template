@@ -11,10 +11,26 @@ import { Icons } from '@superscale/ui/icons';
 import { NodeViewProps } from '@tiptap/core';
 import { generateHTML } from '@tiptap/html';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Turndown from 'turndown';
 import { getExtensions } from '../starterkit';
 import './styles.css';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@superscale/ui/atoms/tooltip';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@superscale/ui/atoms/form';
+import { useForm } from 'react-hook-form';
+import { Input } from '@superscale/ui/atoms/input';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const turndown = new Turndown();
 
@@ -24,7 +40,12 @@ const iconMap = {
   'gpt-4-turbo-preview': Icons.openAI,
 };
 
-export function PromptView({ editor, getPos, node }: NodeViewProps) {
+export function PromptView({
+  editor,
+  getPos,
+  node,
+  updateAttributes,
+}: NodeViewProps) {
   const [model, setModel] = useState('gpt-3.5-turbo');
 
   const { completion, complete, setCompletion } = useCompletion({
@@ -59,6 +80,54 @@ export function PromptView({ editor, getPos, node }: NodeViewProps) {
     });
   };
 
+  const [isEditingId, setIsEditingId] = useState(false);
+  const onClickLabel = (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsEditingId(true);
+  };
+  const inputRef = useRef<HTMLInputElement>(null);
+  useLayoutEffect(() => {
+    if (inputRef.current && isEditingId) {
+      inputRef.current.focus();
+    }
+  }, [isEditingId]);
+  const schema = z.object({
+    id: z.string().min(1, { message: 'Prompt ID cannot be empty' }),
+  });
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      setIsEditingId(false);
+      form.reset();
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        setIsEditingId(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isEditingId]);
+  const submit = (data: z.infer<typeof schema>) => {
+    updateAttributes({ 'data-prompt-id': data.id });
+    setIsEditingId(false);
+  };
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      id: node.attrs['data-prompt-id'],
+    },
+  });
+
   return (
     <NodeViewWrapper className="group relative flex w-full flex-row gap-2">
       <section
@@ -84,8 +153,55 @@ export function PromptView({ editor, getPos, node }: NodeViewProps) {
       </section>
 
       <div className="m-2 ml-0 flex w-full flex-col gap-2">
-        <div className="flex flex-row justify-between gap-2">
-          <div className="flex">
+        <div className="mb-4 flex flex-row justify-between gap-2">
+          <Tooltip delayDuration={100}>
+            <div className="flex flex-grow cursor-default flex-row items-center justify-start gap-2 font-semibold">
+              {isEditingId ? (
+                <Form {...form}>
+                  <form
+                    id="editor-link-modal"
+                    onSubmit={form.handleSubmit(submit)}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="id"
+                      render={({ field }) => (
+                        <FormItem className="relative">
+                          <FormControl>
+                            <Input
+                              {...field}
+                              ref={inputRef}
+                              onKeyDown={onKeyDown}
+                            />
+                          </FormControl>
+                          <FormMessage className="absolute" />
+                        </FormItem>
+                      )}
+                    />
+                  </form>
+                </Form>
+              ) : (
+                <span
+                  onClick={onClickLabel}
+                  className="cursor-pointer text-center align-middle"
+                >
+                  {node.attrs['data-prompt-id']}
+                </span>
+              )}
+              <TooltipTrigger>
+                <Icons.help className="h-4 w-4" />
+              </TooltipTrigger>
+            </div>
+            <TooltipContent side="right">
+              <div>
+                <span>
+                  This is the prompt's unique identifier. You can reference it
+                  from other prompts by typing <code>@</code>.
+                </span>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+          <div className="flex flex-row gap-2">
             <Select defaultValue={model} onValueChange={setModel}>
               <SelectTrigger>
                 <SelectValue placeholder="Select an LLM" />
@@ -98,12 +214,14 @@ export function PromptView({ editor, getPos, node }: NodeViewProps) {
                 </SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div className="flex flex-row gap-2">
-            <Button size="icon" onClick={doCompletion}>
+            <Button
+              className="flex flex-shrink-0"
+              size="icon"
+              onClick={doCompletion}
+            >
               <Icons.play className="h-4 w-4" />
             </Button>
-            <Button size="icon" onClick={reset}>
+            <Button className="flex flex-shrink-0" size="icon" onClick={reset}>
               <Icons.rotate className="h-4 w-4" />
             </Button>
           </div>

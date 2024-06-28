@@ -42,6 +42,7 @@ import {
   Unlink,
   User,
   X,
+  HelpCircleIcon,
   type LucideIcon,
 } from 'lucide-react';
 

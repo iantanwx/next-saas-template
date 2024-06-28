@@ -52,6 +52,8 @@ export function LinkBubbleMenu({ editor }: LinkBubbleMenuProps) {
   const { formState, getFieldState } = form;
   const { error, isDirty } = getFieldState('url', formState);
 
+  if (!editor) return null;
+
   return (
     <BubbleMenu editor={editor} shouldShow={shouldShow}>
       <div className="border-input bg-background flex flex-row items-start gap-2 rounded-sm border p-2">

@@ -2,6 +2,7 @@ import { Node, mergeAttributes } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { PLUGIN_PRIORITY } from '../../constants';
 import { PromptView } from './view';
+import { generateRandomName } from '@superscale/lib/utils/random-name';
 
 export const Prompt = Node.create({
   name: 'prompt',
@@ -11,8 +12,12 @@ export const Prompt = Node.create({
   selectable: false,
   inline: false,
   priority: PLUGIN_PRIORITY.PROMPT,
-  renderHTML({ HTMLAttributes }) {
-    return ['prompt-view', mergeAttributes(HTMLAttributes), 0];
+  addAttributes() {
+    return {
+      'data-prompt-id': {
+        default: generateRandomName(),
+      },
+    };
   },
   addNodeView() {
     return ReactNodeViewRenderer(PromptView);

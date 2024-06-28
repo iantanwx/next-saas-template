@@ -26,8 +26,8 @@ export function BubbleMenu(props: BubbleMenuProps) {
       <div className="border-input bg-background flex flex-row items-center gap-2 rounded-sm border p-2">
         {commands.map((cmd) => {
           return (
-            <Tooltip>
-              <TooltipTrigger>
+            <Tooltip key={cmd.name}>
+              <TooltipTrigger asChild>
                 <Button
                   type="button"
                   size="icon"
