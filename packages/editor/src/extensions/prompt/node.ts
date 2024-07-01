@@ -1,8 +1,20 @@
-import { Node } from '@tiptap/core';
+import {
+  combineTransactionSteps,
+  findChildrenInRange,
+  getChangedRanges,
+  Node,
+} from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { PLUGIN_PRIORITY } from '../../constants';
 import { PromptView } from './view';
 import { generateRandomName } from '@superscale/lib/utils/random-name';
+import { atom } from 'jotai';
+import { store } from '../../store';
+import { Plugin, PluginKey } from '@tiptap/pm/state';
+
+export const nodeIDsAtom = atom(new Set());
+
+export const DATA_PROMPT_ID = 'data-prompt-id';
 
 export const Prompt = Node.create({
   name: 'prompt',
@@ -14,10 +26,49 @@ export const Prompt = Node.create({
   priority: PLUGIN_PRIORITY.PROMPT,
   addAttributes() {
     return {
-      'data-prompt-id': {
-        default: generateRandomName(),
+      [DATA_PROMPT_ID]: {
+        default: null,
       },
     };
+  },
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        key: new PluginKey('prompt'),
+        appendTransaction: (transactions, oldState, newState) => {
+          const docChanged =
+            transactions.some((tr) => tr.docChanged) &&
+            !oldState.doc.eq(newState.doc);
+          if (!docChanged) return;
+
+          const { tr } = newState;
+          const steps = combineTransactionSteps(oldState.doc, [
+            ...transactions,
+          ]);
+          getChangedRanges(steps).forEach(({ newRange }) => {
+            const promptNodes = findChildrenInRange(
+              newState.doc,
+              newRange,
+              (node) => node.type.name === 'prompt'
+            );
+            promptNodes.forEach(({ node, pos }) => {
+              const promptID = tr.doc.nodeAt(pos)?.attrs[DATA_PROMPT_ID];
+              if (!promptID) {
+                const randomName = generateRandomName();
+                tr.setNodeMarkup(pos, undefined, {
+                  ...node.attrs,
+                  [DATA_PROMPT_ID]: randomName,
+                });
+                store.set(nodeIDsAtom, (ids) => ids.add(randomName));
+                return;
+              }
+              store.set(nodeIDsAtom, (ids) => ids.add(promptID));
+            });
+          });
+          return tr.steps.length ? tr : undefined;
+        },
+      }),
+    ];
   },
   addNodeView() {
     return ReactNodeViewRenderer(PromptView);

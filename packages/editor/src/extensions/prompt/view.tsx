@@ -31,6 +31,10 @@ import Turndown from 'turndown';
 import { z } from 'zod';
 import { getExtensions } from '../starterkit';
 import './styles.css';
+import { DATA_PROMPT_ID, nodeIDsAtom } from './node';
+import { useAtomValue } from 'jotai';
+
+// import { callCompletionApi } from '@ai-sdk/ui-utils'
 
 const turndown = new Turndown();
 
@@ -97,9 +101,6 @@ export function PromptView({
       inputRef.current.focus();
     }
   }, [isEditingId]);
-  const schema = z.object({
-    id: z.string().min(1, { message: 'Prompt ID cannot be empty' }),
-  });
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       setIsEditingId(false);
@@ -107,6 +108,16 @@ export function PromptView({
     }
   };
 
+  const promptIDs = useAtomValue(nodeIDsAtom);
+  console.log('promptIds: ', promptIDs);
+  const schema = z.object({
+    id: z
+      .string()
+      .min(1, { message: 'Prompt ID cannot be empty' })
+      .refine((id) => !promptIDs.has(id), {
+        message: 'Prompt label must be unique',
+      }),
+  });
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -123,13 +134,13 @@ export function PromptView({
     };
   }, [isEditingId]);
   const submit = (data: z.infer<typeof schema>) => {
-    updateAttributes({ 'data-prompt-id': data.id });
+    updateAttributes({ [DATA_PROMPT_ID]: data.id });
     setIsEditingId(false);
   };
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      id: node.attrs['data-prompt-id'],
+      id: node.attrs[DATA_PROMPT_ID],
     },
   });
 
