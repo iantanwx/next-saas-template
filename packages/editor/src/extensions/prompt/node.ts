@@ -1,4 +1,4 @@
-import { Node, mergeAttributes } from '@tiptap/core';
+import { Node } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { PLUGIN_PRIORITY } from '../../constants';
 import { PromptView } from './view';
@@ -39,15 +39,22 @@ export const Prompt = Node.create({
 
         let nextNodeTo = -1;
 
-        const prevPos = $from.before();
-        const prevNode = doc.nodeAt(prevPos);
-        const prevNodeText = prevNode?.textContent;
-        const prevPrevPos = prevPos - (prevNode?.nodeSize ?? 0);
-        const prevPrevNode = prevPrevPos >= 0 ? doc.nodeAt(prevPrevPos) : null;
-        const prevPrevNodeText = prevPrevNode?.textContent;
-        const prevNodesEmpty = prevNodeText === '' && prevPrevNodeText === '';
-        const isAtEnd = $from.parentOffset === $from.parent.nodeSize - 2;
-        if (!isAtEnd || !prevNodesEmpty) {
+        const isAtEnd =
+          parent.maybeChild(parent.childCount - 1) === $from.parent;
+
+        let textContent = '';
+        parent.forEach((node) => {
+          if (!node.textContent) {
+            // treat empty nodes as newlines
+            textContent += '\n';
+          } else {
+            textContent += node.textContent;
+          }
+          return false;
+        });
+        const endsWithDoubleNewline = textContent.endsWith('\n\n');
+
+        if (!isAtEnd || !endsWithDoubleNewline || parent.childCount <= 2) {
           return false;
         }
 
@@ -62,8 +69,14 @@ export const Prompt = Node.create({
           return false;
         });
 
-        const offset =
-          (prevNode?.nodeSize ?? 0) + (prevPrevNode?.nodeSize ?? 0);
+        let offset: number = 0;
+        parent.content.forEach((node, _, index) => {
+          // offset two from the end of the Fragment.
+          if (index >= parent.childCount - 2) {
+            offset += node.nodeSize;
+          }
+          return false;
+        });
 
         const content = doc.slice(from, nextNodeTo)?.toJSON()?.content ?? [
           {
