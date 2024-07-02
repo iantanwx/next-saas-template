@@ -14,10 +14,10 @@
   "dependencies": {
     "@ai-sdk/openai": "^0.0.31",
     "@ai-sdk/react": "^0.0.3",
+    "@ai-sdk/ui-utils": "^0.0.9",
     "@hookform/resolvers": "^3.3.1",
-    "@superscale/ui": "workspace:^",
     "@superscale/lib": "workspace:^",
-    "@tiptap-pro/extension-unique-id": "^2.8.9",
+    "@superscale/ui": "workspace:^",
     "@tiptap/core": "^2.4.0",
     "@tiptap/extension-blockquote": "^2.4.0",
     "@tiptap/extension-bold": "^2.4.0",
