@@ -1,13 +1,17 @@
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+
 import { useCompletion } from '@ai-sdk/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { NodeViewProps } from '@tiptap/core';
+import { generateHTML } from '@tiptap/html';
+import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
+import { atom, useAtomValue } from 'jotai';
+import { useForm } from 'react-hook-form';
+import Turndown from 'turndown';
+import { z } from 'zod';
+
 import { Button } from '@superscale/ui/atoms/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@superscale/ui/atoms/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@superscale/ui/atoms/form';
 import { Input } from '@superscale/ui/atoms/input';
 import {
   Select,
@@ -16,25 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@superscale/ui/atoms/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@superscale/ui/atoms/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@superscale/ui/atoms/tooltip';
 import { Icons } from '@superscale/ui/icons';
-import { NodeViewProps } from '@tiptap/core';
-import { generateHTML } from '@tiptap/html';
-import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import Turndown from 'turndown';
-import { z } from 'zod';
-import { getExtensions } from '../starterkit';
-import './styles.css';
-import { DATA_PROMPT_ID, nodeIDsAtom } from './node';
-import { useAtomValue } from 'jotai';
 
-// import { callCompletionApi } from '@ai-sdk/ui-utils'
+import { getExtensions } from '../starterkit';
+import { DATA_PROMPT_ID, PromptState, complete, createPromptAtom, promptMapAtom } from './node';
+import './styles.css';
 
 const turndown = new Turndown();
 
@@ -44,26 +35,35 @@ const iconMap = {
   'gpt-4-turbo-preview': Icons.openAI,
 };
 
-export function PromptView({
-  editor,
-  getPos,
-  node,
-  updateAttributes,
-}: NodeViewProps) {
+function usePromptState(promptID?: string): PromptState | undefined {
+  if (!promptID) return;
+  const promptState = useAtomValue(promptMapAtom);
+  return promptState.get(promptID);
+  // if (!promptID) return;
+  // const promptStateAtom = useMemo(() => createPromptAtom(promptID), [promptID]);
+  // // //
+  // return useAtomValue(promptStateAtom);
+}
+
+export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewProps) {
   const [model, setModel] = useState('gpt-3.5-turbo');
 
-  const { completion, complete, setCompletion } = useCompletion({
-    api: '/api/completions',
-  });
+  // const { completion, complete, setCompletion } = useCompletion({
+  //   api: '/api/completions',
+  // });
   const doCompletion = async () => {
-    try {
-      const content = node.toJSON();
-      const html = generateHTML(content, getExtensions());
-      const md = turndown.turndown(html);
-      complete(md, { body: { model } });
-    } catch (error) {
-      console.error(error);
-    }
+    const content = node.toJSON();
+    const html = generateHTML(content, getExtensions());
+    const md = turndown.turndown(html);
+    complete(node.attrs[DATA_PROMPT_ID], md, '/api/completions');
+    // try {
+    //   const content = node.toJSON();
+    //   const html = generateHTML(content, getExtensions());
+    //   const md = turndown.turndown(html);
+    //   await complete(md, { body: { model } });
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
   const reset = () => {
     setCompletion('');
@@ -86,7 +86,7 @@ export function PromptView({
 
   const [isEditingId, setIsEditingId] = useState(false);
   const labelRef = useRef<HTMLSpanElement>(null);
-  const onClickLabel = (e: React.MouseEvent<HTMLSpanElement>) => {
+  const onClickLabel = (_: React.MouseEvent<HTMLSpanElement>) => {
     setIsEditingId(true);
   };
   const onMousedownLabel = (e: React.MouseEvent<HTMLSpanElement>) => {
@@ -94,6 +94,8 @@ export function PromptView({
       e.preventDefault();
     }
   };
+  const promptState = usePromptState(node.attrs[DATA_PROMPT_ID]);
+  console.log({ promptState });
 
   const inputRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
@@ -108,8 +110,7 @@ export function PromptView({
     }
   };
 
-  const promptIDs = useAtomValue(nodeIDsAtom);
-  console.log('promptIds: ', promptIDs);
+  const promptIDs = useAtomValue(promptMapAtom);
   const schema = z.object({
     id: z
       .string()
@@ -120,10 +121,7 @@ export function PromptView({
   });
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
-      ) {
+      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
         setIsEditingId(false);
       }
     };
@@ -177,21 +175,14 @@ export function PromptView({
             <div className="flex flex-grow cursor-default flex-row items-center justify-start gap-2 font-semibold">
               {isEditingId ? (
                 <Form {...form}>
-                  <form
-                    id="editor-link-modal"
-                    onSubmit={form.handleSubmit(submit)}
-                  >
+                  <form id="editor-link-modal" onSubmit={form.handleSubmit(submit)}>
                     <FormField
                       control={form.control}
                       name="id"
                       render={({ field }) => (
                         <FormItem className="relative">
                           <FormControl>
-                            <Input
-                              {...field}
-                              ref={inputRef}
-                              onKeyDown={onKeyDown}
-                            />
+                            <Input {...field} ref={inputRef} onKeyDown={onKeyDown} />
                           </FormControl>
                           <FormMessage className="absolute" />
                         </FormItem>
@@ -230,16 +221,10 @@ export function PromptView({
               <SelectContent>
                 <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
                 <SelectItem value="gpt-4-turbo">GPT-4 Turbo</SelectItem>
-                <SelectItem value="gpt-4-turbo-preview">
-                  GPT-4 Turbo Preview
-                </SelectItem>
+                <SelectItem value="gpt-4-turbo-preview">GPT-4 Turbo Preview</SelectItem>
               </SelectContent>
             </Select>
-            <Button
-              className="flex flex-shrink-0"
-              size="icon"
-              onClick={doCompletion}
-            >
+            <Button className="flex flex-shrink-0" size="icon" onClick={doCompletion}>
               <Icons.play className="h-4 w-4" />
             </Button>
             <Button className="flex flex-shrink-0" size="icon" onClick={reset}>
@@ -248,12 +233,12 @@ export function PromptView({
           </div>
         </div>
         <NodeViewContent className="prompt-input border-input my-2 rounded-md border p-2" />
-        {completion && (
+        {promptState?.completion && (
           <div className="mt-4 flex flex-row items-start gap-2">
             <div className="flex items-start ">
               <Icon className="h-4 w-4" />
             </div>
-            <div>{completion}</div>
+            <div>{promptState.completion}</div>
           </div>
         )}
       </div>

@@ -1,14 +1,16 @@
 'use client';
 
-import { TooltipProvider } from '@superscale/ui/atoms/tooltip';
 import { EditorContent, useEditor } from '@tiptap/react';
 import { Provider } from 'jotai';
+
+import { TooltipProvider } from '@superscale/ui/atoms/tooltip';
+
+import { BubbleMenu } from './extensions/bubble-menu';
 import { LinkBubbleMenu, LinkModal } from './extensions/link';
 import { getExtensions } from './extensions/starterkit';
 import { store } from './store';
-import { BubbleMenu } from './extensions/bubble-menu';
-import './styles/placeholder.css';
 import './styles/list.css';
+import './styles/placeholder.css';
 
 export function Editor() {
   const editor = useEditor({

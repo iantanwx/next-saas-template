@@ -1,18 +1,123 @@
-import {
-  combineTransactionSteps,
-  findChildrenInRange,
-  getChangedRanges,
-  Node,
-} from '@tiptap/core';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-import { PLUGIN_PRIORITY } from '../../constants';
-import { PromptView } from './view';
-import { generateRandomName } from '@superscale/lib/utils/random-name';
-import { atom } from 'jotai';
-import { store } from '../../store';
+import { callCompletionApi } from '@ai-sdk/ui-utils';
+import { Node, combineTransactionSteps, findChildrenInRange, getChangedRanges } from '@tiptap/core';
+import { Node as ProsemirrorNode } from '@tiptap/pm/model';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
+import { ReactNodeViewRenderer } from '@tiptap/react';
+import { atom } from 'jotai';
 
-export const nodeIDsAtom = atom(new Set());
+import { generateRandomName } from '@superscale/lib/utils/random-name';
+
+import { PLUGIN_PRIORITY } from '../../constants';
+import { store } from '../../store';
+import { PromptView } from './view';
+
+/**
+ * PromptStatus indicates the state of the prompt
+ *
+ * - idle: prompt is not doing anything
+ * - loading: completion initiated but not yet completed  (e.g. waiting for response from server)
+ * - streaming: completion initiated and streaming data (e.g. streaming data from server)
+ */
+export type PromptStatus = 'idle' | 'loading' | 'streaming' | 'success' | 'error';
+
+export type PromptState = {
+  promptID: string;
+  status: PromptStatus;
+  completion?: string;
+};
+
+const defaultPromptState: PromptState = {
+  promptID: '',
+  status: 'idle',
+};
+
+export const promptMapAtom = atom(new Map<string, PromptState>());
+
+// Create a prompt atom for a given promptID
+export function createPromptAtom(promptID: string) {
+  return atom<PromptState>((get) => {
+    const promptMap = get(promptMapAtom);
+    return promptMap.get(promptID) ?? defaultPromptState;
+  });
+}
+
+export async function complete(promptId: string, prompt: string, api: string) {
+  callCompletionApi({
+    api,
+    prompt,
+    credentials: undefined,
+    body: {
+      model: 'gpt-3.5-turbo',
+    },
+    fetch,
+    headers: {},
+    streamMode: 'text',
+    setCompletion: (completion: string) => {
+      console.log('completion', completion);
+      store.set(promptMapAtom, (ids) =>
+        ids.set(promptId, {
+          ...ids.get(promptId),
+          promptID: promptId,
+          completion,
+          status: 'streaming',
+        }),
+      );
+    },
+    setLoading: (loading) => {
+      store.set(promptMapAtom, (ids) =>
+        ids.set(promptId, {
+          ...ids.get(promptId),
+          promptID: promptId,
+          status: loading ? 'loading' : 'idle',
+        }),
+      );
+    },
+    setError: (error) => {
+      console.log('error', error);
+      store.set(promptMapAtom, (ids) =>
+        ids.set(promptId, {
+          ...ids.get(promptId),
+          promptID: promptId,
+          status: 'error',
+        }),
+      );
+    },
+    setAbortController: (abortController) => {
+      console.log('abortController', abortController);
+    },
+    onResponse: () => {
+      store.set(promptMapAtom, (ids) =>
+        ids.set(promptId, {
+          ...ids.get(promptId),
+          promptID: promptId,
+          status: 'success',
+        }),
+      );
+    },
+    onFinish: () => {
+      store.set(promptMapAtom, (ids) =>
+        ids.set(promptId, {
+          ...ids.get(promptId),
+          promptID: promptId,
+          status: 'idle',
+        }),
+      );
+    },
+    onError: (error) => {
+      console.log('error', error);
+      store.set(promptMapAtom, (ids) =>
+        ids.set(promptId, {
+          ...ids.get(promptId),
+          promptID: promptId,
+          status: 'error',
+        }),
+      );
+    },
+    onData: (data) => {
+      console.log('data', data);
+    },
+  });
+}
 
 export const DATA_PROMPT_ID = 'data-prompt-id';
 
@@ -37,19 +142,16 @@ export const Prompt = Node.create({
         key: new PluginKey('prompt'),
         appendTransaction: (transactions, oldState, newState) => {
           const docChanged =
-            transactions.some((tr) => tr.docChanged) &&
-            !oldState.doc.eq(newState.doc);
+            transactions.some((tr) => tr.docChanged) && !oldState.doc.eq(newState.doc);
           if (!docChanged) return;
 
           const { tr } = newState;
-          const steps = combineTransactionSteps(oldState.doc, [
-            ...transactions,
-          ]);
+          const steps = combineTransactionSteps(oldState.doc, [...transactions]);
           getChangedRanges(steps).forEach(({ newRange }) => {
             const promptNodes = findChildrenInRange(
               newState.doc,
               newRange,
-              (node) => node.type.name === 'prompt'
+              (node) => node.type.name === 'prompt',
             );
             promptNodes.forEach(({ node, pos }) => {
               const promptID = tr.doc.nodeAt(pos)?.attrs[DATA_PROMPT_ID];
@@ -59,10 +161,38 @@ export const Prompt = Node.create({
                   ...node.attrs,
                   [DATA_PROMPT_ID]: randomName,
                 });
-                store.set(nodeIDsAtom, (ids) => ids.add(randomName));
+                store.set(promptMapAtom, (ids) =>
+                  ids.set(randomName, { ...defaultPromptState, promptID: randomName }),
+                );
                 return;
               }
-              store.set(nodeIDsAtom, (ids) => ids.add(promptID));
+
+              // if the node already has a prompt id, it might have changed, in which case we'll have to "shift" the prompt state to a new key.
+              // we'll use the unique id set by @tiptap-pro/extension-unique-id, since it's stable across edits.
+              const nodeID = node.attrs['id'];
+              let oldNodes: ProsemirrorNode[] = [];
+              oldState.doc.descendants((node) => {
+                if (node.attrs['id'] === nodeID) {
+                  // oldNode = node;
+                  oldNodes.push(node);
+                  return false;
+                }
+              });
+              const [oldNode] = oldNodes;
+              if (oldNode) {
+                const existingState = store.get(promptMapAtom).get(oldNode.attrs[DATA_PROMPT_ID]);
+                if (existingState) {
+                  store.set(promptMapAtom, (ids) =>
+                    ids.set(node.attrs[DATA_PROMPT_ID], {
+                      ...existingState,
+                      promptID: node.attrs[DATA_PROMPT_ID],
+                    }),
+                  );
+                }
+              }
+
+              console.log('oldNode:', oldNode);
+              console.log('newNode: ', node);
             });
           });
           return tr.steps.length ? tr : undefined;
@@ -90,8 +220,7 @@ export const Prompt = Node.create({
 
         let nextNodeTo = -1;
 
-        const isAtEnd =
-          parent.maybeChild(parent.childCount - 1) === $from.parent;
+        const isAtEnd = parent.maybeChild(parent.childCount - 1) === $from.parent;
 
         let textContent = '';
         parent.forEach((node) => {
@@ -147,7 +276,7 @@ export const Prompt = Node.create({
             {
               type: 'dBlock',
               content,
-            }
+            },
           )
           .focus(from + 4)
           .run();
