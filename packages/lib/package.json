@@ -20,7 +20,7 @@
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
     "@supabase/ssr": "^0.3.0",
-    "@supabase/supabase-js": "^2.43.4",
+    "@supabase/supabase-js": "^2.44.3",
     "@superscale/crud": "workspace:^",
     "@superscale/email": "workspace:^",
     "@superscale/tsconfig": "workspace:^",
