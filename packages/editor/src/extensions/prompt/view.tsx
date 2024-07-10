@@ -38,7 +38,7 @@ const iconMap = {
 function usePromptState(promptID?: string): PromptState | undefined {
   if (!promptID) return;
   const promptState = useAtomValue(promptMapAtom);
-  return promptState.get(promptID);
+  return promptState[promptID];
   // if (!promptID) return;
   // const promptStateAtom = useMemo(() => createPromptAtom(promptID), [promptID]);
   // // //
@@ -66,7 +66,8 @@ export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewP
     // }
   };
   const reset = () => {
-    setCompletion('');
+    // setCompletion('');
+    console.log('reset: noop');
   };
 
   const Icon = iconMap[model as keyof typeof iconMap];
@@ -115,7 +116,7 @@ export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewP
     id: z
       .string()
       .min(1, { message: 'Prompt ID cannot be empty' })
-      .refine((id) => !promptIDs.has(id), {
+      .refine((id) => !promptIDs[id], {
         message: 'Prompt label must be unique',
       }),
   });

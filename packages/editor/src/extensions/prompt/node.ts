@@ -3,7 +3,7 @@ import { Node, combineTransactionSteps, findChildrenInRange, getChangedRanges } 
 import { Node as ProsemirrorNode } from '@tiptap/pm/model';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { ReactNodeViewRenderer } from '@tiptap/react';
-import { atom } from 'jotai';
+import { PrimitiveAtom, atom } from 'jotai';
 
 import { generateRandomName } from '@superscale/lib/utils/random-name';
 
@@ -31,15 +31,15 @@ const defaultPromptState: PromptState = {
   status: 'idle',
 };
 
-export const promptMapAtom = atom(new Map<string, PromptState>());
+export const promptMapAtom = atom<Record<string, PromptState>>({});
 
 // Create a prompt atom for a given promptID
-export function createPromptAtom(promptID: string) {
-  return atom<PromptState>((get) => {
-    const promptMap = get(promptMapAtom);
-    return promptMap.get(promptID) ?? defaultPromptState;
-  });
-}
+// export function createPromptAtom(promptID: string) {
+//   return atom<PromptState>((get) => {
+//     const promptMap = get(promptMapAtom);
+//     return promptMap.get(promptID) ?? defaultPromptState;
+//   });
+// }
 
 export async function complete(promptId: string, prompt: string, api: string) {
   callCompletionApi({
@@ -51,67 +51,76 @@ export async function complete(promptId: string, prompt: string, api: string) {
     },
     fetch,
     headers: {},
-    streamMode: 'text',
+    streamMode: 'stream-data',
     setCompletion: (completion: string) => {
       console.log('completion', completion);
-      store.set(promptMapAtom, (ids) =>
-        ids.set(promptId, {
-          ...ids.get(promptId),
+      store.set(promptMapAtom, (prompts) => ({
+        ...prompts,
+        [promptId]: {
+          ...prompts[promptId],
           promptID: promptId,
           completion,
           status: 'streaming',
-        }),
-      );
+        },
+      }));
+      // store.set(promptMapAtom, (ids) =>
+      //   ids.set(promptId, {
+      //     ...ids.get(promptId),
+      //     promptID: promptId,
+      //     completion,
+      //     status: 'streaming',
+      //   }),
+      // );
     },
     setLoading: (loading) => {
-      store.set(promptMapAtom, (ids) =>
-        ids.set(promptId, {
-          ...ids.get(promptId),
-          promptID: promptId,
-          status: loading ? 'loading' : 'idle',
-        }),
-      );
+      // store.set(promptMapAtom, (ids) =>
+      //   ids.set(promptId, {
+      //     ...ids.get(promptId),
+      //     promptID: promptId,
+      //     status: loading ? 'loading' : 'idle',
+      //   }),
+      // );
     },
     setError: (error) => {
-      console.log('error', error);
-      store.set(promptMapAtom, (ids) =>
-        ids.set(promptId, {
-          ...ids.get(promptId),
-          promptID: promptId,
-          status: 'error',
-        }),
-      );
+      // console.log('error', error);
+      // store.set(promptMapAtom, (ids) =>
+      //   ids.set(promptId, {
+      //     ...ids.get(promptId),
+      //     promptID: promptId,
+      //     status: 'error',
+      //   }),
+      // );
     },
     setAbortController: (abortController) => {
       console.log('abortController', abortController);
     },
     onResponse: () => {
-      store.set(promptMapAtom, (ids) =>
-        ids.set(promptId, {
-          ...ids.get(promptId),
-          promptID: promptId,
-          status: 'success',
-        }),
-      );
+      // store.set(promptMapAtom, (ids) =>
+      //   ids.set(promptId, {
+      //     ...ids.get(promptId),
+      //     promptID: promptId,
+      //     status: 'success',
+      //   }),
+      // );
     },
     onFinish: () => {
-      store.set(promptMapAtom, (ids) =>
-        ids.set(promptId, {
-          ...ids.get(promptId),
-          promptID: promptId,
-          status: 'idle',
-        }),
-      );
+      // store.set(promptMapAtom, (ids) =>
+      //   ids.set(promptId, {
+      //     ...ids.get(promptId),
+      //     promptID: promptId,
+      //     status: 'idle',
+      //   }),
+      // );
     },
     onError: (error) => {
-      console.log('error', error);
-      store.set(promptMapAtom, (ids) =>
-        ids.set(promptId, {
-          ...ids.get(promptId),
-          promptID: promptId,
-          status: 'error',
-        }),
-      );
+      // console.log('error', error);
+      // store.set(promptMapAtom, (ids) =>
+      //   ids.set(promptId, {
+      //     ...ids.get(promptId),
+      //     promptID: promptId,
+      //     status: 'error',
+      //   }),
+      // );
     },
     onData: (data) => {
       console.log('data', data);
@@ -161,8 +170,13 @@ export const Prompt = Node.create({
                   ...node.attrs,
                   [DATA_PROMPT_ID]: randomName,
                 });
-                store.set(promptMapAtom, (ids) =>
-                  ids.set(randomName, { ...defaultPromptState, promptID: randomName }),
+                store.set(
+                  promptMapAtom,
+                  (prompts) => ({
+                    ...prompts,
+                    [randomName]: defaultPromptState,
+                  }),
+                  // prompts.set(randomName, { ...defaultPromptState, promptID: randomName }),
                 );
                 return;
               }
@@ -180,14 +194,17 @@ export const Prompt = Node.create({
               });
               const [oldNode] = oldNodes;
               if (oldNode) {
-                const existingState = store.get(promptMapAtom).get(oldNode.attrs[DATA_PROMPT_ID]);
+                const existingState = store.get(promptMapAtom)[oldNode.attrs[DATA_PROMPT_ID]];
+
+                // const existingState = store.get(promptMapAtom).get(oldNode.attrs[DATA_PROMPT_ID]);
                 if (existingState) {
-                  store.set(promptMapAtom, (ids) =>
-                    ids.set(node.attrs[DATA_PROMPT_ID], {
+                  store.set(promptMapAtom, (ids) => ({
+                    ...ids,
+                    [node.attrs[DATA_PROMPT_ID]]: {
                       ...existingState,
                       promptID: node.attrs[DATA_PROMPT_ID],
-                    }),
-                  );
+                    },
+                  }));
                 }
               }
 
