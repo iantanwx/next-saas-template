@@ -31,15 +31,7 @@ const defaultPromptState: PromptState = {
   status: 'idle',
 };
 
-export const promptMapAtom = atom<Record<string, PromptState>>({});
-
-// Create a prompt atom for a given promptID
-// export function createPromptAtom(promptID: string) {
-//   return atom<PromptState>((get) => {
-//     const promptMap = get(promptMapAtom);
-//     return promptMap.get(promptID) ?? defaultPromptState;
-//   });
-// }
+export const promptMapAtom = atom<Record<string, PrimitiveAtom<PromptState>>>({});
 
 export async function complete(promptId: string, prompt: string, api: string) {
   callCompletionApi({
@@ -53,24 +45,13 @@ export async function complete(promptId: string, prompt: string, api: string) {
     headers: {},
     streamMode: 'stream-data',
     setCompletion: (completion: string) => {
-      console.log('completion', completion);
-      store.set(promptMapAtom, (prompts) => ({
-        ...prompts,
-        [promptId]: {
-          ...prompts[promptId],
-          promptID: promptId,
-          completion,
-          status: 'streaming',
-        },
+      const promptStateAtom = store.get(promptMapAtom)[promptId];
+      store.set(promptStateAtom, (prevState) => ({
+        ...prevState,
+        promptID: promptId,
+        completion,
+        status: 'streaming',
       }));
-      // store.set(promptMapAtom, (ids) =>
-      //   ids.set(promptId, {
-      //     ...ids.get(promptId),
-      //     promptID: promptId,
-      //     completion,
-      //     status: 'streaming',
-      //   }),
-      // );
     },
     setLoading: (loading) => {
       // store.set(promptMapAtom, (ids) =>
@@ -174,7 +155,7 @@ export const Prompt = Node.create({
                   promptMapAtom,
                   (prompts) => ({
                     ...prompts,
-                    [randomName]: defaultPromptState,
+                    [randomName]: atom(defaultPromptState),
                   }),
                   // prompts.set(randomName, { ...defaultPromptState, promptID: randomName }),
                 );
@@ -194,18 +175,18 @@ export const Prompt = Node.create({
               });
               const [oldNode] = oldNodes;
               if (oldNode) {
-                const existingState = store.get(promptMapAtom)[oldNode.attrs[DATA_PROMPT_ID]];
+                const oldPromptID = oldNode.attrs[DATA_PROMPT_ID];
+                const newPromptID = node.attrs[DATA_PROMPT_ID];
 
-                // const existingState = store.get(promptMapAtom).get(oldNode.attrs[DATA_PROMPT_ID]);
-                if (existingState) {
-                  store.set(promptMapAtom, (ids) => ({
-                    ...ids,
-                    [node.attrs[DATA_PROMPT_ID]]: {
-                      ...existingState,
-                      promptID: node.attrs[DATA_PROMPT_ID],
-                    },
-                  }));
-                }
+                if (oldPromptID === newPromptID) return;
+
+                const promptStateAtom = store.get(promptMapAtom)[oldPromptID];
+                if (!promptStateAtom) return;
+
+                store.set(promptMapAtom, (prevState) => {
+                  delete prevState[oldPromptID];
+                  return { ...prevState, [newPromptID]: promptStateAtom };
+                });
               }
 
               console.log('oldNode:', oldNode);

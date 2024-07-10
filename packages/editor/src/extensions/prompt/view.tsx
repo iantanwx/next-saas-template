@@ -24,7 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@superscale/ui/atoms/to
 import { Icons } from '@superscale/ui/icons';
 
 import { getExtensions } from '../starterkit';
-import { DATA_PROMPT_ID, PromptState, complete, createPromptAtom, promptMapAtom } from './node';
+import { DATA_PROMPT_ID, PromptState, complete, promptMapAtom } from './node';
 import './styles.css';
 
 const turndown = new Turndown();
@@ -38,11 +38,7 @@ const iconMap = {
 function usePromptState(promptID?: string): PromptState | undefined {
   if (!promptID) return;
   const promptState = useAtomValue(promptMapAtom);
-  return promptState[promptID];
-  // if (!promptID) return;
-  // const promptStateAtom = useMemo(() => createPromptAtom(promptID), [promptID]);
-  // // //
-  // return useAtomValue(promptStateAtom);
+  return useAtomValue(promptState[promptID]);
 }
 
 export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewProps) {
@@ -56,14 +52,6 @@ export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewP
     const html = generateHTML(content, getExtensions());
     const md = turndown.turndown(html);
     complete(node.attrs[DATA_PROMPT_ID], md, '/api/completions');
-    // try {
-    //   const content = node.toJSON();
-    //   const html = generateHTML(content, getExtensions());
-    //   const md = turndown.turndown(html);
-    //   await complete(md, { body: { model } });
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
   const reset = () => {
     // setCompletion('');
