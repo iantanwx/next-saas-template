@@ -1,5 +1,6 @@
 import _Link from '@tiptap/extension-link';
 import { atom } from 'jotai';
+
 import { store } from '../../store';
 
 export const Link = _Link.extend({

@@ -10,3 +10,5 @@ export function baseUrl() {
     ? `https://${process.env.VERCEL_URL}`
     : `http://localhost:${process.env.PORT || 3000}`;
 }
+
+export function noop(...args: any[]) {}

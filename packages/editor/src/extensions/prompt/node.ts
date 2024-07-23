@@ -5,6 +5,7 @@ import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { PrimitiveAtom, atom } from 'jotai';
 
+import { noop } from '@superscale/lib/utils';
 import { generateRandomName } from '@superscale/lib/utils/random-name';
 
 import { PLUGIN_PRIORITY } from '../../constants';
@@ -24,14 +25,25 @@ export type PromptState = {
   promptID: string;
   status: PromptStatus;
   completion?: string;
+  error?: string;
+  abortController: AbortController | null;
 };
 
 const defaultPromptState: PromptState = {
   promptID: '',
   status: 'idle',
+  abortController: null,
 };
 
 export const promptMapAtom = atom<Record<string, PrimitiveAtom<PromptState>>>({});
+
+export function reset(promptID: string) {
+  const promptStateAtom = store.get(promptMapAtom)[promptID];
+  store.set(promptStateAtom, () => ({
+    ...defaultPromptState,
+    promptID,
+  }));
+}
 
 export async function complete(promptId: string, prompt: string, api: string) {
   callCompletionApi({
@@ -48,64 +60,51 @@ export async function complete(promptId: string, prompt: string, api: string) {
       const promptStateAtom = store.get(promptMapAtom)[promptId];
       store.set(promptStateAtom, (prevState) => ({
         ...prevState,
-        promptID: promptId,
         completion,
-        status: 'streaming',
+        status: !!completion ? 'streaming' : prevState.status,
       }));
     },
     setLoading: (loading) => {
-      // store.set(promptMapAtom, (ids) =>
-      //   ids.set(promptId, {
-      //     ...ids.get(promptId),
-      //     promptID: promptId,
-      //     status: loading ? 'loading' : 'idle',
-      //   }),
-      // );
+      if (!loading) return;
+      const promptStateAtom = store.get(promptMapAtom)[promptId];
+      store.set(promptStateAtom, (prevState) => ({
+        ...prevState,
+        status: 'loading',
+      }));
     },
     setError: (error) => {
-      // console.log('error', error);
-      // store.set(promptMapAtom, (ids) =>
-      //   ids.set(promptId, {
-      //     ...ids.get(promptId),
-      //     promptID: promptId,
-      //     status: 'error',
-      //   }),
-      // );
+      if (!error) return;
+      const promptStateAtom = store.get(promptMapAtom)[promptId];
+      store.set(promptStateAtom, (prevState) => ({
+        ...prevState,
+        status: 'error',
+        error: error.message,
+      }));
     },
     setAbortController: (abortController) => {
-      console.log('abortController', abortController);
+      const promptStateAtom = store.get(promptMapAtom)[promptId];
+      store.set(promptStateAtom, (prevState) => ({
+        ...prevState,
+        abortController,
+      }));
     },
-    onResponse: () => {
-      // store.set(promptMapAtom, (ids) =>
-      //   ids.set(promptId, {
-      //     ...ids.get(promptId),
-      //     promptID: promptId,
-      //     status: 'success',
-      //   }),
-      // );
-    },
+    onResponse: noop,
     onFinish: () => {
-      // store.set(promptMapAtom, (ids) =>
-      //   ids.set(promptId, {
-      //     ...ids.get(promptId),
-      //     promptID: promptId,
-      //     status: 'idle',
-      //   }),
-      // );
+      const promptStateAtom = store.get(promptMapAtom)[promptId];
+      store.set(promptStateAtom, (prevState) => ({
+        ...prevState,
+        status: 'success',
+      }));
     },
     onError: (error) => {
-      // console.log('error', error);
-      // store.set(promptMapAtom, (ids) =>
-      //   ids.set(promptId, {
-      //     ...ids.get(promptId),
-      //     promptID: promptId,
-      //     status: 'error',
-      //   }),
-      // );
+      const promptStateAtom = store.get(promptMapAtom)[promptId];
+      store.set(promptStateAtom, (prevState) => ({
+        ...prevState,
+        status: 'error',
+        error: error.message,
+      }));
     },
-    onData: (data) => {
-      console.log('data', data);
-    },
+    onData: noop,
   });
 }
 
@@ -151,14 +150,10 @@ export const Prompt = Node.create({
                   ...node.attrs,
                   [DATA_PROMPT_ID]: randomName,
                 });
-                store.set(
-                  promptMapAtom,
-                  (prompts) => ({
-                    ...prompts,
-                    [randomName]: atom(defaultPromptState),
-                  }),
-                  // prompts.set(randomName, { ...defaultPromptState, promptID: randomName }),
-                );
+                store.set(promptMapAtom, (prompts) => ({
+                  ...prompts,
+                  [randomName]: atom({ ...defaultPromptState, promptID: randomName }),
+                }));
                 return;
               }
 

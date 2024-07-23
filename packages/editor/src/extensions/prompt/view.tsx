@@ -24,7 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@superscale/ui/atoms/to
 import { Icons } from '@superscale/ui/icons';
 
 import { getExtensions } from '../starterkit';
-import { DATA_PROMPT_ID, PromptState, complete, promptMapAtom } from './node';
+import { DATA_PROMPT_ID, PromptState, complete, promptMapAtom, reset } from './node';
 import './styles.css';
 
 const turndown = new Turndown();
@@ -44,18 +44,15 @@ function usePromptState(promptID?: string): PromptState | undefined {
 export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewProps) {
   const [model, setModel] = useState('gpt-3.5-turbo');
 
-  // const { completion, complete, setCompletion } = useCompletion({
-  //   api: '/api/completions',
-  // });
   const doCompletion = async () => {
     const content = node.toJSON();
     const html = generateHTML(content, getExtensions());
     const md = turndown.turndown(html);
     complete(node.attrs[DATA_PROMPT_ID], md, '/api/completions');
   };
-  const reset = () => {
-    // setCompletion('');
-    console.log('reset: noop');
+
+  const handleReset = () => {
+    reset(node.attrs[DATA_PROMPT_ID]);
   };
 
   const Icon = iconMap[model as keyof typeof iconMap];
@@ -84,7 +81,6 @@ export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewP
     }
   };
   const promptState = usePromptState(node.attrs[DATA_PROMPT_ID]);
-  console.log({ promptState });
 
   const inputRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
@@ -216,18 +212,26 @@ export function PromptView({ editor, getPos, node, updateAttributes }: NodeViewP
             <Button className="flex flex-shrink-0" size="icon" onClick={doCompletion}>
               <Icons.play className="h-4 w-4" />
             </Button>
-            <Button className="flex flex-shrink-0" size="icon" onClick={reset}>
+            <Button className="flex flex-shrink-0" size="icon" onClick={handleReset}>
               <Icons.rotate className="h-4 w-4" />
             </Button>
           </div>
         </div>
         <NodeViewContent className="prompt-input border-input my-2 rounded-md border p-2" />
-        {promptState?.completion && (
+        {promptState?.status === 'loading' && (
           <div className="mt-4 flex flex-row items-start gap-2">
             <div className="flex items-start ">
-              <Icon className="h-4 w-4" />
+              <Icons.loader2 className="h-4 w-4 animate-spin" />
             </div>
-            <div>{promptState.completion}</div>
+            <div>Loading...</div>
+          </div>
+        )}
+        {promptState?.completion && (
+          <div className="not-prose mt-4 flex items-start gap-2 p-4">
+            <Icon className="mt-1 h-4 w-4 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm leading-5">{promptState.completion}</p>
+            </div>
           </div>
         )}
       </div>
