@@ -9,7 +9,7 @@ const schema = z.object({
 });
 
 interface Props {
-  searchParams: { [key: string]: string };
+  searchParams: Promise<{ [key: string]: string }>;
 }
 
 function copy(error: string) {
@@ -47,7 +47,8 @@ function copy(error: string) {
   }
 }
 
-export default function AuthErrorPage({ searchParams }: Props) {
+export default async function AuthErrorPage(props: Props) {
+  const searchParams = await props.searchParams;
   const params = schema.parse(searchParams);
   return (
     <div className="container h-full">

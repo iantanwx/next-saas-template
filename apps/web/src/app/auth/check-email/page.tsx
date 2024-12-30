@@ -6,10 +6,11 @@ const schema = z.object({
 });
 
 interface Props {
-  searchParams: { [key: string]: string };
+  searchParams: Promise<{ [key: string]: string }>;
 }
 
-export default function CheckEmailPage({ searchParams }: Props) {
+export default async function CheckEmailPage(props: Props) {
+  const searchParams = await props.searchParams;
   const params = schema.safeParse(searchParams);
   return (
     <div className="container h-full">

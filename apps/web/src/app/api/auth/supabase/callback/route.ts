@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   // Exchanges an auth code for the user's session. The `/auth/callback` route is required for the server-side auth flow implemented
-  const supabase = createClient(cookies());
+  const supabase = createClient(await cookies());
   const requestUrl = new URL(request.url);
   const invitationId = requestUrl.searchParams.get('invitationId');
 

@@ -7,14 +7,18 @@ import { DeleteOrganization } from './delete-org';
 import { OrganizationSettingsForm } from './org-details-form';
 
 interface Props {
-  params: {
+  params: Promise<{
     organization: string;
-  };
+  }>;
 }
 
-export default async function SettingsPage({
-  params: { organization: slug },
-}: Props) {
+export default async function SettingsPage(props: Props) {
+  const params = await props.params;
+
+  const {
+    organization: slug
+  } = params;
+
   const organization = await organizations.getBySlug(slug);
   const user = await getCurrentUser();
   if (!user) {

@@ -6,13 +6,20 @@ import { notFound, redirect } from 'next/navigation';
 
 interface Props {
   children: React.ReactNode;
-  params: { organization: string };
+  params: Promise<{ organization: string }>;
 }
 
-export default async function DashboardLayout({
-  children,
-  params: { organization },
-}: Props) {
+export default async function DashboardLayout(props: Props) {
+  const params = await props.params;
+
+  const {
+    organization
+  } = params;
+
+  const {
+    children
+  } = props;
+
   const user = await getCurrentUser();
   if (!user) {
     redirect('/auth/sign-in');

@@ -4,14 +4,23 @@ import { notFound, redirect } from 'next/navigation';
 import { InvitationCard } from './card';
 
 interface Props {
-  params: { invitationId: string };
-  searchParams: { accept?: boolean };
+  params: Promise<{ invitationId: string }>;
+  searchParams: Promise<{ accept?: boolean }>;
 }
 
-export default async function AcceptInvitationPage({
-  params: { invitationId },
-  searchParams: { accept },
-}: Props) {
+export default async function AcceptInvitationPage(props: Props) {
+  const searchParams = await props.searchParams;
+
+  const {
+    accept
+  } = searchParams;
+
+  const params = await props.params;
+
+  const {
+    invitationId
+  } = params;
+
   const invitation = await invitations.findById(invitationId);
   if (!invitation) {
     notFound();

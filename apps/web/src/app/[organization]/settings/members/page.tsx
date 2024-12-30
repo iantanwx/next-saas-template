@@ -39,14 +39,18 @@ async function fetchData(organization: OrganizationWithMembers) {
 }
 
 interface Props {
-  params: {
+  params: Promise<{
     organization: string;
-  };
+  }>;
 }
 
-export default async function MembersPage({
-  params: { organization: slug },
-}: Props) {
+export default async function MembersPage(props: Props) {
+  const params = await props.params;
+
+  const {
+    organization: slug
+  } = params;
+
   const user = await getCurrentUser();
   if (!user) {
     redirect('/auth/sign-in');

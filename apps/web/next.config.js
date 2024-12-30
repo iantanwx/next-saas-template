@@ -5,7 +5,7 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'],
   },
-  webpack(config, { isServer }) {
+  webpack(config) {
     // see https://github.com/vercel/next.js/issues/48177
     // Configures webpack to handle SVG files with SVGR. SVGR optimizes and transforms SVG files
     // into React components. See https://react-svgr.com/docs/next/
@@ -50,7 +50,6 @@ const nextConfig = {
 module.exports = withAxiom(nextConfig);
 
 // Injected content via Sentry wizard below
-
 const { withSentryConfig } = require('@sentry/nextjs');
 
 module.exports = withSentryConfig(
@@ -85,8 +84,3 @@ module.exports = withSentryConfig(
     disableLogger: true,
   }
 );
-
-// Contentlayer
-const { withContentlayer } = require('next-contentlayer');
-
-module.exports = withContentlayer(module.exports);

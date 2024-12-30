@@ -48,3 +48,6 @@ next-env.d.ts
 
 # contentlayer
 .contentlayer
+
+# Turbopack
+.next/trace.log

@@ -1,14 +1,17 @@
 {
   "extends": "@superscale/tsconfig/lib.tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "allowJs": true,
+    "moduleResolution": "bundler",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["src/*"]
+    },
+    "jsx": "preserve",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "tailwind.config.mts"],
-  "exclude": ["dist", "build", "node_modules"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

@@ -5,10 +5,11 @@ import { getCurrentSession } from '@superscale/lib/auth';
 import { redirect } from 'next/navigation';
 
 interface Props {
-  searchParams: { email?: string; invitationId?: string };
+  searchParams: Promise<{ email?: string; invitationId?: string }>;
 }
 
-export default async function SignInPage({ searchParams }: Props) {
+export default async function SignInPage(props: Props) {
+  const searchParams = await props.searchParams;
   const { email, invitationId } = searchParams;
   const { user } = await getCurrentSession();
 
