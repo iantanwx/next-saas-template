@@ -63,8 +63,6 @@
     "@superscale/twconfig": "workspace:^",
     "@svgr/webpack": "^8.1.0",
     "encoding": "^0.1.13",
-    "eslint": "^8.46.0",
-    "eslint-config-next": "15.1.2",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "postcss": "8.4.27",
     "prettier": "^3.0.1",
@@ -79,7 +77,6 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.1",
-    "tslib": "^2.6.2",
-    "typescript-eslint": "^7.7.0"
+    "tslib": "^2.6.2"
   }
 }
