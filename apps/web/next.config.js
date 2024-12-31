@@ -3,7 +3,7 @@ const { withAxiom } = require('next-axiom');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['images.unsplash.com'],
+    remotePatterns: [{ hostname: 'images.unsplash.com' }],
   },
   webpack(config) {
     // see https://github.com/vercel/next.js/issues/48177

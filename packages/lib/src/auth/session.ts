@@ -7,7 +7,7 @@ export async function getCurrentUser() {
 }
 
 export async function getCurrentSession() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user: _user },
   } = await supabase.auth.getUser();
