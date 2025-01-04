@@ -32,19 +32,19 @@ const _users = authSchema.table('users', {
 export const users = pgTable(
   'users',
   {
-    id: text('id').primaryKey().$defaultFn(cuid),
+    id: uuid('id')
+      .primaryKey()
+      .references(() => _users.id, {
+        onDelete: 'cascade',
+      }),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
     deletedAt: timestamp('deleted_at'),
     name: text('name'),
     email: text('email'),
     avatarUrl: text('avatar_url'),
-    authId: uuid('auth_id').references(() => _users.id, {
-      onDelete: 'cascade',
-    }),
   },
   (table) => ({
-    uniqueAuthId: uniqueIndex('unique_auth_id').on(table.authId),
     uniqueEmail: uniqueIndex('unique_email').on(table.email),
   })
 );
@@ -96,7 +96,7 @@ export const organizationMembers = pgTable(
       .references(() => organizations.id, {
         onDelete: 'cascade',
       }),
-    userId: text('user_id')
+    userId: uuid('user_id')
       .notNull()
       .references(() => users.id, {
         onDelete: 'cascade',
@@ -131,7 +131,7 @@ export const userInvitations = pgTable(
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
     deletedAt: timestamp('deleted_at'),
-    createdById: text('created_by_id')
+    createdById: uuid('created_by_id')
       .notNull()
       .references(() => users.id, {
         onDelete: 'cascade',

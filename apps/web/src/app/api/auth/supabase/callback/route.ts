@@ -1,14 +1,13 @@
 import { logger } from '@/lib/logger';
 import { EmailOtpType } from '@superscale/lib/supabase';
 import { createClient } from '@superscale/lib/supabase/server';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   // Exchanges an auth code for the user's session. The `/auth/callback` route is required for the server-side auth flow implemented
-  const supabase = createClient(await cookies());
+  const supabase = await createClient();
   const requestUrl = new URL(request.url);
   const invitationId = requestUrl.searchParams.get('invitationId');
 
