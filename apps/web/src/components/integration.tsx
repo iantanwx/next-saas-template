@@ -39,7 +39,7 @@ export function Integration({
         </p>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Switch id={`${name.toLowerCase()}-notifications`} />
+        <Switch id={`${name.toLowerCase()}-notifications`} checked />
         <Button asChild>
           <Link href={redirectUrl}>Install</Link>
         </Button>
