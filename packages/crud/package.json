@@ -2,7 +2,7 @@
   "name": "@superscale/crud",
   "version": "1.0.0",
   "description": "",
-  "type": "esnext",
+  "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./types": "./src/types.ts"
@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
+    "@superscale/eslintconfig": "workspace:^",
     "@superscale/tsconfig": "workspace:^",
     "drizzle-orm": "^0.31.1",
     "postgres": "^3.4.4"

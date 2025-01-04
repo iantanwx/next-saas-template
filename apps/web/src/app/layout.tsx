@@ -1,7 +1,7 @@
 import { Toaster } from '@/components/ui/toaster';
 import { siteConfig } from '@/config/site';
-import '@/styles/global.css';
 import { TrpcProvider } from '@superscale/trpc/react';
+import '@superscale/ui/globals.css';
 import cn from 'classnames';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';

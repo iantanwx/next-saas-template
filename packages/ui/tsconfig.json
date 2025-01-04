@@ -1,16 +1,10 @@
 {
   "extends": "@superscale/tsconfig/lib.tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "bundler",
-    "module": "ESNext",
     "baseUrl": ".",
     "paths": {
       "@superscale/ui/*": ["./src/*"]
-    },
-    "jsx": "preserve",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    }
   },
   "include": ["."],
   "exclude": ["node_modules"]
