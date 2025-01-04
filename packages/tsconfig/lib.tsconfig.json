@@ -1,14 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "lib",
+  "display": "React Library",
   "extends": "./base.tsconfig.json",
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "target": "ES5",
-    "jsx": "preserve",
-    "noEmit": true,
-    "declaration": false,
-    "declarationMap": false
-  },
-  "exclude": ["node_modules"]
+    "jsx": "react-jsx"
+  }
 }

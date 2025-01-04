@@ -5,13 +5,13 @@
     "module": "ESNext",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@superscale/ui/*": ["./src/*"]
     },
     "jsx": "preserve",
     "allowJs": true,
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["src/**/*"],
+  "include": ["."],
   "exclude": ["node_modules"]
 }

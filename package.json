@@ -9,6 +9,7 @@
     "dev:email": "pnpm --filter=@superscale/email dev",
     "supabase:start": "pnpm --filter=@superscale/crud supabase:start",
     "supabase:stop": "pnpm --filter=@superscale/crud supabase:stop",
+    "supabase:db:push": "pnpm --filter=@superscale/crud supabase db push",
     "supabase:db:reset": "pnpm --filter=@superscale/crud supabase db reset",
     "build:web": "pnpm --filter=@superscale/web build",
     "build:chat": "pnpm --filter=@superscale/chat build",

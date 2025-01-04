@@ -25,6 +25,7 @@ import {
   X,
   Home,
   type LucideIcon,
+  Puzzle,
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -72,4 +73,5 @@ export const Icons = {
   ),
   twitter: Twitter,
   check: Check,
+  puzzle: Puzzle,
 };

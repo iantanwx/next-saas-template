@@ -10,5 +10,10 @@ export const dashboardConfig: DashboardConfig = {
   settingsNav: [
     { name: 'General', href: '/settings', icon: 'home' },
     { name: 'Members', href: '/settings/members', icon: 'user' },
+    {
+      name: 'Integrations',
+      href: '/settings/integrations',
+      icon: 'puzzle',
+    },
   ],
 };

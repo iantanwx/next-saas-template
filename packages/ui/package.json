@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "Shared UI components",
   "type": "module",
-  "main": "./src/index.ts",
+  "private": true,
   "exports": {
-    ".": "./src/index.ts",
+    "./globals.css": "./src/styles/globals.css",
+    "./postcss.config": "./postcss.config.mjs",
+    "./tailwind.config": "./tailwind.config.ts",
+    "./lib/*": "./src/lib/*.ts",
     "./atoms/*": "./src/atoms/*.tsx",
-    "./styles/*": "./src/styles/*.css"
+    "./hooks/*": "./src/hooks/*.ts"
   },
   "scripts": {},
   "keywords": [],
@@ -24,6 +27,9 @@
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-switch": "^1.1.2",
+    "@superscale/eslintconfig": "workspace:^",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.263.1",

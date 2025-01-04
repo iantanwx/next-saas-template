@@ -15,9 +15,7 @@ interface Props {
 export default async function SettingsPage(props: Props) {
   const params = await props.params;
 
-  const {
-    organization: slug
-  } = params;
+  const { organization: slug } = params;
 
   const organization = await organizations.getBySlug(slug);
   const user = await getCurrentUser();

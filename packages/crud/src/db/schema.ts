@@ -166,3 +166,44 @@ export const userInvitationsRelations = relations(
     }),
   })
 );
+
+export const integrationTypes = pgEnum('integration_types', [
+  'slack',
+  'github',
+]);
+
+export const installations = pgTable(
+  'installations',
+  {
+    id: text('id').primaryKey().$defaultFn(cuid),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    deletedAt: timestamp('deleted_at'),
+    type: integrationTypes('type').notNull(),
+    // External IDs (e.g., Slack team ID, GitHub org name)
+    externalId: text('external_id').notNull(),
+    externalName: text('external_name').notNull(),
+    // Integration-specific credentials and metadata stored as JSONB
+    credentials: text('credentials').notNull(),
+    metadata: text('metadata'),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, {
+        onDelete: 'cascade',
+      }),
+  },
+  (table) => ({
+    uniqueIntegration: uniqueIndex().on(
+      table.type,
+      table.externalId,
+      table.organizationId
+    ),
+  })
+);
+
+export const installationsRelations = relations(installations, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [installations.organizationId],
+    references: [organizations.id],
+  }),
+}));
