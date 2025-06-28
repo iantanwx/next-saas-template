@@ -42,12 +42,6 @@ export const serverSchema = z.object({
 
   // email
   RESEND_API_KEY: z.string().default(''),
-
-  // Shopify
-  SHOPIFY_API_KEY: z.string().default(''),
-  SHOPIFY_API_SECRET: z.string().default(''),
-  SHOPIFY_APP_URL: z.string().default(''),
-  SHOPIFY_APP_STORE_URL: z.string().default(''),
 });
 
 const env = {

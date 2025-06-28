@@ -12,8 +12,7 @@
     "supabase:db:push": "pnpm --filter=@superscale/crud supabase db push",
     "supabase:db:reset": "pnpm --filter=@superscale/crud supabase db reset",
     "build:web": "pnpm --filter=@superscale/web build",
-    "build:chat": "pnpm --filter=@superscale/chat build",
-    "tunnel:web": "ngrok http --domain boar-helped-mite.ngrok-free.app 3000"
+    "build:chat": "pnpm --filter=@superscale/chat build"
   },
   "workspaces": [
     "apps/*",
