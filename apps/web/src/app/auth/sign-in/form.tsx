@@ -1,14 +1,14 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@superscale/ui/components/button';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@superscale/ui/components/form';
+import { Input } from '@superscale/ui/components/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';

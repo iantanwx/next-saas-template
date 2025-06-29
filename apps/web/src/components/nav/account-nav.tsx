@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+} from '@superscale/ui/components/dropdown-menu';
 import { UserAvatar } from './user-avatar';
 
 interface Props {

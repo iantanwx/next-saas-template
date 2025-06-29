@@ -1,5 +1,5 @@
 import { DashboardHeader } from '@/components/header';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@superscale/ui/components/separator';
 import { invitations, organizations } from '@superscale/crud';
 import {
   OrganizationRole,

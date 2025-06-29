@@ -5,9 +5,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@superscale/ui/atoms/button';
-import { Switch } from '@superscale/ui/atoms/switch';
+} from '@superscale/ui/components/card';
+import { Button } from '@superscale/ui/components/button';
+import { Switch } from '@superscale/ui/components/switch';
 import { type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 

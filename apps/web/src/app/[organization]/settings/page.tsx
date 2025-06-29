@@ -1,5 +1,5 @@
 import { DashboardHeader } from '@/components/header';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@superscale/ui/components/separator';
 import { organizations } from '@superscale/crud';
 import { getCurrentUser } from '@superscale/lib/auth/session';
 import { redirect } from 'next/navigation';

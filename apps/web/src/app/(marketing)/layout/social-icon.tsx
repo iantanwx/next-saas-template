@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@superscale/ui/components/button';
 import { Icons } from '@/components/util/icons';
 import { Social } from '@/config/socials';
 import Link from 'next/link';

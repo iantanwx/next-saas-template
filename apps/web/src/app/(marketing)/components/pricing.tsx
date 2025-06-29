@@ -1,5 +1,5 @@
-import { Badge, badgeVariants } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Badge, badgeVariants } from '@superscale/ui/components/badge';
+import { Separator } from '@superscale/ui/components/separator';
 import { Icons } from '@/components/util/icons';
 import { VariantProps } from 'class-variance-authority';
 import cn from 'classnames';

@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@superscale/ui/components/badge';
+import { Button } from '@superscale/ui/components/button';
 import { Icons } from '@/components/util/icons';
 import Link from 'next/link';
 import Feature from './components/feature';

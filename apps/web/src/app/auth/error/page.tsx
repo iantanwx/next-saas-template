@@ -1,4 +1,4 @@
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@superscale/ui/components/button';
 import cn from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';

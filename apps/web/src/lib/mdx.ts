@@ -1,4 +1,4 @@
-import { Image } from '@/components/ui/image';
+import { Image } from '@superscale/ui/components/image';
 import fs from 'fs';
 import { compileMDX, MDXRemoteProps } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';

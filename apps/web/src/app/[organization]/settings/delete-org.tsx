@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@superscale/ui/components/button';
 import {
   Dialog,
   DialogContent,
@@ -9,16 +9,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@superscale/ui/components/dialog';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
+} from '@superscale/ui/components/form';
+import { Input } from '@superscale/ui/components/input';
+import { useToast } from '@superscale/ui/components/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   OrganizationWithMembers,

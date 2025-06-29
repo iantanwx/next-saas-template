@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@superscale/ui/components/avatar';
+import { Button } from '@superscale/ui/components/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@superscale/ui/components/dropdown-menu';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useToast } from '@/components/ui/use-toast';
+} from '@superscale/ui/components/select';
+import { useToast } from '@superscale/ui/components/use-toast';
 import { canRemove, getRole } from '@superscale/lib/auth/utils';
 import { OrganizationRole } from '@superscale/crud/types';
 import { t } from '@superscale/trpc/client';

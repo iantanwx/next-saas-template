@@ -1,4 +1,4 @@
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@superscale/ui/components/toaster';
 import { siteConfig } from '@/config/site';
 import { TrpcProvider } from '@superscale/trpc/react';
 import '@superscale/ui/globals.css';

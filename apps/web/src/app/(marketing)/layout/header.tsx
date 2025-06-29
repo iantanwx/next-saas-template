@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { marketingPagesConfig } from '@/config/pages';
-import { Button } from '@/components/ui/button';
+import { Button } from '@superscale/ui/components/button';
 import { usePathname } from 'next/navigation';
 import cn from 'classnames';
 import { Icons } from '@/components/util/icons';

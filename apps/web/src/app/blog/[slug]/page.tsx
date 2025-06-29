@@ -1,4 +1,4 @@
-import { Image } from '@/components/ui/image';
+import { Image } from '@superscale/ui/components/image';
 import { getPost } from '@/lib/mdx';
 import { format, parseISO } from 'date-fns';
 import { notFound } from 'next/navigation';

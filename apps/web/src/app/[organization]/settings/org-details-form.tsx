@@ -1,7 +1,7 @@
 'use client';
 
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { Button } from '@superscale/ui/components/button';
 import {
   Form,
   FormControl,
@@ -9,9 +9,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
+} from '@superscale/ui/components/form';
+import { Input } from '@superscale/ui/components/input';
+import { useToast } from '@superscale/ui/components/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   OrganizationWithMembers,

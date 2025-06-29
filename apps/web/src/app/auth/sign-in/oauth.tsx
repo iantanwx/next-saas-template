@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@superscale/ui/components/button';
 import GoogleLogo from './google_logo.svg';
 import { createClient } from '@superscale/lib/supabase/browser';
 

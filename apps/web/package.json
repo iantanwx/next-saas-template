@@ -23,7 +23,6 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
     "@sentry/nextjs": "^7.120.2",
-    "@superscale/convex": "workspace:^",
     "@superscale/crud": "workspace:^",
     "@superscale/editor": "workspace:^",
     "@superscale/email": "workspace:^",

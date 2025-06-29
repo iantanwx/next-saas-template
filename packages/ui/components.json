@@ -11,10 +11,10 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@superscale/ui/atoms",
+    "components": "@superscale/ui/components",
     "utils": "@superscale/ui/lib/utils",
     "hooks": "@superscale/ui/hooks",
     "lib": "@superscale/ui/lib",
-    "ui": "@superscale/ui/atoms"
+    "ui": "@superscale/ui/components"
   }
 }
