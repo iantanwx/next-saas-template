@@ -3,16 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter=@superscale/web --filter=@superscale/chat --filter=@superscale/convex dev",
+    "dev": "pnpm --filter=@superscale/web",
     "dev:web": "pnpm --filter=@superscale/web dev",
-    "dev:convex": "pnpm --filter=@superscale/convex dev",
     "dev:email": "pnpm --filter=@superscale/email dev",
     "supabase:start": "pnpm --filter=@superscale/crud supabase:start",
     "supabase:stop": "pnpm --filter=@superscale/crud supabase:stop",
     "supabase:db:push": "pnpm --filter=@superscale/crud supabase db push",
     "supabase:db:reset": "pnpm --filter=@superscale/crud supabase db reset",
-    "build:web": "pnpm --filter=@superscale/web build",
-    "build:chat": "pnpm --filter=@superscale/chat build"
+    "build:web": "pnpm --filter=@superscale/web build"
   },
   "workspaces": [
     "apps/*",
