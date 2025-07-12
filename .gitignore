@@ -29,6 +29,10 @@ yarn-error.log*
 .env
 .env*.local
 
+# but allow .env.example files
+!.env.example
+!**/.env.example
+
 # vercel
 .vercel
 
