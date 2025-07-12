@@ -13,11 +13,17 @@ A modern SaaS template built with Next.js 15, Supabase, tRPC, and Convex.
 
 ### Environment Variables Setup
 
-Copy the environment variables template:
+This project requires environment variables in two locations:
 
-```bash
-cp packages/crud/.env.example packages/crud/.env
-```
+1. **For the Next.js application** (`apps/web/`):
+   ```bash
+   cp apps/web/.env.example apps/web/.env.local
+   ```
+
+2. **For Supabase local development** (`packages/crud/`):
+   ```bash
+   cp packages/crud/.env.example packages/crud/.env
+   ```
 
 Then follow the guides below to obtain each set of credentials.
 
@@ -36,7 +42,7 @@ Then follow the guides below to obtain each set of credentials.
    ```bash
    pnpm supabase:start
    ```
-3. After startup, you'll see output with your local credentials:
+3. After startup, you'll see output with your local credentials - add these to `apps/web/.env.local`:
    - `API URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon key` → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `service_role key` → `SUPABASE_SERVICE_ROLE_KEY`
@@ -63,8 +69,8 @@ Then follow the guides below to obtain each set of credentials.
    - Local Supabase: `http://localhost:54321/auth/v1/callback`
    - Production Supabase: `https://your-project-ref.supabase.co/auth/v1/callback`
 7. Copy the Client ID and Client Secret:
-   - Client ID → `SUPABASE_AUTH_GOOGLE_CLIENT_ID`
-   - Client Secret → `SUPABASE_AUTH_GOOGLE_SECRET`
+   - Client ID → `SUPABASE_AUTH_GOOGLE_CLIENT_ID` (add to `packages/crud/.env`)
+   - Client Secret → `SUPABASE_AUTH_GOOGLE_SECRET` (add to `packages/crud/.env`)
 
 ### 3. Email Service (Resend)
 
