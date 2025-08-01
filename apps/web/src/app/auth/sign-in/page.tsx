@@ -15,7 +15,10 @@ export default async function SignInPage(props: Props) {
 
   // we don't redirect the user if they are trying to log in to accept the correct invitation.
   if (!invitationId && user && user.memberships.length > 0) {
-    redirect(`/${user.memberships[0].organization.slug}`);
+    const firstMembership = user.memberships[0];
+    if (firstMembership) {
+      redirect(`/${firstMembership.organization.slug}`);
+    }
   }
 
   return (

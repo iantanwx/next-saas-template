@@ -26,7 +26,7 @@ export async function create(
   completedOnboarding = false
 ) {
   const id = await db.transaction(async (tx) => {
-    const [{ organizationId }] = await tx
+    const result = await tx
       .insert(organizations)
       .values({
         name: organizationName,
@@ -34,6 +34,7 @@ export async function create(
         completedOnboarding,
       })
       .returning({ organizationId: organizations.id });
+    const { organizationId } = result[0]!;
     await tx.insert(organizationMembers).values({
       role: 'owner',
       userId,
@@ -96,13 +97,14 @@ export async function getByNameOrId(nameOrId: string) {
  * @returns
  */
 export async function exists(nameOrSlug: string) {
-  const [{ n }] = await db
+  const result = await db
     .select({ n: count() })
     .from(organizations)
     .where(
       sql`${organizations.name} = ${nameOrSlug} OR ${organizations.slug} = ${nameOrSlug} AND ${organizations.deletedAt} IS NOT NULL`
     );
-
+  
+  const { n } = result[0]!;
   return n > 0;
 }
 

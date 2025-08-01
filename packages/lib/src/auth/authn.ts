@@ -1,10 +1,10 @@
 import { users } from '@superscale/crud';
-import { InvitationWithOrgAndInviter } from '../../../crud/src/invitation';
+import { InvitationWithOrgAndInviter } from '@superscale/crud/types';
 import { createClient } from '../supabase/server';
 import { baseUrl } from '../utils';
 
 export async function getMagicLink(email: string, invitationId?: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.auth.admin.generateLink({
     type: 'magiclink',
     email,
@@ -23,7 +23,7 @@ export async function getInviteLink({
   id,
   email,
 }: InvitationWithOrgAndInviter) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const invitee = await users.findByEmail(email);
   const { data, error } = await supabase.auth.admin.generateLink({
     type: invitee ? 'magiclink' : 'invite',

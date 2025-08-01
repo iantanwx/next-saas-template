@@ -4,13 +4,15 @@ import { organizationMembers, userInvitations } from './db/schema';
 import { OrganizationRole } from './organization';
 import { users } from '.';
 
+export type InvitationWithOrgAndInviter = Awaited<ReturnType<typeof findById>>;
+
 export async function findOrCreate(
   email: string,
   organizationId: string,
   role: OrganizationRole,
   createdById: string
 ) {
-  const [{ id }] = await db
+  const result = await db
     .insert(userInvitations)
     .values({
       email,
@@ -23,10 +25,10 @@ export async function findOrCreate(
       set: { role: role },
     })
     .returning({ id: userInvitations.id });
+
+  const { id } = result[0]!;
   return await findById(id);
 }
-
-export type InvitationWithOrgAndInviter = Awaited<ReturnType<typeof findById>>;
 
 export async function findById(id: string) {
   const invitation = await db.query.userInvitations.findFirst({

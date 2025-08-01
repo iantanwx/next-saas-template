@@ -11,7 +11,7 @@ export default async function Dashboard() {
   if (
     !user.name ||
     !user.memberships?.length ||
-    !user.memberships[0].organization.completedOnboarding
+    !user.memberships[0]?.organization.completedOnboarding
   ) {
     redirect(`/onboarding`);
   }

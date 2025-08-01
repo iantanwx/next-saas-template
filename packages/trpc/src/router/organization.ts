@@ -247,7 +247,7 @@ const leaveOrganization = protectedProcedure
 
 async function sendInvitationEmail(
   senderUserId: string,
-  invitation: NonNullable<crud.invitations.InvitationWithOrgAndInviter>,
+  invitation: crud.invitations.InvitationWithOrgAndInviter,
   email: string
 ) {
   const inviter = await crud.users.getById(senderUserId);

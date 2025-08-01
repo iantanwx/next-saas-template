@@ -1,9 +1,14 @@
 'use client';
 import { Button } from '@superscale/ui/components/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@superscale/ui/components/card';
 import {
-  InvitationWithOrgAndInviter,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@superscale/ui/components/card';
+import {
   UserWithMemberships,
+  InvitationWithOrgAndInviter,
 } from '@superscale/crud/types';
 import { t } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';

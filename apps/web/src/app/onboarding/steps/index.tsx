@@ -46,12 +46,12 @@ function Footer({ loading }: FooterProps) {
             Previous
           </Button>
         )}
-        {!isLastStep && stepConfig.renderNext && (
+        {!isLastStep && stepConfig?.renderNext && (
           <Button type="submit" form={`onboarding-step-${activeStep + 1}`}>
             Next
           </Button>
         )}
-        {isLastStep && stepConfig.renderNext && (
+        {isLastStep && stepConfig?.renderNext && (
           <Button type="submit" form={`onboarding-step-${activeStep + 1}`}>
             Finish
           </Button>

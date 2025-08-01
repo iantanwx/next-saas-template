@@ -12,12 +12,11 @@ export default async function OnboardingPage() {
     return redirect('/auth/sign-in');
   }
 
-  if (
-    user.name &&
-    user.memberships?.length > 0 &&
-    user.memberships[0].organization.completedOnboarding
-  ) {
-    return redirect(`/${user.memberships[0].organization.slug}`);
+  if (user.name && user.memberships?.length > 0) {
+    const firstMembership = user.memberships[0];
+    if (firstMembership?.organization.completedOnboarding) {
+      return redirect(`/${firstMembership.organization.slug}`);
+    }
   }
 
   return (
