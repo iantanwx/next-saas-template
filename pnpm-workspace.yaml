@@ -1,3 +1,32 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+catalog:
+  # Core React ecosystem (used in 5+ packages)
+  react: 19.1.1
+  react-dom: 19.1.1
+  '@types/react': ^19.0.2
+  '@types/react-dom': ^19.0.2
+
+  # Core build tools (used in 3+ packages)
+  typescript: 5.9.2
+  '@types/node': ^22.14.1
+  next: 15.4.5
+
+  # Shared utilities (used in 3+ packages)
+  clsx: ^2.1.1
+  tailwind-merge: ^3.3.1
+  zod: ^3.24.1
+
+  # Form handling (used in web + ui)
+  react-hook-form: ^7.62.0
+
+  # CSS pipeline (standardize across all packages)
+  tailwindcss: 4.0.0
+  postcss: 8.4.49
+  autoprefixer: 10.4.14
+
+  # Code quality (workspace-wide standards)
+  prettier: ^3.4.2
+  eslint: ^8.56.0

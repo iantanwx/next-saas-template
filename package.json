@@ -19,15 +19,6 @@
   "dependencies": {
     "prettier": "^3.0.1"
   },
-  "pnpm": {
-    "overrides": {
-      "next": "15.4.5",
-      "react": "19.0.0",
-      "@types/react": "19.0.2",
-      "@types/react-dom": "19.0.2",
-      "typescript": "5.9.2"
-    }
-  },
   "packageManager": "pnpm@9.15.2",
   "devDependencies": {
     "turbo": "^2.3.3"

@@ -23,9 +23,9 @@
     "@superscale/crud": "workspace:^",
     "@superscale/email": "workspace:^",
     "@superscale/tsconfig": "workspace:^",
-    "clsx": "^2.0.0",
-    "next": "14.2.3",
-    "tailwind-merge": "^1.14.0",
-    "zod": "^3.22.2"
+    "clsx": "catalog:",
+    "next": "catalog:",
+    "tailwind-merge": "catalog:",
+    "zod": "catalog:"
   }
 }
