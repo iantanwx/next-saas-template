@@ -1,28 +1,5 @@
 'use client';
 
-// @ts-ignore
-import tippy from 'tippy.js';
-import {
-  useEditor,
-  EditorContent,
-  NodeViewWrapper,
-  NodeViewContent,
-  ReactNodeViewRenderer,
-  ReactRenderer,
-} from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import {
-  Editor as _Editor,
-  Range,
-  Node,
-  NodeViewProps,
-  mergeAttributes,
-  Extension,
-} from '@tiptap/core';
-import Suggestion, { SuggestionOptions } from '@tiptap/suggestion';
-
-import { Fzf, FzfOptions } from 'fzf';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Select,
   SelectContent,
@@ -30,6 +7,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@superscale/ui/atoms/select';
+import {
+  type Editor as _Editor,
+  Extension,
+  mergeAttributes,
+  Node,
+  type NodeViewProps,
+  type Range,
+} from '@tiptap/core';
+import {
+  EditorContent,
+  NodeViewContent,
+  NodeViewWrapper,
+  ReactNodeViewRenderer,
+  ReactRenderer,
+  useEditor,
+} from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Suggestion, { type SuggestionOptions } from '@tiptap/suggestion';
+
+import { Fzf, type FzfOptions } from 'fzf';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+// @ts-ignore
+import tippy from 'tippy.js';
 
 function PromptView(_: NodeViewProps) {
   return (

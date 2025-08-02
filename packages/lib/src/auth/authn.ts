@@ -1,5 +1,5 @@
 import { users } from '@superscale/crud';
-import { InvitationWithOrgAndInviter } from '@superscale/crud/types';
+import type { InvitationWithOrgAndInviter } from '@superscale/crud/types';
 import { createClient } from '../supabase/server';
 import { baseUrl } from '../utils';
 

@@ -1,11 +1,11 @@
 import { Image } from '@superscale/ui/components/image';
 import fs from 'fs';
-import { compileMDX, MDXRemoteProps } from 'next-mdx-remote/rsc';
-import remarkGfm from 'remark-gfm';
+import { compileMDX, type MDXRemoteProps } from 'next-mdx-remote/rsc';
+import path from 'path';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import path from 'path';
+import remarkGfm from 'remark-gfm';
 
 const postsDirectory = path.join(process.cwd(), 'src/content/posts');
 

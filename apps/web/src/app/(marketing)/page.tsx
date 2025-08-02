@@ -1,7 +1,7 @@
 import { Badge } from '@superscale/ui/components/badge';
 import { Button } from '@superscale/ui/components/button';
-import { Icons } from '@/components/util/icons';
 import Link from 'next/link';
+import { Icons } from '@/components/util/icons';
 import Feature from './components/feature';
 import Pricing from './components/pricing';
 

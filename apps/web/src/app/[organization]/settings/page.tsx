@@ -1,8 +1,8 @@
-import { DashboardHeader } from '@/components/header';
-import { Separator } from '@superscale/ui/components/separator';
 import { organizations } from '@superscale/crud';
 import { getCurrentUser } from '@superscale/lib/auth/session';
+import { Separator } from '@superscale/ui/components/separator';
 import { redirect } from 'next/navigation';
+import { DashboardHeader } from '@/components/header';
 import { DeleteOrganization } from './delete-org';
 import { OrganizationSettingsForm } from './org-details-form';
 

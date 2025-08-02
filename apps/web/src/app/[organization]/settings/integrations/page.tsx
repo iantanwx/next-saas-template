@@ -1,5 +1,5 @@
-import { Integration } from '@/components/integration';
 import { Slack } from 'lucide-react';
+import { Integration } from '@/components/integration';
 
 const integrations = [
   {

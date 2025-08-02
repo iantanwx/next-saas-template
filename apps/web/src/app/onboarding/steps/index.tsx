@@ -1,11 +1,11 @@
 'use client';
 
+import type { UserWithMemberships } from '@superscale/crud/types';
 import { Button } from '@superscale/ui/components/button';
 import { Card, CardFooter } from '@superscale/ui/components/card';
 import { Progress } from '@superscale/ui/components/progress';
-import { UserWithMemberships } from '@superscale/crud/types';
 import { useState } from 'react';
-import { Wizard, useWizard } from 'react-use-wizard';
+import { useWizard, Wizard } from 'react-use-wizard';
 import NameStep from './name';
 import OrganizationStep from './organization';
 

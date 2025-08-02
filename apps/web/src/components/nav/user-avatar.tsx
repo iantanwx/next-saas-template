@@ -1,5 +1,10 @@
 // import { User } from 'next-auth';
-import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from '@superscale/ui/components/avatar';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  type AvatarProps,
+} from '@superscale/ui/components/avatar';
 import { Icons } from '../icons';
 
 interface Props extends AvatarProps {

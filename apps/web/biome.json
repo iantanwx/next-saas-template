@@ -1,0 +1,21 @@
+{
+  "root": false,
+  "extends": "//",
+  "linter": {
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    },
+    "rules": {
+      "nursery": {
+        "useSortedClasses": "warn"
+      },
+      "suspicious": {
+        "noConsole": "warn"
+      }
+    }
+  },
+  "javascript": {
+    "globals": ["React", "JSX"]
+  }
+}

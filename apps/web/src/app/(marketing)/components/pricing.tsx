@@ -1,8 +1,8 @@
-import { Badge, badgeVariants } from '@superscale/ui/components/badge';
+import { Badge, type badgeVariants } from '@superscale/ui/components/badge';
 import { Separator } from '@superscale/ui/components/separator';
-import { Icons } from '@/components/util/icons';
-import { VariantProps } from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import cn from 'classnames';
+import { Icons } from '@/components/util/icons';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   badge: {

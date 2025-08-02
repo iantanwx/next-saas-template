@@ -1,0 +1,7 @@
+node_modules/
+.next/
+dist/
+build/
+*.d.ts
+pnpm-lock.yaml
+**/types/package.json

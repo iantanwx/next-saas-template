@@ -1,6 +1,12 @@
 'use client';
 
-import { Icons } from '@/components/icons';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type {
+  Organization,
+  OrganizationRole,
+  UserWithMemberships,
+} from '@superscale/crud/types';
+import { t } from '@superscale/trpc/client';
 import { Button } from '@superscale/ui/components/button';
 import {
   Form,
@@ -19,17 +25,11 @@ import {
   SelectValue,
 } from '@superscale/ui/components/select';
 import { useToast } from '@superscale/ui/components/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Organization,
-  OrganizationRole,
-  UserWithMemberships,
-} from '@superscale/crud/types';
-import { t } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Icons } from '@/components/icons';
 
 const formSchema = z.object({
   email: z.string().email(),

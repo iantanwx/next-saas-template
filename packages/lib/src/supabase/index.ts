@@ -1,7 +1,7 @@
+export * from '@supabase/supabase-js';
 export { createClient as createBrowserClient } from './browser';
 export {
-  createClient as createServerClient,
   type Cookie,
   type CookieStore,
+  createClient as createServerClient,
 } from './server';
-export * from '@supabase/supabase-js';

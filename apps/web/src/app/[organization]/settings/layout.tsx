@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { SideNav } from '@/components/nav/side-nav';
 import { dashboardConfig } from '@/config/dashboard';
 

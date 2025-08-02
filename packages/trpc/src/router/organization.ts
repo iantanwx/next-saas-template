@@ -260,8 +260,8 @@ async function sendInvitationEmail(
     {
       link,
       organizationName: invitation.organization.name,
-      inviterName: inviter.name!!,
-      inviterEmail: inviter.email!!,
+      inviterName: inviter.name!,
+      inviterEmail: inviter.email!,
     }
   );
 }

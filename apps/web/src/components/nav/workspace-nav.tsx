@@ -1,5 +1,7 @@
 'use client';
 
+import type { UserWithMemberships } from '@superscale/crud/types';
+import { createClient } from '@superscale/lib/supabase/browser';
 import { Button } from '@superscale/ui/components/button';
 import {
   DropdownMenu,
@@ -9,8 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@superscale/ui/components/dropdown-menu';
-import { UserWithMemberships } from '@superscale/crud/types';
-import { createClient } from '@superscale/lib/supabase/browser';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 

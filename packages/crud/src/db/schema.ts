@@ -1,7 +1,7 @@
 import { init } from '@paralleldrive/cuid2';
 import { relations, sql } from 'drizzle-orm';
 import {
-  AnyPgColumn,
+  type AnyPgColumn,
   boolean,
   index,
   pgEnum,

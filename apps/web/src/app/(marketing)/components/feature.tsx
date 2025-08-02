@@ -1,5 +1,5 @@
-import { Icons, KnownIcon } from '@/components/util/icons';
 import cn from 'classnames';
+import { Icons, type KnownIcon } from '@/components/util/icons';
 
 type Props = {
   className?: string;

@@ -11,15 +11,11 @@ interface Props {
 export default async function AcceptInvitationPage(props: Props) {
   const searchParams = await props.searchParams;
 
-  const {
-    accept
-  } = searchParams;
+  const { accept } = searchParams;
 
   const params = await props.params;
 
-  const {
-    invitationId
-  } = params;
+  const { invitationId } = params;
 
   const invitation = await invitations.findById(invitationId);
   if (!invitation) {

@@ -1,15 +1,15 @@
-import { DashboardHeader } from '@/components/header';
-import { Separator } from '@superscale/ui/components/separator';
 import { invitations, organizations } from '@superscale/crud';
-import {
+import type {
   OrganizationRole,
   OrganizationWithMembers,
 } from '@superscale/crud/types';
 import { getCurrentUser } from '@superscale/lib/auth/session';
+import { Separator } from '@superscale/ui/components/separator';
 import { redirect } from 'next/navigation';
+import { DashboardHeader } from '@/components/header';
 import { InvitationForm } from './invitation-form';
 import { MembersTable } from './tables';
-import { RowData } from './tables/columns';
+import type { RowData } from './tables/columns';
 
 async function fetchData(organization: OrganizationWithMembers) {
   const invitationRecords = await invitations.listByOrganization(
@@ -21,8 +21,8 @@ async function fetchData(organization: OrganizationWithMembers) {
     data.push({
       type: 'member',
       userId: member.userId,
-      name: member.user.name!!,
-      email: member.user.email!!,
+      name: member.user.name!,
+      email: member.user.email!,
       role: member.role as OrganizationRole,
       imageUrl: member.user.avatarUrl,
     });
@@ -47,9 +47,7 @@ interface Props {
 export default async function MembersPage(props: Props) {
   const params = await props.params;
 
-  const {
-    organization: slug
-  } = params;
+  const { organization: slug } = params;
 
   const user = await getCurrentUser();
   if (!user) {

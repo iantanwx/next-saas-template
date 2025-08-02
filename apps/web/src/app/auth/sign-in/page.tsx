@@ -1,8 +1,8 @@
+import { getCurrentSession } from '@superscale/lib/auth';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 import SignInForm from './form';
 import Oauth from './oauth';
-import { getCurrentSession } from '@superscale/lib/auth';
-import { redirect } from 'next/navigation';
 
 interface Props {
   searchParams: Promise<{ email?: string; invitationId?: string }>;

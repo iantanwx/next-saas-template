@@ -10,17 +10,19 @@
     "supabase:stop": "pnpm --filter=@superscale/crud supabase:stop",
     "supabase:db:push": "pnpm --filter=@superscale/crud supabase db push",
     "supabase:db:reset": "pnpm --filter=@superscale/crud supabase db reset",
-    "build:web": "pnpm --filter=@superscale/web build"
+    "build:web": "pnpm --filter=@superscale/web build",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write ."
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
-  "dependencies": {
-    "prettier": "^3.0.1"
-  },
+  "dependencies": {},
   "packageManager": "pnpm@9.15.2",
   "devDependencies": {
+    "@biomejs/biome": "2.1.3",
     "turbo": "^2.3.3"
   }
 }

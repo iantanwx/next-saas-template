@@ -1,8 +1,8 @@
 import { organizations } from '@superscale/crud';
-import { TRPCError, initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { z } from 'zod';
-import { TrpcContext } from './context';
+import type { TrpcContext } from './context';
 
 const t = initTRPC.context<TrpcContext>().create({
   transformer: superjson,

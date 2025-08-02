@@ -1,6 +1,6 @@
-import { WorkspaceNav } from '@/components/nav/workspace-nav';
 import { getCurrentUser } from '@superscale/lib/auth/session';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
+import { WorkspaceNav } from '@/components/nav/workspace-nav';
 import { Back } from './back';
 
 export async function NotFoundLayout({ children }: PropsWithChildren) {

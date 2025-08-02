@@ -1,5 +1,6 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@superscale/ui/components/button';
 import {
   Form,
@@ -9,7 +10,6 @@ import {
   FormMessage,
 } from '@superscale/ui/components/form';
 import { Input } from '@superscale/ui/components/input';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';

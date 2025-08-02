@@ -1,7 +1,7 @@
-import { logger } from '@/lib/logger';
-import { EmailOtpType } from '@superscale/lib/supabase';
+import type { EmailOtpType } from '@superscale/lib/supabase';
 import { createClient } from '@superscale/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     logger.error({ error }, 'Error exchanging code for session');
     return redirect(requestUrl.origin + '/error');
   }
-  const path = !!invitationId
+  const path = invitationId
     ? `/auth/invitation/${invitationId}?accept=true`
     : '/onboarding';
   return redirect(requestUrl.origin + path);

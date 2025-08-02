@@ -1,8 +1,8 @@
 'use client';
 
+import { createClient } from '@superscale/lib/supabase/browser';
 import { Button } from '@superscale/ui/components/button';
 import GoogleLogo from './google_logo.svg';
-import { createClient } from '@superscale/lib/supabase/browser';
 
 interface Props {
   invitationId?: string;

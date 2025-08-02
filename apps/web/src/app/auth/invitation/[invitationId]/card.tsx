@@ -1,4 +1,9 @@
 'use client';
+import type {
+  InvitationWithOrgAndInviter,
+  UserWithMemberships,
+} from '@superscale/crud/types';
+import { t } from '@superscale/trpc/client';
 import { Button } from '@superscale/ui/components/button';
 import {
   Card,
@@ -6,11 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@superscale/ui/components/card';
-import {
-  UserWithMemberships,
-  InvitationWithOrgAndInviter,
-} from '@superscale/crud/types';
-import { t } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 
 interface Props {

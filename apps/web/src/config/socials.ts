@@ -1,4 +1,4 @@
-import { KnownIcon } from '@/components/util/icons';
+import type { KnownIcon } from '@/components/util/icons';
 
 export type Social = {
   name: string;

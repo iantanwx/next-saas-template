@@ -1,6 +1,6 @@
+import { TrpcProvider } from '@superscale/trpc/react';
 import { Toaster } from '@superscale/ui/components/toaster';
 import { siteConfig } from '@/config/site';
-import { TrpcProvider } from '@superscale/trpc/react';
 import '@superscale/ui/globals.css';
 import cn from 'classnames';
 import type { Metadata } from 'next';

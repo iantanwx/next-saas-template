@@ -1,3 +1,4 @@
+import { Button } from '@superscale/ui/components/button';
 import {
   Card,
   CardContent,
@@ -6,9 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@superscale/ui/components/card';
-import { Button } from '@superscale/ui/components/button';
 import { Switch } from '@superscale/ui/components/switch';
-import { type LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 
 interface IntegrationProps {

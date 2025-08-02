@@ -19,7 +19,7 @@ export default async function Blog() {
       <h1 className="mb-4 text-4xl font-bold lg:text-6xl">Blog</h1>
       <p className="text-xl">A collection of articles.</p>
       <Separator className="mb-4 mt-6" />
-      {!!posts.length ? (
+      {posts.length ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {posts.map((post) => (
             <Link

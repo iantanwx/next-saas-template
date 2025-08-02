@@ -1,4 +1,7 @@
-import { OrganizationRole, UserWithMemberships } from '@superscale/crud/types';
+import type {
+  OrganizationRole,
+  UserWithMemberships,
+} from '@superscale/crud/types';
 
 export function getRole(user: UserWithMemberships, organizationId: string) {
   const membership = user.memberships.find(

@@ -1,8 +1,8 @@
+import { getCurrentUser } from '@superscale/lib/auth/session';
+import { notFound, redirect } from 'next/navigation';
 import { AccountNav } from '@/components/nav/account-nav';
 import { MainNav } from '@/components/nav/main-nav';
 import { dashboardConfig } from '@/config/dashboard';
-import { getCurrentUser } from '@superscale/lib/auth/session';
-import { notFound, redirect } from 'next/navigation';
 
 interface Props {
   children: React.ReactNode;
@@ -12,13 +12,9 @@ interface Props {
 export default async function DashboardLayout(props: Props) {
   const params = await props.params;
 
-  const {
-    organization
-  } = params;
+  const { organization } = params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const user = await getCurrentUser();
   if (!user) {

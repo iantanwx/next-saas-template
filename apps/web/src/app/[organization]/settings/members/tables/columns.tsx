@@ -1,5 +1,7 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
+import type { OrganizationRole } from '@superscale/crud/types';
+import { canRemove, getRole } from '@superscale/lib/auth/utils';
+import { t } from '@superscale/trpc/client';
 import {
   Avatar,
   AvatarFallback,
@@ -20,9 +22,6 @@ import {
   SelectValue,
 } from '@superscale/ui/components/select';
 import { useToast } from '@superscale/ui/components/use-toast';
-import { canRemove, getRole } from '@superscale/lib/auth/utils';
-import { OrganizationRole } from '@superscale/crud/types';
-import { t } from '@superscale/trpc/client';
 import { createColumnHelper } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -108,6 +107,7 @@ export const columns = [
       const router = useRouter();
       const { toast } = useToast();
       const updateRole = t.organization.updateMemberRole.useMutation();
+      // biome-ignore lint: meta always exists.
       const { user: currentUser, organization } = props.table.options.meta!;
       const organizationRole = currentUser.memberships.find(
         (m) => m.organization.id === organization.id
@@ -121,6 +121,7 @@ export const columns = [
           return;
         try {
           await updateRole.mutateAsync({
+            // biome-ignore lint: meta always exists.
             organizationId: props.table.options.meta!.organization.id,
             userId: props.row.original.userId,
             role: value,
@@ -180,7 +181,9 @@ export const columns = [
     size: 50,
     cell(props) {
       const row = props.row;
+      // biome-ignore lint: meta always exists.
       const { user: currentUser, organization } = props.table.options.meta!;
+      // biome-ignore lint: user always have a role for the organization.
       const organizationRole = getRole(currentUser, organization.id)!;
       const removeMember = t.organization.removeMember.useMutation();
       const leaveOrganization = t.organization.leaveOrganization.useMutation();

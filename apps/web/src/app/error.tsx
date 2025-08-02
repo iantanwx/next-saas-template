@@ -1,8 +1,8 @@
 'use client';
 
-import { Back } from '@/components/layout/back';
 import { Button } from '@superscale/ui/components/button';
 import Image from 'next/image';
+import { Back } from '@/components/layout/back';
 
 export default function Error({ reset }: { error: Error; reset: () => void }) {
   return (

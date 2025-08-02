@@ -1,5 +1,5 @@
-import * as z from 'zod';
 import Image from 'next/image';
+import * as z from 'zod';
 
 const schema = z.object({
   email: z.string().email(),

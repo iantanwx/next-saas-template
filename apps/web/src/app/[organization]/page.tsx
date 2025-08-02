@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 export default async function Dashboard() {
   const user = await getCurrentUser();
   if (!user) {
-    redirect(`/auth/sign-in`);
+    redirect('/auth/sign-in');
   }
 
   // Redirect to onboarding if the user doesn't yet have an organization or has not completed onboarding
@@ -13,7 +13,7 @@ export default async function Dashboard() {
     !user.memberships?.length ||
     !user.memberships[0]?.organization.completedOnboarding
   ) {
-    redirect(`/onboarding`);
+    redirect('/onboarding');
   }
 
   return (

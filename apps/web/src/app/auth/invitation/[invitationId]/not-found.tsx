@@ -1,7 +1,12 @@
-import { NotFoundLayout } from '@/components/layout/not-found';
 import { Button } from '@superscale/ui/components/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@superscale/ui/components/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@superscale/ui/components/card';
 import Link from 'next/link';
+import { NotFoundLayout } from '@/components/layout/not-found';
 
 export default async function InvitationNotFound() {
   return (

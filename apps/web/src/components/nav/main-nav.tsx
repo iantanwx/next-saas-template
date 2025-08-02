@@ -1,13 +1,13 @@
 'use client';
 
-import { Icons } from '@/components/icons';
 import cn from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useSelectedLayoutSegment } from 'next/navigation';
 import { useState } from 'react';
+import { Icons } from '@/components/icons';
 import { MobileNav } from './mobile-nav';
-import { NavItem } from './types';
+import type { NavItem } from './types';
 
 interface NavProps {
   items: NavItem[];

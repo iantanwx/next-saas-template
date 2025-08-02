@@ -1,9 +1,8 @@
-import { Back } from '@/components/layout/back';
-import { WorkspaceNav } from '@/components/nav/workspace-nav';
 import { getCurrentSession } from '@superscale/lib/auth';
-
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
+import { Back } from '@/components/layout/back';
+import { WorkspaceNav } from '@/components/nav/workspace-nav';
 import Onboarding from './steps';
 
 export default async function OnboardingPage() {

@@ -3,7 +3,7 @@ import {
   createTrpcContext,
   fetchRequestHandler,
 } from '@superscale/trpc';
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 function handler(req: NextRequest) {
   return fetchRequestHandler({

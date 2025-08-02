@@ -1,10 +1,15 @@
 'use client';
 
+import type { Organization, UserWithMemberships } from '@superscale/crud/types';
 import { Input } from '@superscale/ui/components/input';
-import { Table, TableBody, TableCell, TableRow } from '@superscale/ui/components/table';
-import { UserWithMemberships, Organization } from '@superscale/crud/types';
 import {
-  ColumnFiltersState,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from '@superscale/ui/components/table';
+import {
+  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -12,7 +17,7 @@ import {
 } from '@tanstack/react-table';
 import { SearchIcon } from 'lucide-react';
 import { useState } from 'react';
-import { RowData, columns } from './columns';
+import { columns, type RowData } from './columns';
 
 interface Props<TData> {
   // See https://github.com/TanStack/table/issues/4382

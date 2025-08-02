@@ -1,8 +1,8 @@
 import {
-  InferSelectModel,
   and,
   count,
   eq,
+  type InferSelectModel,
   inArray,
   or,
   sql,
@@ -103,7 +103,7 @@ export async function exists(nameOrSlug: string) {
     .where(
       sql`${organizations.name} = ${nameOrSlug} OR ${organizations.slug} = ${nameOrSlug} AND ${organizations.deletedAt} IS NOT NULL`
     );
-  
+
   const { n } = result[0]!;
   return n > 0;
 }

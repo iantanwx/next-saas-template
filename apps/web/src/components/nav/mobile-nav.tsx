@@ -1,11 +1,10 @@
+import { useLockBodyScroll } from '@uidotdev/usehooks';
 import Image from 'next/image';
 import Link from 'next/link';
-
-import { cn } from '@/lib/utils';
-import { useLockBodyScroll } from '@uidotdev/usehooks';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { NavItem } from './types';
+import { cn } from '@/lib/utils';
+import type { NavItem } from './types';
 
 interface MobileNavProps {
   items: NavItem[];

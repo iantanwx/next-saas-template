@@ -35,7 +35,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@superscale/eslintconfig": "workspace:^",
     "@superscale/tsconfig": "workspace:^",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.0.0",

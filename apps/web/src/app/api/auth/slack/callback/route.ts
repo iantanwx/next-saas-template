@@ -1,6 +1,6 @@
-import { logger } from '@/lib/logger';
 import { createClient } from '@superscale/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 

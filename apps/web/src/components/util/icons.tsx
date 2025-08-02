@@ -1,16 +1,16 @@
 import {
   ArrowUpRight,
+  BadgeDollarSign,
   CheckCircle2,
+  Cloud,
+  ExternalLink,
+  GitBranch,
+  type LucideProps,
   Mail,
   RefreshCw,
-  GitBranch,
-  Cloud,
   RotateCcw,
   Server,
-  BadgeDollarSign,
-  ExternalLink,
 } from 'lucide-react';
-import { LucideProps } from 'lucide-react';
 
 function NextJs(props: LucideProps) {
   return (

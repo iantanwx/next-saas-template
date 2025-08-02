@@ -1,6 +1,11 @@
 'use client';
 
-import { Icons } from '@/components/icons';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type {
+  OrganizationWithMembers,
+  UserWithMemberships,
+} from '@superscale/crud/types';
+import { TRPCClientError, t } from '@superscale/trpc/client';
 import { Button } from '@superscale/ui/components/button';
 import {
   Form,
@@ -12,17 +17,12 @@ import {
 } from '@superscale/ui/components/form';
 import { Input } from '@superscale/ui/components/input';
 import { useToast } from '@superscale/ui/components/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  OrganizationWithMembers,
-  UserWithMemberships,
-} from '@superscale/crud/types';
-import { TRPCClientError, t } from '@superscale/trpc/client';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Icons } from '@/components/icons';
 
 interface Props {
   user: UserWithMemberships;

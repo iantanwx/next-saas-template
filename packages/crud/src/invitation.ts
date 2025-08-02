@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
+import { users } from '.';
 import { db } from './db/connection';
 import { organizationMembers, userInvitations } from './db/schema';
-import { OrganizationRole } from './organization';
-import { users } from '.';
+import type { OrganizationRole } from './organization';
 
 export type InvitationWithOrgAndInviter = Awaited<ReturnType<typeof findById>>;
 

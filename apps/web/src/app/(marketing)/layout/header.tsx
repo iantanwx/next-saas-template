@@ -1,11 +1,11 @@
 'use client';
 
-import Link from 'next/link';
-import { marketingPagesConfig } from '@/config/pages';
 import { Button } from '@superscale/ui/components/button';
-import { usePathname } from 'next/navigation';
 import cn from 'classnames';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Icons } from '@/components/util/icons';
+import { marketingPagesConfig } from '@/config/pages';
 
 interface Props {
   className?: string;

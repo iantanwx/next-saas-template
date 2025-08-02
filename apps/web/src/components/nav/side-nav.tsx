@@ -1,10 +1,10 @@
 'use client';
 
-import { Icons } from '@/components/icons';
 import cn from 'classnames';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
-import { SidebarNavItem } from './types';
+import { Icons } from '@/components/icons';
+import type { SidebarNavItem } from './types';
 
 interface Props {
   items: SidebarNavItem[];
