@@ -57,7 +57,6 @@ The project uses pnpm workspaces with the following structure:
 - `@superscale/editor` - Rich text editor components
 - `@superscale/eslintconfig` - Shared ESLint configurations
 - `@superscale/tsconfig` - Shared TypeScript configurations
-- `@superscale/twconfig` - Shared Tailwind CSS configuration
 
 ### Key Features
 - Multi-tenant organization system with user invitations
