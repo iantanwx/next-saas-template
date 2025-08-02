@@ -37,7 +37,7 @@ export default async function DashboardLayout(props: Props) {
   return (
     <div className="flex min-h-screen flex-col space-y-6">
       <header className="bg-background sticky top-0 z-40 border-b">
-        <div className="container flex h-16 items-center justify-between py-4">
+        <div className="flex h-16 items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <MainNav items={dashboardConfig.mainNav} />
           <AccountNav user={user} />
         </div>
