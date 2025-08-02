@@ -19,9 +19,7 @@ export default function Oauth({ invitationId }: Props) {
             provider: 'google',
             options: {
               redirectTo: 'http://localhost:3000/api/auth/supabase/callback',
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-expect-error
-              queryParams: { invitationId: invitationId ?? undefined },
+              queryParams: invitationId ? { invitationId } : {},
             },
           });
         }}

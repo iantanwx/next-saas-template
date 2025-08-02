@@ -18,18 +18,16 @@
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",
     "@tiptap/suggestion": "^2.4.0",
-    "add": "^2.0.6",
     "fzf": "^0.5.2",
     "prosemirror-markdown": "^1.13.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tippy": "^0.0.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@superscale/tsconfig": "workspace:^",
-    "@types/react": "18.2.20",
-    "@types/react-dom": "18.2.7",
-    "typescript": "5.1.6"
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
   }
 }

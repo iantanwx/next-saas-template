@@ -20,16 +20,17 @@
     "@superscale/crud": "workspace:^",
     "@superscale/email": "workspace:^",
     "@superscale/lib": "workspace:^",
-    "@superscale/tsconfig": "workspace:^",
-    "@tanstack/react-query": "^5.84.0",
+    "@tanstack/react-query": "catalog:",
     "@trpc/client": "11.4.3",
     "@trpc/next": "11.4.3",
     "@trpc/react-query": "11.4.3",
     "@trpc/server": "11.4.3",
-    "@types/react": "catalog:",
     "react": "catalog:",
     "superjson": "^1.13.1",
-    "upgrade": "^1.1.0",
     "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@superscale/tsconfig": "workspace:^",
+    "@types/react": "catalog:"
   }
 }

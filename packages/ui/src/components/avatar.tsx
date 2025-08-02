@@ -51,3 +51,4 @@ function AvatarFallback({
 }
 
 export { Avatar, AvatarImage, AvatarFallback }
+export type AvatarProps = React.ComponentProps<typeof AvatarPrimitive.Root>

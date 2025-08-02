@@ -18,6 +18,11 @@ catalog:
   clsx: ^2.1.1
   tailwind-merge: ^3.3.1
   zod: ^3.24.1
+  'class-variance-authority': ^0.7.1
+  'date-fns': ^2.30.0
+
+  # Data fetching (used in web + trpc)
+  '@tanstack/react-query': ^5.84.0
 
   # Form handling (used in web + ui)
   react-hook-form: ^7.62.0

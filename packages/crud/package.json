@@ -18,14 +18,14 @@
   "license": "ISC",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "@superscale/eslintconfig": "workspace:^",
-    "@superscale/tsconfig": "workspace:^",
-    "drizzle-orm": "^0.31.1",
+    "drizzle-orm": "^0.44.4",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
-    "@types/node": "20.4.9",
-    "drizzle-kit": "^0.22.4",
+    "@superscale/eslintconfig": "workspace:^",
+    "@superscale/tsconfig": "workspace:^",
+    "@types/node": "catalog:",
+    "drizzle-kit": "^0.31.4",
     "supabase": "2.30.4"
   }
 }
