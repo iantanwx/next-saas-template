@@ -24,7 +24,7 @@ export default async function OnboardingPage() {
         <Back />
         {user ? <WorkspaceNav user={user} /> : null}
       </div>
-      <main className="container flex h-screen w-screen flex-col items-center justify-center space-y-12 py-24">
+      <main className="flex flex-1 flex-col items-center justify-center space-y-12 px-4 py-24">
         <div className="flex flex-col items-center justify-center">
           <Image src="/logo.png" height={120} width={120} alt="logo" />
           <h1 className="text-4xl font-bold">Superscale</h1>

@@ -22,7 +22,7 @@ export default async function SignInPage(props: Props) {
   }
 
   return (
-    <div className="container flex h-screen w-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex h-screen w-screen flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="mb-12 flex flex-col items-center">
         <Image
           className="mb-2"
