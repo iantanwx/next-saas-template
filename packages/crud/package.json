@@ -25,6 +25,6 @@
     "@superscale/tsconfig": "workspace:^",
     "@types/node": "catalog:",
     "drizzle-kit": "^0.31.4",
-    "supabase": "2.30.4"
+    "supabase": "2.33.9"
   }
 }

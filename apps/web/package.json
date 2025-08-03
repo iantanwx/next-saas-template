@@ -11,7 +11,9 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "shadcn": "pnpm dlx shadcn@canary",
-    "dev:email": "email dev --port 3001 --dir ./emails"
+    "dev:email": "email dev --port 3001 --dir ./emails",
+    "test": "vitest",
+    "test:integration": "vitest run tests/integration"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -62,6 +64,7 @@
     "remark-gfm": "^4.0.0",
     "remark-reading-time": "^2.0.1",
     "ts-node": "^10.9.2",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "vitest": "^2.1.8"
   }
 }

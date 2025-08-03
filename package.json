@@ -11,6 +11,7 @@
     "supabase:db:push": "pnpm --filter=@superscale/crud supabase db push",
     "supabase:db:reset": "pnpm --filter=@superscale/crud supabase db reset",
     "build:web": "pnpm --filter=@superscale/web build",
+    "test:integration": "pnpm --filter=@superscale/web test:integration",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write ."
