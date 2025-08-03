@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar"
+import { AppSidebar } from '@/components/app-sidebar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,13 +6,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@superscale/ui/components/breadcrumb"
-import { Separator } from "@superscale/ui/components/separator"
+} from '@superscale/ui/components/breadcrumb';
+import { Separator } from '@superscale/ui/components/separator';
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@superscale/ui/components/sidebar"
+} from '@superscale/ui/components/sidebar';
 
 export default function Page() {
   return (
@@ -45,11 +45,11 @@ export default function Page() {
           <div className="grid auto-rows-min gap-4 md:grid-cols-3">
             <div className="bg-muted/50 aspect-video rounded-xl" />
             <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
+            jk <div className="bg-muted/50 aspect-video rounded-xl" />
           </div>
           <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

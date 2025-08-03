@@ -1,14 +1,13 @@
 import type { PropsWithChildren } from 'react';
-import { SideNav } from '@/components/nav/side-nav';
-import { dashboardConfig } from '@/config/dashboard';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
   return (
-    <div className="grid flex-1 gap-12 px-4 sm:px-6 lg:px-8 md:grid-cols-[200px_1fr]">
-      <aside>
-        <SideNav items={dashboardConfig.settingsNav} />
-      </aside>
-      <main>{children}</main>
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="grid auto-rows-min gap-4">
+        <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <div className="flex-1 lg:max-w-2xl">{children}</div>
+        </div>
+      </div>
     </div>
   );
 }

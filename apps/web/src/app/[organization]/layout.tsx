@@ -1,8 +1,18 @@
 import { getCurrentUser } from '@superscale/lib/auth/session';
 import { notFound, redirect } from 'next/navigation';
-import { AccountNav } from '@/components/nav/account-nav';
-import { MainNav } from '@/components/nav/main-nav';
-import { dashboardConfig } from '@/config/dashboard';
+import { AppSidebar } from '@/components/nav/app-sidebar';
+import { SidebarWrapper } from '@/components/nav/sidebar-wrapper';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from '@superscale/ui/components/breadcrumb';
+import { Separator } from '@superscale/ui/components/separator';
+import {
+  SidebarInset,
+  SidebarTrigger,
+} from '@superscale/ui/components/sidebar';
 
 interface Props {
   children: React.ReactNode;
@@ -34,15 +44,46 @@ export default async function DashboardLayout(props: Props) {
     notFound();
   }
 
+  const currentOrg = user.memberships.find(
+    (membership) => membership.organization.slug === organization.toLowerCase()
+  )?.organization;
+
+  if (!currentOrg) {
+    notFound();
+  }
+
   return (
-    <div className="flex min-h-screen flex-col space-y-6">
-      <header className="bg-background sticky top-0 z-40 border-b">
-        <div className="flex h-16 items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <MainNav items={dashboardConfig.mainNav} />
-          <AccountNav user={user} />
-        </div>
-      </header>
-      {children}
-    </div>
+    <SidebarWrapper>
+      <AppSidebar
+        user={{
+          name: user.name || '',
+          email: user.email || '',
+          avatar: user.avatarUrl || '',
+        }}
+        organization={{
+          name: currentOrg.name,
+          slug: currentOrg.slug,
+        }}
+      />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{organization}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col">{children}</div>
+      </SidebarInset>
+    </SidebarWrapper>
   );
 }
