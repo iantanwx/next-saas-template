@@ -4,4 +4,5 @@ export type {
   OrganizationRole,
   OrganizationWithMembers,
 } from './organization';
+export type { Todo, InsertTodo, UpdateTodoData } from './todo';
 export type { UserWithMemberships } from './user';

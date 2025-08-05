@@ -207,3 +207,67 @@ export const installationsRelations = relations(installations, ({ one }) => ({
     references: [organizations.id],
   }),
 }));
+
+export const todoPriority = pgEnum('todo_priority', ['low', 'medium', 'high']);
+
+export const todoStatus = pgEnum('todo_status', [
+  'pending',
+  'in_progress',
+  'completed',
+  'cancelled',
+]);
+
+export const todos = pgTable(
+  'todos',
+  {
+    id: text('id').primaryKey().$defaultFn(cuid),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    deletedAt: timestamp('deleted_at'),
+    title: text('title').notNull(),
+    description: text('description'),
+    completed: boolean('completed').notNull().default(false),
+    dueDate: timestamp('due_date'),
+    priority: todoPriority('priority').notNull().default('medium'),
+    status: todoStatus('status').notNull().default('pending'),
+    tags: text('tags').array().notNull().default(sql`ARRAY[]::text[]`),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, {
+        onDelete: 'cascade',
+      }),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, {
+        onDelete: 'cascade',
+      }),
+    // For optimistic locking and conflict resolution
+    version: text('version').notNull().default('1'),
+    // For real-time collaboration
+    lastEditedBy: uuid('last_edited_by').references(() => users.id),
+    lastEditedAt: timestamp('last_edited_at'),
+  },
+  (table) => [
+    index('todos_user_idx').on(table.userId),
+    index('todos_organization_idx').on(table.organizationId),
+    index('todos_status_idx').on(table.status),
+    index('todos_due_date_idx').on(table.dueDate),
+    index('todos_priority_idx').on(table.priority),
+    index('todos_completed_idx').on(table.completed),
+  ]
+);
+
+export const todosRelations = relations(todos, ({ one }) => ({
+  user: one(users, {
+    fields: [todos.userId],
+    references: [users.id],
+  }),
+  organization: one(organizations, {
+    fields: [todos.organizationId],
+    references: [organizations.id],
+  }),
+  lastEditedByUser: one(users, {
+    fields: [todos.lastEditedBy],
+    references: [users.id],
+  }),
+}));

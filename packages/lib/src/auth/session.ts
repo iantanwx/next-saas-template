@@ -15,7 +15,7 @@ export async function getCurrentSession() {
   if (!_user) {
     return { user: null };
   }
-
+ 
   const user = await users.getById(_user.id);
   return { user };
 }

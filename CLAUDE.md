@@ -179,3 +179,7 @@ This template is designed for building **real-time, workflow-driven SaaS applica
 - Real-time sync latency: < 100ms local, < 1s remote
 - Offline functionality: 100% feature availability
 - Performance: 90+ Lighthouse score
+
+## Task Master AI Instructions
+**Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
+@./.taskmaster/CLAUDE.md
