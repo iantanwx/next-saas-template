@@ -1,0 +1,57 @@
+# Electric SQL Proxy Architecture
+
+## Overview
+
+Architecture for integrating Electric SQL with Next.js using CloudFlare Workers as a proxy and tRPC for real-time subscriptions.
+
+## Core Components
+
+- **Frontend**: Next.js application deployed on Vercel
+- **Proxy**: CloudFlare Worker for authentication and CORS
+- **Database**: Electric SQL for real-time data synchronization
+- **Auth**: Supabase with symmetric JWT validation
+- **API Layer**: tRPC with WebSocket subscriptions
+
+### Data Flow
+```
+Browser ←→ WebSocket ←→ CloudFlare Worker ←→ Long HTTP Poll ←→ Electric SQL
+```
+
+## CloudFlare Worker Proxy
+
+The worker handles:
+- JWT validation using Supabase symmetric keys (no network roundtrip)
+- CORS header management
+- Request proxying to Electric SQL backend
+- Long-lived connection maintenance
+
+## JWT Validation
+
+Use Supabase's symmetric JWT support for stateless token validation. This provides zero-latency authentication without breaking Electric SQL's streaming performance.
+
+## tRPC Integration
+
+### Connection Strategy
+Use tRPC's split link to route operations:
+- **Subscriptions**: WebSocket to CloudFlare Worker
+- **Queries/Mutations**: HTTP to Next.js API routes
+
+This keeps long HTTP connections server-side while providing reliable WebSocket connections to browsers.
+
+### Subscription Design
+Create separate subscriptions for each Electric SQL shape:
+- One subscription per data type (users, posts, etc.)
+- Granular updates and selective syncing
+- Better resource management
+
+## Deployment
+
+### Worker Deployment
+- Automatic deployment via GitHub Actions on merge to main
+- Built-in TypeScript compilation with esbuild
+- Source maps included for debugging
+
+### Configuration
+- JWT secrets stored in CloudFlare Worker environment
+- GitHub Secrets for CI/CD pipeline
+- Production domain CORS configuration

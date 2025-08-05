@@ -1,0 +1,930 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Set up Electric SQL for Real-time Sync",
+        "description": "Integrate Electric SQL into the existing Next.js template to enable real-time synchronization capabilities.",
+        "details": "1. Install Electric SQL packages: `npm install electric-sql @electric-sql/prisma-generator`\n2. Configure Electric SQL with Supabase PostgreSQL database\n3. Set up the Electric client in a provider component\n4. Create initial sync configuration for core data models\n5. Implement connection status monitoring\n6. Add necessary environment variables for Electric SQL configuration\n7. Update database schema to support Electric SQL requirements",
+        "testStrategy": "1. Verify successful connection to Electric SQL service\n2. Test data synchronization between multiple clients\n3. Validate that data changes are properly tracked\n4. Ensure proper error handling for connection issues\n5. Confirm Electric SQL is properly integrated with existing Supabase setup",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Install and Configure Electric SQL Packages",
+            "description": "Install the necessary Electric SQL packages and set up the initial configuration for the project.",
+            "dependencies": [],
+            "details": "Run `npm install electric-sql @electric-sql/prisma-generator` to install the required packages. Add the Electric SQL Prisma generator to the Prisma schema file. Create a basic configuration file at `lib/electric/config.ts` that includes connection parameters for the Supabase PostgreSQL database.",
+            "status": "pending",
+            "testStrategy": "Verify successful installation by checking package.json and node_modules. Ensure Prisma generator is properly configured by running a test generation."
+          },
+          {
+            "id": 2,
+            "title": "Set Up Electric SQL Client Provider",
+            "description": "Create a provider component that initializes the Electric SQL client and makes it available throughout the application.",
+            "dependencies": [],
+            "details": "Create an ElectricProvider.tsx component that initializes the Electric client using the configuration from step 1. Implement React context to make the client available to child components. Add connection status monitoring with appropriate UI feedback. Wrap the application with this provider in _app.tsx or layout.tsx.",
+            "status": "pending",
+            "testStrategy": "Test the provider by creating a simple component that connects to Electric and displays connection status."
+          },
+          {
+            "id": 3,
+            "title": "Configure Database Schema for Electric SQL",
+            "description": "Update the database schema to support Electric SQL requirements and generate the necessary client code.",
+            "dependencies": [],
+            "details": "Modify Prisma schema to add Electric-specific annotations to models that need synchronization. Run the Electric SQL Prisma generator to create the client code. Update database migrations to include Electric SQL required tables and extensions. Configure the initial sync rules for core data models.",
+            "status": "pending",
+            "testStrategy": "Verify schema generation by checking the output files. Test basic database operations to ensure the schema is correctly configured."
+          },
+          {
+            "id": 4,
+            "title": "Set Up CloudFlare Worker Project",
+            "description": "Create and configure a CloudFlare Worker project to serve as a proxy for Electric SQL.",
+            "dependencies": [],
+            "details": "Initialize a new CloudFlare Worker project using Wrangler CLI. Set up TypeScript configuration with esbuild for compilation. Create the basic worker structure with request handling. Configure the worker's package.json with necessary dependencies including JWT validation libraries.",
+            "status": "pending",
+            "testStrategy": "Deploy the worker to a development environment and verify it responds to basic requests."
+          },
+          {
+            "id": 5,
+            "title": "Implement JWT Validation in CloudFlare Worker",
+            "description": "Add JWT validation to the CloudFlare Worker using Supabase symmetric keys.",
+            "dependencies": [],
+            "details": "Implement JWT validation middleware in the worker that verifies tokens using Supabase symmetric keys. Extract and validate user information from the JWT. Configure the worker to reject requests with invalid or expired tokens. Add appropriate error responses for authentication failures.",
+            "status": "pending",
+            "testStrategy": "Test with valid and invalid JWTs to ensure proper validation. Verify that expired tokens are correctly rejected."
+          },
+          {
+            "id": 6,
+            "title": "Implement Electric SQL Proxy in CloudFlare Worker",
+            "description": "Create the proxy functionality in the CloudFlare Worker to forward requests to the Electric SQL backend.",
+            "dependencies": [],
+            "details": "Implement request forwarding from the worker to the Electric SQL backend. Configure long HTTP poll handling for real-time updates. Add proper header management for proxied requests. Implement CORS configuration to allow requests from the frontend application. Add error handling for connection issues with the Electric backend.",
+            "status": "pending",
+            "testStrategy": "Test proxy functionality by sending requests through the worker and verifying they reach the Electric backend. Verify long polling works correctly for real-time updates."
+          },
+          {
+            "id": 7,
+            "title": "Configure Environment Variables and Secrets",
+            "description": "Set up all necessary environment variables for both the Next.js application and CloudFlare Worker.",
+            "dependencies": [],
+            "details": "Create environment variable configurations for the Next.js application including Electric SQL connection details. Set up CloudFlare Worker environment variables and secrets for JWT validation keys and Electric SQL backend URL. Document all required environment variables in a .env.example file. Implement environment variable validation at startup.",
+            "status": "pending",
+            "testStrategy": "Verify application starts correctly with the configured environment variables. Test error handling when required variables are missing."
+          },
+          {
+            "id": 8,
+            "title": "Set Up GitHub Actions Deployment Pipeline",
+            "description": "Create a GitHub Actions workflow to automatically deploy the CloudFlare Worker and configure the production domain.",
+            "dependencies": [],
+            "details": "Create a GitHub Actions workflow file that builds and deploys the CloudFlare Worker. Configure the workflow to use secrets for API tokens and environment variables. Set up production domain configuration in the deployment process. Add deployment verification steps to ensure successful deployment. Configure the Next.js application to use the deployed worker URL.",
+            "status": "pending",
+            "testStrategy": "Test the GitHub Actions workflow by making a small change and verifying successful deployment. Verify the production domain is correctly configured and the application can connect through the proxy."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement Local-First Architecture",
+        "description": "Design and implement a local-first architecture that allows the application to work offline with seamless synchronization.",
+        "details": "1. Set up local SQLite database with Electric SQL\n2. Create data access layer that prioritizes local data\n3. Implement optimistic UI updates\n4. Design sync conflict detection mechanism\n5. Create data models with appropriate timestamps for sync\n6. Implement background sync process\n7. Add network status detection\n8. Create fallback mechanisms for when server is unreachable",
+        "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronizes correctly when connection is restored\n3. Simulate network interruptions to ensure resilience\n4. Validate that local changes are preserved during sync\n5. Measure performance impact of local-first approach",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set up local SQLite database with Electric SQL",
+            "description": "Initialize and configure a local SQLite database using Electric SQL to enable offline data storage and synchronization capabilities.",
+            "dependencies": [],
+            "details": "Install Electric SQL dependencies and configure the client. Set up the SQLite database schema with appropriate tables for the application data. Define the necessary migrations for the database structure. Configure Electric SQL with the appropriate connection settings for both local development and production environments. Initialize the database connection in the application startup process.",
+            "status": "pending",
+            "testStrategy": "Verify database connection and initialization. Test basic CRUD operations against the local database. Ensure database schema matches the expected structure."
+          },
+          {
+            "id": 2,
+            "title": "Configure tRPC split link architecture",
+            "description": "Implement a tRPC split link configuration that supports both WebSocket connections for subscriptions and HTTP connections for queries and mutations.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Create a tRPC WebSocket link that connects to the CloudFlare Worker for real-time subscriptions. Implement an HTTP link for queries and mutations that connects to Next.js API routes. Configure a split link that routes subscription operations to the WebSocket link and other operations to the HTTP link. Add error handling and reconnection logic for both links. Implement request batching for the HTTP link to optimize performance.",
+            "status": "pending",
+            "testStrategy": "Test both subscription and query/mutation operations to ensure they're routed correctly. Verify reconnection behavior when connections are interrupted. Measure performance impact of request batching."
+          },
+          {
+            "id": 3,
+            "title": "Implement data access layer with local-first priority",
+            "description": "Create a data access layer that prioritizes local data access while handling synchronization with the server when online.",
+            "dependencies": [
+              "2.1",
+              "2.2"
+            ],
+            "details": "Develop a data access abstraction that first attempts to retrieve and manipulate data locally. Implement methods for CRUD operations that work with the local SQLite database. Create a synchronization mechanism that pushes local changes to the server when online. Implement data fetching strategies that prioritize local data but update from the server when available. Add caching mechanisms to optimize data access performance.",
+            "status": "pending",
+            "testStrategy": "Test data access methods in both online and offline scenarios. Verify that local data is prioritized when available. Test synchronization behavior when transitioning between online and offline states."
+          },
+          {
+            "id": 4,
+            "title": "Design and implement shape-based subscriptions",
+            "description": "Create a subscription system based on data shapes, with one subscription per data type to efficiently manage real-time updates.",
+            "dependencies": [
+              "2.2",
+              "2.3"
+            ],
+            "details": "Define subscription shapes for each major data type in the application. Implement subscription handlers that process incoming data changes. Create client-side subscription management that efficiently subscribes and unsubscribes based on active views. Implement data normalization to handle overlapping subscriptions. Add subscription throttling and batching to prevent overwhelming the client with updates.",
+            "status": "pending",
+            "testStrategy": "Test subscription activation and deactivation as views change. Verify that data updates are correctly processed and applied to the local state. Test performance with high-frequency updates to ensure client stability."
+          },
+          {
+            "id": 5,
+            "title": "Implement optimistic UI updates and offline queue",
+            "description": "Create a system for optimistic UI updates that immediately reflects user actions while queueing operations for synchronization when offline.",
+            "dependencies": [
+              "2.3"
+            ],
+            "details": "Implement optimistic updates that immediately update the UI when actions are performed. Create an offline queue that stores operations when the application is offline. Develop a queue processing mechanism that executes queued operations when connectivity is restored. Add transaction support to ensure operations are atomic. Implement rollback mechanisms for failed operations to maintain data consistency.",
+            "status": "pending",
+            "testStrategy": "Test optimistic updates by verifying immediate UI changes. Verify that operations are queued when offline. Test queue processing when connectivity is restored. Validate rollback behavior for failed operations."
+          },
+          {
+            "id": 6,
+            "title": "Implement network status detection and fallback mechanisms",
+            "description": "Add network status detection to the application and implement fallback mechanisms for when the server is unreachable.",
+            "dependencies": [
+              "2.3",
+              "2.5"
+            ],
+            "details": "Implement network status detection using browser APIs and heartbeat mechanisms. Create a network status store that provides the current connectivity state to the application. Develop fallback mechanisms that gracefully handle server unavailability. Implement retry strategies with exponential backoff for failed requests. Add user notifications for connectivity changes to improve the user experience.",
+            "status": "pending",
+            "testStrategy": "Test network status detection by simulating connectivity changes. Verify fallback mechanisms activate when the server is unreachable. Test retry strategies to ensure they correctly handle temporary outages."
+          },
+          {
+            "id": 7,
+            "title": "Implement sync conflict detection and resolution",
+            "description": "Design and implement mechanisms for detecting and resolving conflicts that occur during data synchronization.",
+            "dependencies": [
+              "2.3",
+              "2.5",
+              "2.6"
+            ],
+            "details": "Implement timestamp-based conflict detection using last-modified timestamps. Create data models with appropriate timestamp fields for tracking changes. Develop conflict resolution strategies based on application-specific rules (e.g., last-write-wins, manual resolution). Implement a conflict resolution UI for cases requiring user intervention. Add logging and analytics for conflict occurrences to identify patterns and improve resolution strategies.",
+            "status": "pending",
+            "testStrategy": "Test conflict detection by creating concurrent modifications to the same data. Verify that resolution strategies correctly handle various conflict scenarios. Test the conflict resolution UI to ensure it presents clear options to users."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Implement GitHub OAuth Authentication",
+        "description": "Add GitHub OAuth as an authentication option alongside the existing Google OAuth.",
+        "details": "1. Register a new OAuth application in GitHub Developer settings\n2. Install required packages: `npm install @supabase/auth-helpers-nextjs`\n3. Configure Supabase authentication settings for GitHub provider\n4. Create GitHub OAuth callback route in Next.js\n5. Add GitHub login button to authentication UI\n6. Implement user profile data retrieval from GitHub\n7. Handle GitHub authentication errors\n8. Update user model to store GitHub-specific information",
+        "testStrategy": "1. Test GitHub login flow end-to-end\n2. Verify user profile data is correctly retrieved and stored\n3. Test error handling for failed authentication\n4. Ensure existing Google OAuth still works properly\n5. Validate session management with GitHub authentication",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Email/Password Authentication",
+        "description": "Add traditional email and password authentication to complement OAuth options.",
+        "details": "1. Configure Supabase for email/password authentication\n2. Create registration form with email validation\n3. Implement password strength requirements\n4. Add login form for email/password authentication\n5. Create server-side validation for registration data\n6. Implement email verification process\n7. Add security headers for authentication routes\n8. Update authentication UI to include email/password option",
+        "testStrategy": "1. Test registration process with valid and invalid inputs\n2. Verify email verification flow works correctly\n3. Test login with correct and incorrect credentials\n4. Ensure password strength requirements are enforced\n5. Validate that user data is correctly stored in database",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Password Reset Functionality",
+        "description": "Create a secure password reset flow for users with email/password authentication.",
+        "details": "1. Create password reset request form\n2. Implement password reset token generation in Supabase\n3. Design and implement password reset email template using Resend\n4. Create password reset confirmation page\n5. Add server-side validation for reset requests\n6. Implement token expiration and security checks\n7. Add rate limiting for password reset requests\n8. Create success/error notifications for the reset process",
+        "testStrategy": "1. Test password reset flow end-to-end\n2. Verify token expiration works correctly\n3. Test with valid and invalid email addresses\n4. Ensure reset emails are sent and formatted correctly\n5. Validate security of the reset process against common attacks",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Magic Link Authentication",
+        "description": "Add passwordless authentication using magic links sent via email.",
+        "details": "1. Configure Supabase for magic link authentication\n2. Create magic link request form\n3. Implement magic link token generation\n4. Design and implement magic link email template using Resend\n5. Create magic link callback handler\n6. Add rate limiting for magic link requests\n7. Implement security checks for magic link authentication\n8. Update authentication UI to include magic link option",
+        "testStrategy": "1. Test magic link authentication flow end-to-end\n2. Verify emails are sent correctly with valid links\n3. Test security of the magic link process\n4. Ensure rate limiting prevents abuse\n5. Validate user session is created correctly after magic link authentication",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Integrate Stripe for Payment Processing",
+        "description": "Implement Stripe integration for handling subscription payments and billing.",
+        "details": "1. Install Stripe packages: `npm install stripe @stripe/stripe-js`\n2. Set up Stripe account and API keys\n3. Create Stripe customer creation on user registration\n4. Implement Stripe Checkout for subscription creation\n5. Design subscription plan structure in Stripe dashboard\n6. Create database models for subscription data\n7. Implement client-side Stripe Elements for payment forms\n8. Add Stripe-related environment variables",
+        "testStrategy": "1. Test subscription creation in test mode\n2. Verify customer creation in Stripe\n3. Test payment processing with test cards\n4. Ensure subscription data is correctly stored in database\n5. Validate error handling for failed payments",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Stripe Webhook Handling",
+        "description": "Set up webhook endpoints to handle Stripe events for subscription updates, payments, and other billing events.",
+        "details": "1. Create webhook endpoint in Next.js API routes\n2. Implement signature verification for Stripe webhooks\n3. Handle key events: payment_succeeded, payment_failed, subscription_updated, etc.\n4. Update local database based on webhook events\n5. Implement idempotency for webhook processing\n6. Add logging for webhook events\n7. Create error handling for webhook processing failures\n8. Test webhook handling with Stripe CLI",
+        "testStrategy": "1. Use Stripe CLI to test webhook delivery\n2. Verify database updates based on webhook events\n3. Test idempotency by sending duplicate events\n4. Ensure security of webhook endpoint\n5. Validate error handling for malformed webhook data",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Create Customer Portal for Subscription Management",
+        "description": "Implement a customer portal that allows users to manage their subscriptions, payment methods, and billing information.",
+        "details": "1. Set up Stripe Customer Portal configuration\n2. Create portal session generation endpoint\n3. Implement UI for accessing the customer portal\n4. Add return URL handling from the portal\n5. Create subscription status display in user dashboard\n6. Implement access control based on subscription status\n7. Add webhook handling for portal-initiated changes\n8. Create notifications for subscription changes",
+        "testStrategy": "1. Test portal access and return flow\n2. Verify subscription changes are reflected in the application\n3. Test access control based on subscription status\n4. Ensure proper handling of portal-initiated changes\n5. Validate user experience for subscription management",
+        "priority": "high",
+        "dependencies": [
+          7,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Subscription Management System",
+        "description": "Create a comprehensive subscription management system that handles plan changes, cancellations, and subscription status.",
+        "details": "1. Design subscription data model\n2. Implement subscription creation flow\n3. Create plan change functionality\n4. Implement cancellation handling\n5. Add subscription status checks\n6. Create subscription renewal logic\n7. Implement prorated billing for plan changes\n8. Add subscription metadata for feature access control",
+        "testStrategy": "1. Test full subscription lifecycle\n2. Verify plan changes are handled correctly\n3. Test cancellation and reactivation flows\n4. Ensure billing is accurate for all subscription changes\n5. Validate feature access based on subscription status",
+        "priority": "high",
+        "dependencies": [
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Integrate Inngest for Workflow Management",
+        "description": "Set up Inngest as the workflow engine for handling long-running processes and background jobs.",
+        "details": "1. Install Inngest packages: `npm install inngest @inngest/nextjs`\n2. Configure Inngest client and connection\n3. Set up Inngest dev server for local development\n4. Create basic workflow function structure\n5. Implement event sending mechanism\n6. Add Inngest API key to environment variables\n7. Create Inngest dashboard access\n8. Set up deployment configuration for Inngest functions",
+        "testStrategy": "1. Verify Inngest connection and configuration\n2. Test basic event sending and receiving\n3. Ensure local development setup works correctly\n4. Validate deployment configuration\n5. Test Inngest dashboard access and monitoring",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Implement Long-Running Job Infrastructure",
+        "description": "Create infrastructure for long-running jobs that can operate for hours or days without failure.",
+        "details": "1. Design job persistence model\n2. Implement job step functions in Inngest\n3. Create checkpoint mechanism for long-running jobs\n4. Implement job resumption after interruption\n5. Add timeout handling and retry logic\n6. Create job cancellation functionality\n7. Implement resource management for concurrent jobs\n8. Add monitoring for job health",
+        "testStrategy": "1. Test job persistence through server restarts\n2. Verify checkpoint and resumption functionality\n3. Test timeout and retry mechanisms\n4. Ensure jobs can be properly cancelled\n5. Validate resource usage during concurrent job execution",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Create Workflow Progress Tracking System",
+        "description": "Implement a system to track and report progress of long-running workflows to users.",
+        "details": "1. Design progress tracking data model\n2. Implement progress update events in workflows\n3. Create real-time progress update mechanism\n4. Implement progress calculation for multi-step workflows\n5. Add estimated time remaining functionality\n6. Create progress visualization components\n7. Implement progress notification system\n8. Add progress history for completed workflows",
+        "testStrategy": "1. Test progress updates during workflow execution\n2. Verify real-time updates reach the UI\n3. Test progress calculation accuracy\n4. Ensure progress history is correctly maintained\n5. Validate user experience of progress tracking",
+        "priority": "high",
+        "dependencies": [
+          11,
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Workflow State Persistence",
+        "description": "Create a system for persisting workflow state to enable resumption after interruptions or failures.",
+        "details": "1. Design workflow state storage model\n2. Implement state serialization and deserialization\n3. Create state checkpoint mechanism\n4. Implement state restoration on workflow resumption\n5. Add versioning for state schema changes\n6. Create state cleanup for completed workflows\n7. Implement state compression for large datasets\n8. Add state encryption for sensitive data",
+        "testStrategy": "1. Test state persistence through server restarts\n2. Verify state restoration works correctly\n3. Test handling of state schema changes\n4. Ensure state cleanup prevents data leaks\n5. Validate performance with large state objects",
+        "priority": "high",
+        "dependencies": [
+          11,
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Develop UI Component Library",
+        "description": "Create a comprehensive UI component library for consistent design across the application.",
+        "details": "1. Set up Tailwind CSS configuration\n2. Create base component structure\n3. Implement form components (inputs, selectors, buttons)\n4. Create data display components (tables, cards, lists)\n5. Implement feedback components (alerts, toasts, modals)\n6. Create layout components (containers, grids, sidebars)\n7. Implement navigation components (menus, tabs, breadcrumbs)\n8. Add accessibility features to all components",
+        "testStrategy": "1. Test component rendering in various contexts\n2. Verify responsive behavior on different screen sizes\n3. Test accessibility compliance\n4. Ensure consistent styling across components\n5. Validate component composition patterns",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Implement Dashboard Templates",
+        "description": "Create reusable dashboard templates for common SaaS application layouts and views.",
+        "details": "1. Design main dashboard layout\n2. Create analytics dashboard template\n3. Implement settings page template\n4. Create user management dashboard\n5. Implement workflow monitoring dashboard\n6. Add subscription management template\n7. Create documentation page template\n8. Implement responsive behavior for all templates",
+        "testStrategy": "1. Test template rendering with various data sets\n2. Verify responsive behavior on different devices\n3. Test navigation between dashboard sections\n4. Ensure consistent styling across templates\n5. Validate accessibility of dashboard templates",
+        "priority": "high",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Implement Mobile Responsive Design",
+        "description": "Ensure the entire application is fully responsive and works well on mobile devices.",
+        "details": "1. Implement responsive breakpoints in Tailwind configuration\n2. Create mobile navigation component\n3. Adapt form layouts for small screens\n4. Implement touch-friendly interactions\n5. Create responsive table alternatives for mobile\n6. Optimize modal and dialog behavior on mobile\n7. Test and fix layout issues on various screen sizes\n8. Implement responsive typography",
+        "testStrategy": "1. Test on various device sizes and orientations\n2. Verify usability on touch devices\n3. Test performance on mobile devices\n4. Ensure all features are accessible on small screens\n5. Validate that no horizontal scrolling occurs on mobile",
+        "priority": "high",
+        "dependencies": [
+          15,
+          16
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Implement Dark Mode Support",
+        "description": "Add dark mode support throughout the application with user preference persistence.",
+        "details": "1. Configure Tailwind for dark mode\n2. Create theme toggle component\n3. Implement system preference detection\n4. Add user preference persistence\n5. Update all components for dark mode compatibility\n6. Create dark mode variants for all icons and images\n7. Implement smooth transition between modes\n8. Add dark mode preview in user settings",
+        "testStrategy": "1. Test theme switching functionality\n2. Verify system preference detection\n3. Test preference persistence across sessions\n4. Ensure all components render correctly in dark mode\n5. Validate contrast and accessibility in dark mode",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Create Workflow Status UI",
+        "description": "Develop UI components for displaying workflow status, progress, and controls.",
+        "details": "1. Design workflow status card component\n2. Implement progress visualization\n3. Create workflow control buttons (pause, resume, cancel)\n4. Add real-time status updates\n5. Implement error state display\n6. Create workflow history view\n7. Add detailed step information display\n8. Implement workflow logs viewer",
+        "testStrategy": "1. Test status display with various workflow states\n2. Verify real-time updates are reflected in UI\n3. Test control buttons functionality\n4. Ensure error states are clearly communicated\n5. Validate usability of workflow history and logs",
+        "priority": "medium",
+        "dependencies": [
+          13,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Implement Real-time Updates UI",
+        "description": "Create UI components and patterns for displaying real-time data updates throughout the application.",
+        "details": "1. Design real-time update indicators\n2. Implement optimistic UI updates\n3. Create data refresh mechanisms\n4. Add conflict resolution UI\n5. Implement offline indicator\n6. Create sync status display\n7. Add real-time collaboration indicators\n8. Implement notification system for updates",
+        "testStrategy": "1. Test real-time update flow with multiple clients\n2. Verify optimistic updates work correctly\n3. Test conflict resolution UI\n4. Ensure offline status is clearly indicated\n5. Validate user experience during synchronization",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Implement Landing Pages",
+        "description": "Create marketing-focused landing pages for the SaaS application.",
+        "details": "1. Design main landing page layout\n2. Create feature showcase sections\n3. Implement pricing page\n4. Add testimonials section\n5. Create FAQ page\n6. Implement contact form\n7. Add call-to-action components\n8. Ensure SEO optimization for all landing pages",
+        "testStrategy": "1. Test responsive behavior of landing pages\n2. Verify all links and forms work correctly\n3. Test performance and loading speed\n4. Ensure accessibility compliance\n5. Validate SEO elements are properly implemented",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Implement Loading States and Skeletons",
+        "description": "Create consistent loading states and skeleton screens throughout the application.",
+        "details": "1. Design skeleton components for common UI elements\n2. Implement loading state management\n3. Create loading indicators for actions\n4. Add skeleton screens for page transitions\n5. Implement progressive loading for large data sets\n6. Create shimmer effects for skeletons\n7. Add timeout handling for long-running operations\n8. Implement error states for failed loading",
+        "testStrategy": "1. Test loading states with various network conditions\n2. Verify skeleton screens render correctly\n3. Test transition between loading and loaded states\n4. Ensure loading states are accessible\n5. Validate user experience during loading",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Create Error Pages and Error Handling",
+        "description": "Implement comprehensive error handling and custom error pages throughout the application.",
+        "details": "1. Design 404 not found page\n2. Create 500 server error page\n3. Implement 403 forbidden page\n4. Add error boundary components\n5. Create toast notification system for errors\n6. Implement form validation error display\n7. Add retry mechanisms for failed operations\n8. Create error logging to Sentry",
+        "testStrategy": "1. Test error pages with various error conditions\n2. Verify error boundaries catch component errors\n3. Test form validation error display\n4. Ensure error notifications are clear and helpful\n5. Validate error logging to Sentry works correctly",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Implement Email Templates",
+        "description": "Create a system for email templates and notifications using Resend.",
+        "details": "1. Set up Resend integration\n2. Create base email template with branding\n3. Implement welcome email template\n4. Create password reset email template\n5. Implement verification email template\n6. Add subscription notification emails\n7. Create workflow status notification emails\n8. Implement team invitation email template",
+        "testStrategy": "1. Test email delivery through Resend\n2. Verify email rendering in various email clients\n3. Test personalization in email templates\n4. Ensure all links in emails work correctly\n5. Validate email template responsiveness",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Progress Indicators",
+        "description": "Create consistent progress indicators for various operations throughout the application.",
+        "details": "1. Design linear progress component\n2. Implement circular progress indicator\n3. Create progress bar with percentage\n4. Add step indicator for multi-step processes\n5. Implement progress toast notifications\n6. Create progress modal for long-running operations\n7. Add progress indicators for file uploads\n8. Implement progress tracking for form completion",
+        "testStrategy": "1. Test progress indicators with various durations\n2. Verify progress updates are smooth and accurate\n3. Test accessibility of progress indicators\n4. Ensure progress indicators are consistent across the application\n5. Validate user experience with progress feedback",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Implement Background Jobs System",
+        "description": "Create a system for managing and executing background jobs for data processing and maintenance tasks.",
+        "details": "1. Design background job queue\n2. Implement job scheduler\n3. Create job worker infrastructure\n4. Add job status tracking\n5. Implement job retry mechanism\n6. Create job priority system\n7. Add job cancellation functionality\n8. Implement job result storage",
+        "testStrategy": "1. Test job scheduling and execution\n2. Verify job status tracking works correctly\n3. Test retry mechanism for failed jobs\n4. Ensure job priorities are respected\n5. Validate job cancellation functionality",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Implement File Upload System",
+        "description": "Create a comprehensive file upload system with progress tracking and storage management.",
+        "details": "1. Set up Supabase Storage configuration\n2. Create file upload component\n3. Implement drag-and-drop functionality\n4. Add upload progress tracking\n5. Create file type validation\n6. Implement file size limits\n7. Add direct-to-storage upload\n8. Create file management UI",
+        "testStrategy": "1. Test file uploads of various types and sizes\n2. Verify progress tracking during upload\n3. Test validation of file types and sizes\n4. Ensure uploaded files are accessible\n5. Validate file management functionality",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Implement WebSocket Support",
+        "description": "Add WebSocket support for real-time communication between clients and server.",
+        "details": "1. Set up WebSocket server\n2. Create WebSocket connection management\n3. Implement message serialization/deserialization\n4. Add authentication for WebSocket connections\n5. Create channel subscription mechanism\n6. Implement presence tracking\n7. Add reconnection handling\n8. Create WebSocket event hooks",
+        "testStrategy": "1. Test WebSocket connection establishment\n2. Verify message delivery in both directions\n3. Test authentication and security\n4. Ensure reconnection works after disconnection\n5. Validate performance with multiple concurrent connections",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set up WebSocket Server in CloudFlare Worker",
+            "description": "Implement a WebSocket server within a CloudFlare Worker that can accept and manage WebSocket connections from clients.",
+            "dependencies": [],
+            "details": "Create a new CloudFlare Worker that listens for WebSocket upgrade requests. Implement the necessary event handlers for connection, message, error, and close events. Set up the appropriate routes and handlers in the worker to distinguish WebSocket connections from regular HTTP requests. Configure CORS settings to allow connections from authorized origins. Implement basic logging and monitoring for WebSocket connections.",
+            "status": "pending",
+            "testStrategy": "Test WebSocket connection establishment from various clients. Verify the worker correctly handles upgrade requests. Test connection limits and ensure proper error handling for failed connections."
+          },
+          {
+            "id": 2,
+            "title": "Implement WebSocket Connection Management",
+            "description": "Create a system to track active WebSocket connections, handle authentication, and manage connection lifecycle.",
+            "dependencies": [
+              "28.1"
+            ],
+            "details": "Develop a connection manager that maintains a registry of active WebSocket connections with unique identifiers. Implement authentication middleware that validates connection requests using JWT or similar tokens. Create mechanisms to handle connection timeouts, heartbeats, and graceful disconnections. Implement rate limiting to prevent abuse. Store connection metadata including client information, authentication status, and connection timestamp.",
+            "status": "pending",
+            "testStrategy": "Test authentication flow for WebSocket connections. Verify connections are properly tracked and can be retrieved by ID. Test connection timeout and heartbeat mechanisms. Validate rate limiting functionality."
+          },
+          {
+            "id": 3,
+            "title": "Develop WebSocket to Long HTTP Poll Proxy",
+            "description": "Create the proxy mechanism that converts WebSocket messages to long HTTP poll requests for clients that cannot maintain WebSocket connections.",
+            "dependencies": [
+              "28.1",
+              "28.2"
+            ],
+            "details": "Implement a proxy layer in the CloudFlare Worker that translates between WebSocket protocol and long HTTP polling. Create a message queue for each client to store messages when long polling connection is not active. Implement the HTTP endpoints for long polling clients to connect and receive queued messages. Develop a session management system to maintain state between polling requests. Ensure message ordering and delivery guarantees match WebSocket expectations.",
+            "status": "pending",
+            "testStrategy": "Test message delivery between WebSocket clients and long polling clients. Verify message ordering is preserved. Test reconnection scenarios and message queuing. Measure latency differences between direct WebSocket and proxied connections."
+          },
+          {
+            "id": 4,
+            "title": "Implement Message Serialization and Channel Subscription",
+            "description": "Create a message format for communication and implement a channel-based subscription system for routing messages.",
+            "dependencies": [
+              "28.2",
+              "28.3"
+            ],
+            "details": "Design and implement a standardized message format with headers for routing and metadata. Create serialization/deserialization functions for converting between JSON and binary formats as needed. Implement a channel subscription system allowing clients to subscribe to specific topics or channels. Develop message routing logic to deliver messages only to subscribed clients. Create APIs for clients to manage their channel subscriptions.",
+            "status": "pending",
+            "testStrategy": "Test message serialization with various data types and sizes. Verify channel subscription and unsubscription functionality. Test message routing to ensure messages are delivered only to appropriate subscribers. Validate performance with high message volumes."
+          },
+          {
+            "id": 5,
+            "title": "Implement Reconnection Handling and Presence Tracking",
+            "description": "Add robust reconnection capabilities and implement presence tracking to monitor which clients are online.",
+            "dependencies": [
+              "28.2",
+              "28.3",
+              "28.4"
+            ],
+            "details": "Implement client-side reconnection logic with exponential backoff. Create server-side session resumption to maintain state across reconnections. Develop a presence system that tracks online status of users across different connection methods. Implement presence events that notify when users come online or go offline. Create a recovery mechanism to replay missed messages after reconnection. Add configurable timeouts for considering connections as stale.",
+            "status": "pending",
+            "testStrategy": "Test reconnection under various network failure scenarios. Verify session state is properly maintained after reconnection. Test presence updates are correctly broadcast to interested clients. Validate missed message recovery works correctly after reconnection."
+          }
+        ]
+      },
+      {
+        "id": 29,
+        "title": "Implement Role-Based Access Control",
+        "description": "Create a comprehensive role-based access control system for organizations and resources.",
+        "details": "1. Design role and permission data model\n2. Implement role assignment functionality\n3. Create permission checking middleware\n4. Add UI for role management\n5. Implement role-based UI adaptation\n6. Create permission inheritance system\n7. Add audit logging for permission changes\n8. Implement custom role creation",
+        "testStrategy": "1. Test permission enforcement for various roles\n2. Verify role assignment functionality\n3. Test UI adaptation based on permissions\n4. Ensure audit logging captures all changes\n5. Validate security of the permission system",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Implement Teams within Organizations",
+        "description": "Add support for teams as a sub-grouping within organizations for more granular access control.",
+        "details": "1. Design team data model\n2. Implement team creation and management\n3. Create team membership functionality\n4. Add team-based permission system\n5. Implement team settings UI\n6. Create team invitation system\n7. Add team activity feed\n8. Implement team resource sharing",
+        "testStrategy": "1. Test team creation and management\n2. Verify team membership functionality\n3. Test team-based permissions\n4. Ensure team invitations work correctly\n5. Validate team resource sharing",
+        "priority": "medium",
+        "dependencies": [
+          29
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Implement Offline Support",
+        "description": "Enhance the application to fully support offline usage with data synchronization when connection is restored.",
+        "details": "1. Implement service worker for offline assets\n2. Create offline data access layer\n3. Implement offline action queueing\n4. Add conflict resolution strategies\n5. Create offline indicator UI\n6. Implement background sync when online\n7. Add offline mode toggle for testing\n8. Create offline usage analytics",
+        "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronization when connection is restored\n3. Test conflict resolution with concurrent changes\n4. Ensure offline indicator correctly shows connection status\n5. Validate offline action queue processing",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Implement Conflict Resolution",
+        "description": "Create a system for detecting and resolving data conflicts during synchronization.",
+        "details": "1. Design conflict detection mechanism\n2. Implement last-write-wins strategy\n3. Create manual conflict resolution UI\n4. Add conflict metadata tracking\n5. Implement merge strategies for different data types\n6. Create conflict history\n7. Add notification system for conflicts\n8. Implement conflict resolution hooks",
+        "testStrategy": "1. Test conflict detection with concurrent edits\n2. Verify automatic resolution strategies\n3. Test manual conflict resolution UI\n4. Ensure conflict metadata is correctly tracked\n5. Validate merge strategies for different data types",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          31
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Implement Real-time Collaboration",
+        "description": "Create features for real-time collaboration between users working on the same data.",
+        "details": "1. Implement presence indicators\n2. Create collaborative editing infrastructure\n3. Add cursor/selection sharing\n4. Implement operational transformation or CRDT\n5. Create user activity feed\n6. Add real-time chat functionality\n7. Implement collaboration permissions\n8. Create collaboration session management",
+        "testStrategy": "1. Test real-time updates with multiple users\n2. Verify presence indicators show correct information\n3. Test collaborative editing functionality\n4. Ensure permissions are enforced in collaboration\n5. Validate performance with multiple collaborators",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          28,
+          31,
+          32
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement WebSocket Infrastructure with tRPC Split Link",
+            "description": "Set up the WebSocket infrastructure using tRPC split link to enable real-time communication between clients and server.",
+            "dependencies": [],
+            "details": "1. Install required dependencies (ws, @trpc/server, @trpc/client)\n2. Configure tRPC server to support WebSocket connections\n3. Implement a split link in the client to handle both HTTP and WebSocket connections\n4. Create a connection manager to handle WebSocket lifecycle events\n5. Implement reconnection logic with exponential backoff\n6. Add authentication middleware for WebSocket connections\n7. Create subscription handler utilities on the server side",
+            "status": "pending",
+            "testStrategy": "1. Test WebSocket connection establishment\n2. Verify reconnection works when connection drops\n3. Test authentication flow for WebSocket connections\n4. Measure connection performance under load"
+          },
+          {
+            "id": 2,
+            "title": "Implement Shape-Based Subscriptions for Different Data Types",
+            "description": "Create subscription patterns for different data types (users, posts, etc.) to allow clients to subscribe to specific data changes.",
+            "dependencies": [
+              "33.1"
+            ],
+            "details": "1. Define subscription schemas for each data type (users, posts, documents, etc.)\n2. Implement subscription resolver functions on the server\n3. Create subscription endpoints in the tRPC router\n4. Implement filtering logic to send only relevant updates\n5. Add subscription management utilities on the client side\n6. Create hooks for easy subscription usage in React components\n7. Implement subscription cleanup on component unmount",
+            "status": "pending",
+            "testStrategy": "1. Test subscribing to different data types\n2. Verify only relevant updates are received\n3. Test subscription with multiple clients\n4. Ensure proper cleanup when subscriptions are no longer needed"
+          },
+          {
+            "id": 3,
+            "title": "Implement Real-time Presence System",
+            "description": "Create a system to track and display user presence information, including online status and current activity.",
+            "dependencies": [
+              "33.1",
+              "33.2"
+            ],
+            "details": "1. Create a presence data model to store user status information\n2. Implement heartbeat mechanism to track active users\n3. Create presence subscription endpoint\n4. Implement presence indicators in the UI (online, away, offline)\n5. Add user activity tracking (typing, viewing, editing)\n6. Create presence update throttling to prevent excessive updates\n7. Implement presence history for recently active users",
+            "status": "pending",
+            "testStrategy": "1. Test presence indicators with multiple users\n2. Verify presence updates in real-time\n3. Test timeout mechanism for inactive users\n4. Ensure presence history shows accurate information"
+          },
+          {
+            "id": 4,
+            "title": "Implement Collaborative Cursor and Selection Tracking",
+            "description": "Create a system to track and display cursor positions and text selections of collaborators in real-time.",
+            "dependencies": [
+              "33.1",
+              "33.3"
+            ],
+            "details": "1. Create data models for cursor position and selection ranges\n2. Implement cursor position tracking in text editors and other interactive elements\n3. Create throttled update mechanism to prevent excessive cursor updates\n4. Implement visual indicators for collaborator cursors with user identification\n5. Add selection highlighting with user-specific colors\n6. Create collision avoidance for multiple cursor indicators\n7. Implement cursor history playback for reviewing collaboration sessions",
+            "status": "pending",
+            "testStrategy": "1. Test cursor tracking with multiple users\n2. Verify cursor positions update in real-time\n3. Test selection highlighting with overlapping selections\n4. Ensure performance with many concurrent cursors"
+          },
+          {
+            "id": 5,
+            "title": "Implement Operational Transformation for Collaborative Editing",
+            "description": "Create a collaborative editing system using Operational Transformation to handle concurrent edits without conflicts.",
+            "dependencies": [
+              "33.1",
+              "33.4"
+            ],
+            "details": "1. Implement basic OT data types (Insert, Delete, Retain)\n2. Create transformation functions for operation pairs\n3. Implement a version vector to track document state\n4. Create server-side operation processing and broadcasting\n5. Implement client-side operation generation and application\n6. Add conflict resolution strategies for concurrent edits\n7. Create history tracking for undo/redo functionality\n8. Implement operation compression for efficiency",
+            "status": "pending",
+            "testStrategy": "1. Test concurrent editing scenarios\n2. Verify document consistency after concurrent edits\n3. Test operation transformation with various edge cases\n4. Measure performance with high frequency of edits"
+          },
+          {
+            "id": 6,
+            "title": "Implement Collaboration Permissions and Session Management",
+            "description": "Create a system to manage collaboration sessions with appropriate permissions and access controls.",
+            "dependencies": [
+              "33.1",
+              "33.3",
+              "33.5"
+            ],
+            "details": "1. Design collaboration session data model\n2. Implement session creation and joining functionality\n3. Create role-based permissions for collaboration (viewer, editor, admin)\n4. Implement session invitation system\n5. Add session activity feed to show recent changes\n6. Create session management UI for owners\n7. Implement session timeout and cleanup mechanisms\n8. Add real-time chat functionality within collaboration sessions",
+            "status": "pending",
+            "testStrategy": "1. Test session creation and joining\n2. Verify permissions are enforced correctly\n3. Test invitation system with various scenarios\n4. Ensure chat messages are delivered in real-time\n5. Validate session cleanup works correctly"
+          }
+        ]
+      },
+      {
+        "id": 34,
+        "title": "Implement Sync Status UI",
+        "description": "Create UI components to display synchronization status and progress to users.",
+        "details": "1. Design sync status indicator\n2. Implement sync progress display\n3. Create sync error notifications\n4. Add detailed sync status page\n5. Implement manual sync trigger\n6. Create sync history log\n7. Add per-entity sync status\n8. Implement sync settings UI",
+        "testStrategy": "1. Test sync status updates during synchronization\n2. Verify error notifications for sync issues\n3. Test manual sync trigger functionality\n4. Ensure sync history correctly logs events\n5. Validate user experience of sync status UI",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          31
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 35,
+        "title": "Implement Multiple Price Tiers",
+        "description": "Enhance the subscription system to support multiple pricing tiers with different feature sets.",
+        "details": "1. Design pricing tier data model\n2. Implement tier-based feature flags\n3. Create pricing page with tier comparison\n4. Add tier upgrade/downgrade functionality\n5. Implement prorated billing for tier changes\n6. Create tier-specific usage limits\n7. Add tier selection during signup\n8. Implement tier-based analytics",
+        "testStrategy": "1. Test tier-based feature access\n2. Verify upgrade/downgrade functionality\n3. Test prorated billing calculations\n4. Ensure usage limits are enforced by tier\n5. Validate tier selection during signup",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          8,
+          9,
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 36,
+        "title": "Implement Free Trial Logic",
+        "description": "Add support for free trials of premium features with automatic conversion to paid plans.",
+        "details": "1. Design trial data model\n2. Implement trial activation process\n3. Create trial expiration handling\n4. Add trial status indicators\n5. Implement trial-to-paid conversion\n6. Create trial extension functionality\n7. Add trial usage analytics\n8. Implement trial notification emails",
+        "testStrategy": "1. Test trial activation and expiration\n2. Verify trial status is correctly displayed\n3. Test conversion from trial to paid subscription\n4. Ensure trial extensions work correctly\n5. Validate trial notification emails",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          8,
+          9,
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 37,
+        "title": "Implement Workflow Templates",
+        "description": "Create a system for predefined workflow templates that users can instantiate and customize.",
+        "details": "1. Design workflow template data model\n2. Implement template creation interface\n3. Create template instantiation process\n4. Add template parameter customization\n5. Implement template versioning\n6. Create template library UI\n7. Add template import/export functionality\n8. Implement template analytics",
+        "testStrategy": "1. Test template creation and editing\n2. Verify template instantiation with parameters\n3. Test template versioning\n4. Ensure template library displays correctly\n5. Validate import/export functionality",
+        "priority": "medium",
+        "dependencies": [
+          11,
+          12,
+          13,
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 38,
+        "title": "Implement Error Recovery for Workflows",
+        "description": "Create robust error recovery mechanisms for workflows to handle failures gracefully.",
+        "details": "1. Implement step-level error handling\n2. Create workflow-level error policies\n3. Add retry mechanisms with backoff\n4. Implement checkpoint-based recovery\n5. Create manual intervention UI for errors\n6. Add error notification system\n7. Implement partial results saving\n8. Create error analytics and reporting",
+        "testStrategy": "1. Test error handling at step and workflow levels\n2. Verify retry mechanisms work correctly\n3. Test checkpoint-based recovery after failures\n4. Ensure manual intervention UI works properly\n5. Validate error notifications and reporting",
+        "priority": "medium",
+        "dependencies": [
+          11,
+          12,
+          13,
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 39,
+        "title": "Implement Analytics Integration",
+        "description": "Add analytics tracking throughout the application to monitor usage and performance.",
+        "details": "1. Set up analytics provider integration\n2. Implement page view tracking\n3. Add event tracking for key user actions\n4. Create custom dimensions for user properties\n5. Implement conversion tracking\n6. Add performance metric tracking\n7. Create analytics dashboard\n8. Implement privacy controls for analytics",
+        "testStrategy": "1. Verify page view tracking works correctly\n2. Test event tracking for various user actions\n3. Ensure custom dimensions are properly set\n4. Validate conversion tracking accuracy\n5. Test privacy controls for analytics opt-out",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 40,
+        "title": "Implement SEO Optimization",
+        "description": "Enhance the application with SEO best practices for better discoverability.",
+        "details": "1. Implement dynamic meta tags\n2. Create sitemap generation\n3. Add structured data markup\n4. Implement canonical URLs\n5. Create robots.txt configuration\n6. Add OpenGraph and Twitter card metadata\n7. Implement server-side rendering for key pages\n8. Create SEO performance monitoring",
+        "testStrategy": "1. Test meta tag generation for various pages\n2. Verify sitemap includes all public pages\n3. Test structured data with validation tools\n4. Ensure canonical URLs are correctly set\n5. Validate OpenGraph and Twitter card previews",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 41,
+        "title": "Create Example Todos Table with Real-time Features",
+        "description": "Implement a todos table as a demonstration of the real-time synchronization capabilities using Electric SQL, tRPC subscriptions, and local-first architecture.",
+        "details": "Create a fully-featured todos application that showcases:\n1. Database schema for todos with user ownership and organization support\n2. Electric SQL shape configuration for real-time sync\n3. tRPC subscription endpoints for todo updates\n4. Local-first CRUD operations with optimistic updates\n5. Real-time collaboration features (live cursors, presence)\n6. Offline support with sync queue\n7. Conflict resolution for concurrent edits\n8. UI components showing sync status and real-time updates",
+        "testStrategy": "1. Test todo creation, update, and deletion in online/offline modes\n2. Verify real-time sync between multiple clients\n3. Test conflict resolution with concurrent edits\n4. Validate offline queue processing\n5. Test presence and collaboration features\n6. Measure sync latency and performance",
+        "status": "done",
+        "dependencies": [
+          1,
+          2,
+          28,
+          31,
+          32,
+          33
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and implement database schema for todos",
+            "description": "Create the database schema for todos with user ownership and organization support using Drizzle ORM.",
+            "dependencies": [],
+            "details": "Define the todos table schema with the following fields: id (primary key), title, description, completed (boolean), user_id (foreign key), organization_id (foreign key), created_at, updated_at, due_date, priority (enum: low, medium, high), and tags (text array). Also create necessary indexes for efficient querying and relationships to users and organizations tables. Use Drizzle ORM for schema definition and migrations.",
+            "status": "done",
+            "testStrategy": "Verify schema creation with test inserts and queries. Ensure foreign key constraints work properly. Test schema migrations for future changes."
+          },
+          {
+            "id": 2,
+            "title": "Configure Electric SQL shapes for todos",
+            "description": "Set up Electric SQL shape configuration to enable real-time synchronization of todo items.",
+            "dependencies": [
+              "41.1"
+            ],
+            "details": "Define Electric SQL shapes for todos that specify which fields should be synchronized in real-time. Create shapes for individual todos, user-specific todos, and organization-wide todos. Configure sync rules based on user permissions and organization membership. Implement proper namespacing to avoid conflicts. Set up appropriate sync intervals and conflict resolution strategies in the Electric configuration.",
+            "status": "done",
+            "testStrategy": "Test shape definitions with sample data. Verify correct synchronization patterns based on user context. Ensure proper permissions are enforced in sync operations."
+          },
+          {
+            "id": 3,
+            "title": "Implement tRPC router with subscription endpoints",
+            "description": "Create a tRPC router with CRUD operations and subscription endpoints for todo updates.",
+            "dependencies": [
+              "41.1",
+              "41.2"
+            ],
+            "details": "Implement a tRPC router with procedures for creating, reading, updating, and deleting todos. Add subscription endpoints that emit events when todos are created, updated, or deleted. Implement proper authentication and authorization checks in the router. Create helper functions for filtering todos based on user permissions and organization membership. Ensure subscription endpoints handle connection management properly.",
+            "status": "done",
+            "testStrategy": "Test CRUD operations with various permission scenarios. Verify subscription events are emitted correctly. Test authentication and authorization logic. Measure performance under load."
+          },
+          {
+            "id": 4,
+            "title": "Develop React components for todo management",
+            "description": "Create React components for displaying and interacting with todos, including list views, detail views, and forms.",
+            "dependencies": [
+              "41.3"
+            ],
+            "details": "Build a TodoList component for displaying todos with filtering and sorting options. Create a TodoItem component for individual todo display with inline editing capabilities. Implement TodoForm for creating and editing todos. Add TodoFilters component for filtering by status, priority, and tags. Create TodoStats component for displaying summary information. Use React hooks for state management and implement proper loading and error states.",
+            "status": "done",
+            "testStrategy": "Write unit tests for individual components. Test component rendering with various data states. Verify user interactions work as expected. Test accessibility compliance."
+          },
+          {
+            "id": 5,
+            "title": "Implement local-first CRUD operations with optimistic updates",
+            "description": "Create hooks and utilities for local-first CRUD operations with optimistic UI updates.",
+            "dependencies": [
+              "41.3",
+              "41.4"
+            ],
+            "details": "Develop custom hooks (useTodoCreate, useTodoUpdate, useTodoDelete) that perform operations locally first, then synchronize with the server. Implement optimistic updates to immediately reflect changes in the UI. Create a local storage cache for offline operation. Implement retry logic for failed operations. Add proper error handling and rollback mechanisms for failed optimistic updates. Create utilities for managing the local state and synchronization queue.",
+            "status": "done",
+            "testStrategy": "Test CRUD operations in both online and offline scenarios. Verify optimistic updates work correctly. Test error handling and rollback mechanisms. Measure performance of local operations."
+          },
+          {
+            "id": 6,
+            "title": "Add real-time collaboration features",
+            "description": "Implement real-time collaboration features such as live cursors, presence indicators, and concurrent editing.",
+            "dependencies": [
+              "41.5"
+            ],
+            "details": "Create a presence system that shows which users are currently viewing or editing a todo. Implement live cursors to show where other users are focusing. Add real-time indicators for who is editing which todo. Create a conflict resolution UI for handling concurrent edits. Implement a locking mechanism to prevent conflicting edits. Add visual indicators for sync status (synced, syncing, offline). Use WebSockets or a similar technology for real-time communication.",
+            "status": "done",
+            "testStrategy": "Test presence indicators with multiple simulated users. Verify live cursors update in real-time. Test conflict resolution with forced concurrent edits. Ensure proper handling of users going offline and coming back online."
+          },
+          {
+            "id": 7,
+            "title": "Implement offline support with sync queue",
+            "description": "Create a robust offline support system with a synchronization queue for pending changes.",
+            "dependencies": [
+              "41.5"
+            ],
+            "details": "Implement a sync queue that stores changes made while offline. Create a background synchronization process that applies queued changes when connectivity is restored. Add conflict detection and resolution for changes made offline. Implement a priority system for the sync queue to handle critical updates first. Create a UI for viewing the sync queue status. Add persistence for the sync queue to survive page reloads. Implement proper error handling for failed synchronizations.",
+            "status": "done",
+            "testStrategy": "Test offline operation by simulating network disconnection. Verify changes are queued properly. Test synchronization when connectivity is restored. Verify conflict resolution works correctly. Test persistence across page reloads."
+          },
+          {
+            "id": 8,
+            "title": "Create UI components for sync status and real-time updates",
+            "description": "Develop UI components that display synchronization status and real-time update information.",
+            "dependencies": [
+              "41.6",
+              "41.7"
+            ],
+            "details": "Create a SyncStatus component that shows the current synchronization state (online, offline, syncing). Implement a SyncQueue component that displays pending changes. Add toast notifications for successful/failed sync operations. Create a CollaborationPanel showing active users and their activities. Implement visual indicators for items being edited by others. Add animations for newly updated items. Create a debug panel for developers to inspect sync operations. Ensure all components are accessible and provide clear visual feedback.",
+            "status": "done",
+            "testStrategy": "Test UI components with various sync states. Verify visual indicators accurately reflect the system state. Test accessibility of all components. Conduct usability testing to ensure the UI effectively communicates sync status to users."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-05T02:58:50.419Z",
+      "updated": "2025-08-05T04:18:30.731Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
