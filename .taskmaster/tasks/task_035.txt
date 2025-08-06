@@ -1,0 +1,22 @@
+# Task ID: 35
+# Title: Implement Multiple Price Tiers
+# Status: pending
+# Dependencies: 7, 8, 9, 10
+# Priority: medium
+# Description: Enhance the subscription system to support multiple pricing tiers with different feature sets.
+# Details:
+1. Design pricing tier data model
+2. Implement tier-based feature flags
+3. Create pricing page with tier comparison
+4. Add tier upgrade/downgrade functionality
+5. Implement prorated billing for tier changes
+6. Create tier-specific usage limits
+7. Add tier selection during signup
+8. Implement tier-based analytics
+
+# Test Strategy:
+1. Test tier-based feature access
+2. Verify upgrade/downgrade functionality
+3. Test prorated billing calculations
+4. Ensure usage limits are enforced by tier
+5. Validate tier selection during signup

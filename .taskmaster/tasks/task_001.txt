@@ -1,0 +1,78 @@
+# Task ID: 1
+# Title: Set up Electric SQL for Real-time Sync
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Integrate Electric SQL into the existing Next.js template to enable real-time synchronization capabilities.
+# Details:
+1. Install Electric SQL packages: `npm install electric-sql`
+2. Configure Electric SQL with Supabase PostgreSQL database
+3. Set up the Electric client in a provider component
+4. Create initial sync configuration for core data models
+5. Implement connection status monitoring
+6. Add necessary environment variables for Electric SQL configuration
+7. Update Drizzle schema to support Electric SQL requirements
+8. Implement tRPC subscriptions for Electric SQL proxy
+
+# Test Strategy:
+1. Verify successful connection to Electric SQL service
+2. Test data synchronization between multiple clients
+3. Validate that data changes are properly tracked
+4. Ensure proper error handling for connection issues
+5. Confirm Electric SQL is properly integrated with existing Supabase setup
+
+# Subtasks:
+## 1. Install and Configure Electric SQL Packages [pending]
+### Dependencies: None
+### Description: Install the necessary Electric SQL packages and set up the initial configuration for the project.
+### Details:
+Run `npm install electric-sql` to install the required packages. Create a basic configuration file at `lib/electric/config.ts` that includes connection parameters for the Supabase PostgreSQL database. Note that we're using Drizzle ORM instead of Prisma.
+
+## 2. Set Up Electric SQL Client Provider [pending]
+### Dependencies: None
+### Description: Create a provider component that initializes the Electric SQL client and makes it available throughout the application.
+### Details:
+Create an ElectricProvider.tsx component that initializes the Electric client using the configuration from step 1. Implement React context to make the client available to child components. Add connection status monitoring with appropriate UI feedback. Wrap the application with this provider in _app.tsx or layout.tsx.
+
+## 3. Configure Drizzle Schema for Electric SQL [pending]
+### Dependencies: None
+### Description: Update the Drizzle schema to support Electric SQL requirements and generate the necessary client code.
+### Details:
+Modify Drizzle schema to add Electric-specific annotations to models that need synchronization. Create the necessary adapters to connect Electric SQL with Drizzle ORM. Update database migrations to include Electric SQL required tables and extensions. Configure the initial sync rules for core data models.
+
+## 4. Configure Existing CloudFlare Worker for Electric SQL [pending]
+### Dependencies: None
+### Description: Configure the existing CloudFlare Worker project at apps/electric-proxy/ to work with Electric SQL.
+### Details:
+Explore the existing CloudFlare Worker project that uses Hono framework. Add necessary configuration for Electric SQL connectivity. Set up environment variables for the worker to connect to Electric SQL backend. Configure the worker to handle Electric SQL specific requests.
+
+## 5. Implement JWT Validation in CloudFlare Worker [pending]
+### Dependencies: None
+### Description: Add JWT validation to the CloudFlare Worker using Supabase symmetric keys.
+### Details:
+Implement JWT validation middleware in the worker that verifies tokens using Supabase symmetric keys. Extract and validate user information from the JWT. Configure the worker to reject requests with invalid or expired tokens. Add appropriate error responses for authentication failures.
+
+## 6. Implement tRPC Subscriptions for Electric SQL [pending]
+### Dependencies: None
+### Description: Create tRPC subscription endpoints to handle Electric SQL real-time updates instead of direct HTTP proxy.
+### Details:
+Implement tRPC subscription handlers for Electric SQL events. Configure the subscription endpoints to forward data from Electric SQL backend. Set up proper authentication for subscription endpoints. Implement error handling and reconnection logic for subscription streams. Update the client to use tRPC subscriptions for real-time updates.
+
+## 7. Configure Environment Variables and Secrets [pending]
+### Dependencies: None
+### Description: Set up all necessary environment variables for both the Next.js application and CloudFlare Worker.
+### Details:
+Create environment variable configurations for the Next.js application including Electric SQL connection details. Set up CloudFlare Worker environment variables and secrets for JWT validation keys and Electric SQL backend URL. Document all required environment variables in a .env.example file. Implement environment variable validation at startup.
+
+## 8. Integrate Electric SQL with Existing Supabase Setup [pending]
+### Dependencies: None
+### Description: Ensure Electric SQL works seamlessly with the existing Supabase authentication and database setup.
+### Details:
+Configure Electric SQL to use Supabase authentication tokens. Set up proper permissions for Electric SQL tables in Supabase. Create integration points between Supabase and Electric SQL for user data. Test the complete flow from Supabase authentication to Electric SQL synchronization.
+
+## 9. Configure tRPC Client for Dual Endpoints [pending]
+### Dependencies: None
+### Description: Configure the tRPC client to handle both the main Next.js API routes and CloudFlare Worker subscriptions with separate endpoints.
+### Details:
+Update the tRPC client configuration to support dual endpoints: one for regular API calls to the Next.js backend and another for Electric SQL subscriptions to the CloudFlare Worker. Configure the client to use different URLs for different operation types. Implement proper authentication forwarding for both endpoints. Set up environment variables for both API endpoint and worker subscription endpoint.
+

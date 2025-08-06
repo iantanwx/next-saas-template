@@ -1,0 +1,22 @@
+# Task ID: 24
+# Title: Implement Email Templates
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Create a system for email templates and notifications using Resend.
+# Details:
+1. Set up Resend integration
+2. Create base email template with branding
+3. Implement welcome email template
+4. Create password reset email template
+5. Implement verification email template
+6. Add subscription notification emails
+7. Create workflow status notification emails
+8. Implement team invitation email template
+
+# Test Strategy:
+1. Test email delivery through Resend
+2. Verify email rendering in various email clients
+3. Test personalization in email templates
+4. Ensure all links in emails work correctly
+5. Validate email template responsiveness

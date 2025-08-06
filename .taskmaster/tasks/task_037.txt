@@ -1,0 +1,22 @@
+# Task ID: 37
+# Title: Implement Workflow Templates
+# Status: pending
+# Dependencies: 11, 12, 13, 14
+# Priority: medium
+# Description: Create a system for predefined workflow templates that users can instantiate and customize.
+# Details:
+1. Design workflow template data model
+2. Implement template creation interface
+3. Create template instantiation process
+4. Add template parameter customization
+5. Implement template versioning
+6. Create template library UI
+7. Add template import/export functionality
+8. Implement template analytics
+
+# Test Strategy:
+1. Test template creation and editing
+2. Verify template instantiation with parameters
+3. Test template versioning
+4. Ensure template library displays correctly
+5. Validate import/export functionality

@@ -20,6 +20,8 @@ catalog:
   zod: ^3.24.1
   'class-variance-authority': ^0.7.1
   'date-fns': ^2.30.0
+  'drizzle-orm': ^0.38.3
+  'drizzle-kit': ^0.31.4
 
   # Data fetching (used in web + trpc)
   '@tanstack/react-query': ^5.84.0
@@ -39,3 +41,4 @@ catalog:
   # Testing (used in packages that need testing)
   vitest: ^2.1.8
   dotenv: ^16.4.7
+  tsx: ^4.19.2

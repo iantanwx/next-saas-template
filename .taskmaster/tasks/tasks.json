@@ -5,83 +5,92 @@
         "id": 1,
         "title": "Set up Electric SQL for Real-time Sync",
         "description": "Integrate Electric SQL into the existing Next.js template to enable real-time synchronization capabilities.",
-        "details": "1. Install Electric SQL packages: `npm install electric-sql @electric-sql/prisma-generator`\n2. Configure Electric SQL with Supabase PostgreSQL database\n3. Set up the Electric client in a provider component\n4. Create initial sync configuration for core data models\n5. Implement connection status monitoring\n6. Add necessary environment variables for Electric SQL configuration\n7. Update database schema to support Electric SQL requirements",
-        "testStrategy": "1. Verify successful connection to Electric SQL service\n2. Test data synchronization between multiple clients\n3. Validate that data changes are properly tracked\n4. Ensure proper error handling for connection issues\n5. Confirm Electric SQL is properly integrated with existing Supabase setup",
-        "priority": "high",
-        "dependencies": [],
         "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "details": "1. Install Electric SQL packages: `npm install electric-sql`\n2. Configure Electric SQL with Supabase PostgreSQL database\n3. Set up the Electric client in a provider component\n4. Create initial sync configuration for core data models\n5. Implement connection status monitoring\n6. Add necessary environment variables for Electric SQL configuration\n7. Update Drizzle schema to support Electric SQL requirements\n8. Implement tRPC subscriptions for Electric SQL proxy",
+        "testStrategy": "1. Verify successful connection to Electric SQL service\n2. Test data synchronization between multiple clients\n3. Validate that data changes are properly tracked\n4. Ensure proper error handling for connection issues\n5. Confirm Electric SQL is properly integrated with existing Supabase setup",
         "subtasks": [
           {
             "id": 1,
             "title": "Install and Configure Electric SQL Packages",
             "description": "Install the necessary Electric SQL packages and set up the initial configuration for the project.",
+            "status": "done",
             "dependencies": [],
-            "details": "Run `npm install electric-sql @electric-sql/prisma-generator` to install the required packages. Add the Electric SQL Prisma generator to the Prisma schema file. Create a basic configuration file at `lib/electric/config.ts` that includes connection parameters for the Supabase PostgreSQL database.",
-            "status": "pending",
-            "testStrategy": "Verify successful installation by checking package.json and node_modules. Ensure Prisma generator is properly configured by running a test generation."
+            "details": "Run `npm install electric-sql` to install the required packages. Create a basic configuration file at `lib/electric/config.ts` that includes connection parameters for the Supabase PostgreSQL database. Note that we're using Drizzle ORM instead of Prisma.\n<info added on 2025-08-05T04:58:08.813Z>\nSuccessfully implemented Electric SQL with PGlite integration:\n- Installed electric-sql and @electric-sql/pglite packages\n- Created local/ folder with PGlite schema that reuses main Drizzle todos schema  \n- Set up PGlite connection with Drizzle ORM integration\n- Created Electric client helpers for authenticated and non-authenticated connections\n- Added connection monitoring utilities\n- Configured proper exports from @superscale/crud package\n- Architecture uses PGlite (WASM PostgreSQL) instead of SQLite for better compatibility with existing Drizzle setup\n</info added on 2025-08-05T04:58:08.813Z>",
+            "testStrategy": "Verify successful installation by checking package.json and node_modules. Ensure configuration file is properly set up with correct connection parameters."
           },
           {
             "id": 2,
             "title": "Set Up Electric SQL Client Provider",
             "description": "Create a provider component that initializes the Electric SQL client and makes it available throughout the application.",
-            "dependencies": [],
-            "details": "Create an ElectricProvider.tsx component that initializes the Electric client using the configuration from step 1. Implement React context to make the client available to child components. Add connection status monitoring with appropriate UI feedback. Wrap the application with this provider in _app.tsx or layout.tsx.",
             "status": "pending",
+            "dependencies": [],
+            "details": "Create an ElectricProvider.tsx component that initializes the Electric client using the configuration from step 1. Implement React context to make the client available to child components. Add connection status monitoring with appropriate UI feedback. Wrap the application with this provider in _app.tsx or layout.tsx.\n<info added on 2025-08-05T08:39:13.205Z>\nThe task should be updated to create a PGliteProvider.tsx component instead of ElectricProvider.tsx. This provider will initialize PGlite database in a web worker for better performance and thread isolation. The component needs to handle Drizzle migrations to set up the local database schema that matches the subset of the remote Supabase schema required by Electric SQL. The provider should expose database operation methods through React context, including CRUD operations, transaction handling, and schema migration status. Web worker implementation will prevent database operations from blocking the main UI thread. The provider should monitor both PGlite initialization status and migration completion, providing appropriate loading states and error handling for the application.\n</info added on 2025-08-05T08:39:13.205Z>",
             "testStrategy": "Test the provider by creating a simple component that connects to Electric and displays connection status."
           },
           {
             "id": 3,
-            "title": "Configure Database Schema for Electric SQL",
-            "description": "Update the database schema to support Electric SQL requirements and generate the necessary client code.",
-            "dependencies": [],
-            "details": "Modify Prisma schema to add Electric-specific annotations to models that need synchronization. Run the Electric SQL Prisma generator to create the client code. Update database migrations to include Electric SQL required tables and extensions. Configure the initial sync rules for core data models.",
+            "title": "Configure Drizzle Schema for Electric SQL",
+            "description": "Update the Drizzle schema to support Electric SQL requirements and generate the necessary client code.",
             "status": "pending",
-            "testStrategy": "Verify schema generation by checking the output files. Test basic database operations to ensure the schema is correctly configured."
+            "dependencies": [],
+            "details": "Modify Drizzle schema to add Electric-specific annotations to models that need synchronization. Create the necessary adapters to connect Electric SQL with Drizzle ORM. Update database migrations to include Electric SQL required tables and extensions. Configure the initial sync rules for core data models.\n<info added on 2025-08-05T08:39:40.203Z>\nRefactor the subtask to create a separate local database schema for PGlite instead of modifying the main Drizzle schema. This involves setting up a PGlite-specific schema that represents a subset of the main Supabase schema, designed specifically for offline-first functionality. Create new migration files for the local schema that include only the essential tables and fields needed for offline operations. Ensure the local schema structure is compatible with Electric SQL's synchronization requirements, including proper primary keys, timestamps, and data types. The local schema should be optimized for client-side performance while maintaining referential integrity for the subset of data being synchronized.\n</info added on 2025-08-05T08:39:40.203Z>",
+            "testStrategy": "Verify schema integration by checking the output files. Test basic database operations to ensure the schema is correctly configured with Electric SQL."
           },
           {
             "id": 4,
-            "title": "Set Up CloudFlare Worker Project",
-            "description": "Create and configure a CloudFlare Worker project to serve as a proxy for Electric SQL.",
-            "dependencies": [],
-            "details": "Initialize a new CloudFlare Worker project using Wrangler CLI. Set up TypeScript configuration with esbuild for compilation. Create the basic worker structure with request handling. Configure the worker's package.json with necessary dependencies including JWT validation libraries.",
+            "title": "Configure Existing CloudFlare Worker for Electric SQL",
+            "description": "Configure the existing CloudFlare Worker project at apps/electric-proxy/ to work with Electric SQL.",
             "status": "pending",
-            "testStrategy": "Deploy the worker to a development environment and verify it responds to basic requests."
+            "dependencies": [],
+            "details": "Explore the existing CloudFlare Worker project that uses Hono framework. Add necessary configuration for Electric SQL connectivity. Set up environment variables for the worker to connect to Electric SQL backend. Configure the worker to handle Electric SQL specific requests.",
+            "testStrategy": "Deploy the worker to a development environment and verify it can connect to the Electric SQL backend."
           },
           {
             "id": 5,
             "title": "Implement JWT Validation in CloudFlare Worker",
             "description": "Add JWT validation to the CloudFlare Worker using Supabase symmetric keys.",
+            "status": "pending",
             "dependencies": [],
             "details": "Implement JWT validation middleware in the worker that verifies tokens using Supabase symmetric keys. Extract and validate user information from the JWT. Configure the worker to reject requests with invalid or expired tokens. Add appropriate error responses for authentication failures.",
-            "status": "pending",
             "testStrategy": "Test with valid and invalid JWTs to ensure proper validation. Verify that expired tokens are correctly rejected."
           },
           {
             "id": 6,
-            "title": "Implement Electric SQL Proxy in CloudFlare Worker",
-            "description": "Create the proxy functionality in the CloudFlare Worker to forward requests to the Electric SQL backend.",
-            "dependencies": [],
-            "details": "Implement request forwarding from the worker to the Electric SQL backend. Configure long HTTP poll handling for real-time updates. Add proper header management for proxied requests. Implement CORS configuration to allow requests from the frontend application. Add error handling for connection issues with the Electric backend.",
+            "title": "Implement tRPC Subscriptions for Electric SQL",
+            "description": "Create tRPC subscription endpoints to handle Electric SQL real-time updates instead of direct HTTP proxy.",
             "status": "pending",
-            "testStrategy": "Test proxy functionality by sending requests through the worker and verifying they reach the Electric backend. Verify long polling works correctly for real-time updates."
+            "dependencies": [],
+            "details": "Implement tRPC subscription handlers for Electric SQL events. Configure the subscription endpoints to forward data from Electric SQL backend. Set up proper authentication for subscription endpoints. Implement error handling and reconnection logic for subscription streams. Update the client to use tRPC subscriptions for real-time updates.",
+            "testStrategy": "Test subscription functionality by connecting clients and verifying they receive real-time updates. Test reconnection behavior when connection is interrupted."
           },
           {
             "id": 7,
             "title": "Configure Environment Variables and Secrets",
             "description": "Set up all necessary environment variables for both the Next.js application and CloudFlare Worker.",
+            "status": "pending",
             "dependencies": [],
             "details": "Create environment variable configurations for the Next.js application including Electric SQL connection details. Set up CloudFlare Worker environment variables and secrets for JWT validation keys and Electric SQL backend URL. Document all required environment variables in a .env.example file. Implement environment variable validation at startup.",
-            "status": "pending",
             "testStrategy": "Verify application starts correctly with the configured environment variables. Test error handling when required variables are missing."
           },
           {
             "id": 8,
-            "title": "Set Up GitHub Actions Deployment Pipeline",
-            "description": "Create a GitHub Actions workflow to automatically deploy the CloudFlare Worker and configure the production domain.",
-            "dependencies": [],
-            "details": "Create a GitHub Actions workflow file that builds and deploys the CloudFlare Worker. Configure the workflow to use secrets for API tokens and environment variables. Set up production domain configuration in the deployment process. Add deployment verification steps to ensure successful deployment. Configure the Next.js application to use the deployed worker URL.",
+            "title": "Integrate Electric SQL with Existing Supabase Setup",
+            "description": "Ensure Electric SQL works seamlessly with the existing Supabase authentication and database setup.",
             "status": "pending",
-            "testStrategy": "Test the GitHub Actions workflow by making a small change and verifying successful deployment. Verify the production domain is correctly configured and the application can connect through the proxy."
+            "dependencies": [],
+            "details": "Configure Electric SQL to use Supabase authentication tokens. Set up proper permissions for Electric SQL tables in Supabase. Create integration points between Supabase and Electric SQL for user data. Test the complete flow from Supabase authentication to Electric SQL synchronization.",
+            "testStrategy": "Verify authenticated users can properly sync data. Test permissions are correctly applied based on user roles. Ensure data consistency between Supabase and Electric SQL."
+          },
+          {
+            "id": 9,
+            "title": "Configure tRPC Client for Dual Endpoints",
+            "description": "Configure the tRPC client to handle both the main Next.js API routes and CloudFlare Worker subscriptions with separate endpoints.",
+            "details": "Update the tRPC client configuration to support dual endpoints: one for regular API calls to the Next.js backend and another for Electric SQL subscriptions to the CloudFlare Worker. Configure the client to use different URLs for different operation types. Implement proper authentication forwarding for both endpoints. Set up environment variables for both API endpoint and worker subscription endpoint.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
           }
         ]
       },
@@ -89,92 +98,90 @@
         "id": 2,
         "title": "Implement Local-First Architecture",
         "description": "Design and implement a local-first architecture that allows the application to work offline with seamless synchronization.",
-        "details": "1. Set up local SQLite database with Electric SQL\n2. Create data access layer that prioritizes local data\n3. Implement optimistic UI updates\n4. Design sync conflict detection mechanism\n5. Create data models with appropriate timestamps for sync\n6. Implement background sync process\n7. Add network status detection\n8. Create fallback mechanisms for when server is unreachable",
-        "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronizes correctly when connection is restored\n3. Simulate network interruptions to ensure resilience\n4. Validate that local changes are preserved during sync\n5. Measure performance impact of local-first approach",
-        "priority": "high",
+        "status": "pending",
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "1. Set up local SQLite database with Electric SQL\n2. Create data access layer that prioritizes local data\n3. Implement optimistic UI updates\n4. Design sync conflict detection mechanism\n5. Create data models with appropriate timestamps for sync\n6. Implement background sync process\n7. Add network status detection\n8. Create fallback mechanisms for when server is unreachable",
+        "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronizes correctly when connection is restored\n3. Simulate network interruptions to ensure resilience\n4. Validate that local changes are preserved during sync\n5. Measure performance impact of local-first approach",
         "subtasks": [
           {
             "id": 1,
             "title": "Set up local SQLite database with Electric SQL",
             "description": "Initialize and configure a local SQLite database using Electric SQL to enable offline data storage and synchronization capabilities.",
+            "status": "done",
             "dependencies": [],
-            "details": "Install Electric SQL dependencies and configure the client. Set up the SQLite database schema with appropriate tables for the application data. Define the necessary migrations for the database structure. Configure Electric SQL with the appropriate connection settings for both local development and production environments. Initialize the database connection in the application startup process.",
-            "status": "pending",
+            "details": "Install Electric SQL dependencies and configure the client. Set up the SQLite database schema with appropriate tables for the application data. Define the necessary migrations for the database structure. Configure Electric SQL with the appropriate connection settings for both local development and production environments. Initialize the database connection in the application startup process.\n<info added on 2025-08-05T08:40:05.149Z>\nUpdated to use PGlite instead of SQLite for better PostgreSQL compatibility. PGlite is a lightweight PostgreSQL implementation that runs in the browser and provides full PostgreSQL features while maintaining compatibility with Electric SQL. The setup should initialize PGlite in a dedicated web worker to avoid blocking the main thread and improve performance. This includes configuring the web worker communication layer, setting up the PGlite instance with appropriate memory limits, and establishing the Electric SQL client connection through the worker interface. The database schema should leverage PostgreSQL-specific features that PGlite supports, such as JSON columns and advanced indexing capabilities.\n</info added on 2025-08-05T08:40:05.149Z>",
             "testStrategy": "Verify database connection and initialization. Test basic CRUD operations against the local database. Ensure database schema matches the expected structure."
           },
           {
             "id": 2,
             "title": "Configure tRPC split link architecture",
             "description": "Implement a tRPC split link configuration that supports both WebSocket connections for subscriptions and HTTP connections for queries and mutations.",
-            "dependencies": [
-              "2.1"
-            ],
-            "details": "Create a tRPC WebSocket link that connects to the CloudFlare Worker for real-time subscriptions. Implement an HTTP link for queries and mutations that connects to Next.js API routes. Configure a split link that routes subscription operations to the WebSocket link and other operations to the HTTP link. Add error handling and reconnection logic for both links. Implement request batching for the HTTP link to optimize performance.",
             "status": "pending",
+            "dependencies": [],
+            "details": "Create a tRPC WebSocket link that connects to the CloudFlare Worker for real-time subscriptions. Implement an HTTP link for queries and mutations that connects to Next.js API routes. Configure a split link that routes subscription operations to the WebSocket link and other operations to the HTTP link. Add error handling and reconnection logic for both links. Implement request batching for the HTTP link to optimize performance.",
             "testStrategy": "Test both subscription and query/mutation operations to ensure they're routed correctly. Verify reconnection behavior when connections are interrupted. Measure performance impact of request batching."
           },
           {
             "id": 3,
             "title": "Implement data access layer with local-first priority",
             "description": "Create a data access layer that prioritizes local data access while handling synchronization with the server when online.",
-            "dependencies": [
-              "2.1",
-              "2.2"
-            ],
-            "details": "Develop a data access abstraction that first attempts to retrieve and manipulate data locally. Implement methods for CRUD operations that work with the local SQLite database. Create a synchronization mechanism that pushes local changes to the server when online. Implement data fetching strategies that prioritize local data but update from the server when available. Add caching mechanisms to optimize data access performance.",
             "status": "pending",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Develop a data access abstraction that first attempts to retrieve and manipulate data locally using the PGlite implementation. Implement methods for CRUD operations that work with the local PGlite database through the established worker interface. Create a synchronization mechanism that pushes local changes to the server when online. Implement data fetching strategies that prioritize local data but update from the server when available. Add caching mechanisms to optimize data access performance. Leverage the existing migration bundling system to ensure schema consistency between local and server environments.",
             "testStrategy": "Test data access methods in both online and offline scenarios. Verify that local data is prioritized when available. Test synchronization behavior when transitioning between online and offline states."
           },
           {
             "id": 4,
             "title": "Design and implement shape-based subscriptions",
             "description": "Create a subscription system based on data shapes, with one subscription per data type to efficiently manage real-time updates.",
-            "dependencies": [
-              "2.2",
-              "2.3"
-            ],
-            "details": "Define subscription shapes for each major data type in the application. Implement subscription handlers that process incoming data changes. Create client-side subscription management that efficiently subscribes and unsubscribes based on active views. Implement data normalization to handle overlapping subscriptions. Add subscription throttling and batching to prevent overwhelming the client with updates.",
             "status": "pending",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Define subscription shapes for each major data type in the application. Implement subscription handlers that process incoming data changes and apply them to the local PGlite database. Create client-side subscription management that efficiently subscribes and unsubscribes based on active views. Implement data normalization to handle overlapping subscriptions. Add subscription throttling and batching to prevent overwhelming the client with updates. Ensure compatibility with the existing foreign key constraint-free schema design for isolated local environments.",
             "testStrategy": "Test subscription activation and deactivation as views change. Verify that data updates are correctly processed and applied to the local state. Test performance with high-frequency updates to ensure client stability."
           },
           {
             "id": 5,
             "title": "Implement optimistic UI updates and offline queue",
             "description": "Create a system for optimistic UI updates that immediately reflects user actions while queueing operations for synchronization when offline.",
-            "dependencies": [
-              "2.3"
-            ],
-            "details": "Implement optimistic updates that immediately update the UI when actions are performed. Create an offline queue that stores operations when the application is offline. Develop a queue processing mechanism that executes queued operations when connectivity is restored. Add transaction support to ensure operations are atomic. Implement rollback mechanisms for failed operations to maintain data consistency.",
             "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "details": "Implement optimistic updates that immediately update the UI and local PGlite database when actions are performed. Create an offline queue that stores operations when the application is offline. Develop a queue processing mechanism that executes queued operations when connectivity is restored. Add transaction support to ensure operations are atomic using PGlite's transaction capabilities. Implement rollback mechanisms for failed operations to maintain data consistency. Utilize the Web Crypto API for generating consistent operation IDs for deduplication.",
             "testStrategy": "Test optimistic updates by verifying immediate UI changes. Verify that operations are queued when offline. Test queue processing when connectivity is restored. Validate rollback behavior for failed operations."
           },
           {
             "id": 6,
             "title": "Implement network status detection and fallback mechanisms",
             "description": "Add network status detection to the application and implement fallback mechanisms for when the server is unreachable.",
-            "dependencies": [
-              "2.3",
-              "2.5"
-            ],
-            "details": "Implement network status detection using browser APIs and heartbeat mechanisms. Create a network status store that provides the current connectivity state to the application. Develop fallback mechanisms that gracefully handle server unavailability. Implement retry strategies with exponential backoff for failed requests. Add user notifications for connectivity changes to improve the user experience.",
             "status": "pending",
+            "dependencies": [
+              3,
+              5
+            ],
+            "details": "Implement network status detection using browser APIs and heartbeat mechanisms. Create a network status store that provides the current connectivity state to the application. Develop fallback mechanisms that gracefully handle server unavailability by relying on the local PGlite database. Implement retry strategies with exponential backoff for failed requests. Add user notifications for connectivity changes to improve the user experience. Ensure fallback behavior works seamlessly with the worker-based PGlite architecture.",
             "testStrategy": "Test network status detection by simulating connectivity changes. Verify fallback mechanisms activate when the server is unreachable. Test retry strategies to ensure they correctly handle temporary outages."
           },
           {
             "id": 7,
             "title": "Implement sync conflict detection and resolution",
             "description": "Design and implement mechanisms for detecting and resolving conflicts that occur during data synchronization.",
-            "dependencies": [
-              "2.3",
-              "2.5",
-              "2.6"
-            ],
-            "details": "Implement timestamp-based conflict detection using last-modified timestamps. Create data models with appropriate timestamp fields for tracking changes. Develop conflict resolution strategies based on application-specific rules (e.g., last-write-wins, manual resolution). Implement a conflict resolution UI for cases requiring user intervention. Add logging and analytics for conflict occurrences to identify patterns and improve resolution strategies.",
             "status": "pending",
+            "dependencies": [
+              3,
+              5,
+              6
+            ],
+            "details": "Implement timestamp-based conflict detection using last-modified timestamps. Create data models with appropriate timestamp fields for tracking changes, compatible with the foreign key constraint-free schema. Develop conflict resolution strategies based on application-specific rules (e.g., last-write-wins, manual resolution). Implement a conflict resolution UI for cases requiring user intervention. Add logging and analytics for conflict occurrences to identify patterns and improve resolution strategies. Utilize the runtime migration processing system to handle schema evolution during conflicts.",
             "testStrategy": "Test conflict detection by creating concurrent modifications to the same data. Verify that resolution strategies correctly handle various conflict scenarios. Test the conflict resolution UI to ensure it presents clear options to users."
           }
         ]
@@ -919,11 +926,82 @@
             "testStrategy": "Test UI components with various sync states. Verify visual indicators accurately reflect the system state. Test accessibility of all components. Conduct usability testing to ensure the UI effectively communicates sync status to users."
           }
         ]
+      },
+      {
+        "id": 42,
+        "title": "Implement tRPC Procedures for Todo CRUD Operations",
+        "description": "Create type-safe tRPC procedures for managing todos, including create, read, update, and delete operations that integrate with the existing Drizzle schema and Supabase setup.",
+        "details": "Implementation details for tRPC todo procedures:\n\n1. **Setup tRPC Router for Todos**:\n   - Create a dedicated router file (`src/server/api/routers/todo.ts`)\n   - Import necessary tRPC utilities and Drizzle schema\n\n2. **Define Zod Validation Schemas**:\n   - Create input validation schemas for each procedure:\n     ```typescript\n     const createTodoSchema = z.object({\n       title: z.string().min(1).max(255),\n       description: z.string().optional(),\n       dueDate: z.date().optional(),\n       completed: z.boolean().default(false),\n       organizationId: z.string().uuid()\n     });\n     \n     const updateTodoSchema = z.object({\n       id: z.string().uuid(),\n       title: z.string().min(1).max(255).optional(),\n       description: z.string().optional(),\n       dueDate: z.date().optional(),\n       completed: z.boolean().optional()\n     });\n     \n     const deleteTodoSchema = z.object({\n       id: z.string().uuid()\n     });\n     ```\n\n3. **Implement CRUD Procedures**:\n   - **Create Todo**:\n     ```typescript\n     create: protectedProcedure\n       .input(createTodoSchema)\n       .mutation(async ({ ctx, input }) => {\n         // Verify user belongs to organization\n         // Insert todo using Drizzle\n         // Return created todo\n       }),\n     ```\n   \n   - **Read Todos**:\n     ```typescript\n     getAll: protectedProcedure\n       .input(z.object({\n         organizationId: z.string().uuid(),\n         limit: z.number().min(1).max(100).default(50),\n         cursor: z.string().nullish()\n       }))\n       .query(async ({ ctx, input }) => {\n         // Verify user belongs to organization\n         // Query todos with pagination\n         // Return todos with next cursor\n       }),\n     \n     getById: protectedProcedure\n       .input(z.object({ id: z.string().uuid() }))\n       .query(async ({ ctx, input }) => {\n         // Verify user has access to todo\n         // Query single todo\n         // Return todo or throw not found\n       }),\n     ```\n   \n   - **Update Todo**:\n     ```typescript\n     update: protectedProcedure\n       .input(updateTodoSchema)\n       .mutation(async ({ ctx, input }) => {\n         // Verify user has access to todo\n         // Update todo using Drizzle\n         // Return updated todo\n       }),\n     ```\n   \n   - **Delete Todo**:\n     ```typescript\n     delete: protectedProcedure\n       .input(deleteTodoSchema)\n       .mutation(async ({ ctx, input }) => {\n         // Verify user has access to todo\n         // Delete todo using Drizzle\n         // Return success message\n       }),\n     ```\n\n4. **Implement Filtering and Sorting**:\n   - Add procedures for filtered queries:\n     ```typescript\n     getFiltered: protectedProcedure\n       .input(z.object({\n         organizationId: z.string().uuid(),\n         completed: z.boolean().optional(),\n         search: z.string().optional(),\n         sortBy: z.enum(['createdAt', 'dueDate', 'title']).default('createdAt'),\n         sortDirection: z.enum(['asc', 'desc']).default('desc')\n       }))\n       .query(async ({ ctx, input }) => {\n         // Implement filtering and sorting logic\n       }),\n     ```\n\n5. **Add Batch Operations**:\n   - Implement batch update/delete for efficiency:\n     ```typescript\n     batchUpdate: protectedProcedure\n       .input(z.object({\n         ids: z.array(z.string().uuid()),\n         completed: z.boolean()\n       }))\n       .mutation(async ({ ctx, input }) => {\n         // Verify user has access to all todos\n         // Batch update todos\n       }),\n     ```\n\n6. **Error Handling**:\n   - Implement proper error handling with descriptive messages\n   - Use tRPC's error formatter for consistent error responses\n   - Handle database errors and validation failures gracefully\n\n7. **Integration with Electric SQL**:\n   - Ensure procedures work with the Electric SQL setup for real-time sync\n   - Implement proper shape queries for todos\n\n8. **Register Router**:\n   - Add the todo router to the main tRPC router in `src/server/api/root.ts`",
+        "testStrategy": "1. **Unit Testing**:\n   - Write unit tests for each tRPC procedure using Vitest\n   - Mock database interactions to test procedure logic in isolation\n   - Test validation error cases with invalid inputs\n   - Verify authorization checks work correctly\n\n2. **Integration Testing**:\n   - Test procedures against a test database\n   - Verify CRUD operations modify the database correctly\n   - Test pagination and filtering functionality\n   - Ensure proper error responses for invalid operations\n\n3. **Authorization Testing**:\n   - Test that users can only access todos in their organizations\n   - Verify users cannot modify todos they don't have access to\n   - Test organization admin privileges for managing all todos\n\n4. **Performance Testing**:\n   - Test batch operations with large datasets\n   - Verify query performance with indexes\n   - Test pagination with large result sets\n\n5. **End-to-End Testing**:\n   - Create Playwright tests that use the tRPC procedures from the frontend\n   - Test complete user flows for todo management\n   - Verify real-time updates work correctly with Electric SQL\n\n6. **Manual Testing**:\n   - Test procedures using tRPC client in the browser\n   - Verify type safety works correctly in the frontend\n   - Test error handling and user feedback\n\n7. **API Documentation Testing**:\n   - Generate and verify API documentation for the todo procedures\n   - Ensure all procedures are properly documented with examples",
+        "status": "pending",
+        "dependencies": [
+          41,
+          33,
+          15
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Setup tRPC Router and Zod Validation Schemas",
+            "description": "Create the todo router file and define Zod validation schemas for all CRUD operations",
+            "dependencies": [],
+            "details": "Create the router file at src/server/api/routers/todo.ts. Import necessary tRPC utilities and Drizzle schema. Define comprehensive Zod validation schemas for create, update, delete, and query operations with proper validation rules for each field. Include schemas for filtering, sorting, and pagination.\n<info added on 2025-08-05T04:31:42.755Z>\nSuccessfully completed the setup of tRPC router and Zod validation schemas for todos. Created comprehensive validation schemas including createTodoSchema, updateTodoSchema, todoIdSchema, todosByOrganizationSchema, and todosByStatusSchema. All schemas include proper validation rules with helpful error messages. Also exported the schema enums (todoPriority, todoStatus) from the CRUD package and registered the todo router in the main tRPC router. Build passes successfully with no TypeScript errors.\n</info added on 2025-08-05T04:31:42.755Z>",
+            "status": "done",
+            "testStrategy": "Write unit tests to verify schema validation works correctly for valid and invalid inputs. Test edge cases like minimum/maximum string lengths and required fields."
+          },
+          {
+            "id": 2,
+            "title": "Implement Create and Read Procedures",
+            "description": "Create tRPC procedures for adding new todos and retrieving todos with various query options",
+            "dependencies": [
+              "42.1"
+            ],
+            "details": "Implement the 'create' mutation that validates input, verifies user belongs to the organization, and inserts the todo using Drizzle. Implement 'getAll' query with pagination support, 'getById' for single todo retrieval, and 'getFiltered' for advanced filtering and sorting. Ensure proper error handling and authorization checks in each procedure.",
+            "status": "pending",
+            "testStrategy": "Test each procedure with valid inputs and verify correct database operations. Test authorization by attempting operations with users who don't have access. Verify pagination works correctly with various limit and cursor values."
+          },
+          {
+            "id": 3,
+            "title": "Implement Update and Delete Procedures",
+            "description": "Create tRPC procedures for modifying and removing existing todos",
+            "dependencies": [
+              "42.1"
+            ],
+            "details": "Implement the 'update' mutation that allows partial updates to todos, verifying user access before modification. Implement the 'delete' mutation that removes todos after authorization checks. Add proper error handling for cases like todo not found or unauthorized access. Return appropriate success responses and updated data.",
+            "status": "pending",
+            "testStrategy": "Test update with various field combinations. Verify deleted todos are no longer accessible. Test error cases like attempting to update/delete non-existent todos or todos the user doesn't have access to."
+          },
+          {
+            "id": 4,
+            "title": "Implement Batch Operations",
+            "description": "Create procedures for efficient batch updates and deletions of multiple todos",
+            "dependencies": [
+              "42.3"
+            ],
+            "details": "Implement 'batchUpdate' mutation that can modify multiple todos at once (e.g., marking several todos as completed). Implement 'batchDelete' for removing multiple todos in one operation. Ensure proper transaction handling for atomicity. Verify user has access to all todos in the batch before proceeding with operations.",
+            "status": "pending",
+            "testStrategy": "Test batch operations with various numbers of items. Verify transactions roll back properly if any item fails. Test partial authorization scenarios where user has access to some but not all todos in the batch."
+          },
+          {
+            "id": 5,
+            "title": "Register Router and Integrate with Project",
+            "description": "Add the todo router to the main tRPC router and ensure compatibility with Electric SQL for real-time sync",
+            "dependencies": [
+              "42.2",
+              "42.3",
+              "42.4"
+            ],
+            "details": "Register the todo router in src/server/api/root.ts. Ensure procedures work with Electric SQL for real-time synchronization by implementing proper shape queries. Add comprehensive error handling with descriptive messages using tRPC's error formatter. Test the complete integration to verify all procedures work end-to-end with the existing Drizzle schema and Supabase setup.",
+            "status": "pending",
+            "testStrategy": "Perform integration testing to verify the router works correctly within the full application. Test real-time sync capabilities with Electric SQL. Verify error messages are properly formatted and helpful for debugging."
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-08-05T02:58:50.419Z",
-      "updated": "2025-08-05T04:18:30.731Z",
+      "updated": "2025-08-06T08:50:51.642Z",
       "description": "Tasks for master context"
     }
   }

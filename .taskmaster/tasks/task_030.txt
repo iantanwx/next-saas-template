@@ -1,0 +1,22 @@
+# Task ID: 30
+# Title: Implement Teams within Organizations
+# Status: pending
+# Dependencies: 29
+# Priority: medium
+# Description: Add support for teams as a sub-grouping within organizations for more granular access control.
+# Details:
+1. Design team data model
+2. Implement team creation and management
+3. Create team membership functionality
+4. Add team-based permission system
+5. Implement team settings UI
+6. Create team invitation system
+7. Add team activity feed
+8. Implement team resource sharing
+
+# Test Strategy:
+1. Test team creation and management
+2. Verify team membership functionality
+3. Test team-based permissions
+4. Ensure team invitations work correctly
+5. Validate team resource sharing

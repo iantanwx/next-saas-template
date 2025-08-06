@@ -1,0 +1,34 @@
+{
+  "name": "@superscale/pglite",
+  "version": "1.0.0",
+  "description": "Electric SQL + PGlite integration for local-first architecture",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "drizzle:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.3.7",
+    "@electric-sql/pglite-sync": "^0.3.10",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@superscale/crud": "workspace:^",
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@superscale/tsconfig": "workspace:^",
+    "@types/node": "catalog:",
+    "@types/webpack-env": "^1.18.8",
+    "drizzle-kit": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts",
+    "./worker": "./src/worker.ts"
+  },
+  "sideEffects": false,
+  "license": "MIT"
+}

@@ -25,6 +25,7 @@
     "@superscale/trpc": "workspace:^",
     "@superscale/tsconfig": "workspace:^",
     "@superscale/ui": "workspace:*",
+    "@superscale/pglite": "workspace:^",
     "@tanstack/react-query-devtools": "^5.84.0",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-table": "^8.20.6",

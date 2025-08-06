@@ -1,0 +1,207 @@
+# Task ID: 42
+# Title: Implement tRPC Procedures for Todo CRUD Operations
+# Status: pending
+# Dependencies: 41, 33, 15
+# Priority: medium
+# Description: Create type-safe tRPC procedures for managing todos, including create, read, update, and delete operations that integrate with the existing Drizzle schema and Supabase setup.
+# Details:
+Implementation details for tRPC todo procedures:
+
+1. **Setup tRPC Router for Todos**:
+   - Create a dedicated router file (`src/server/api/routers/todo.ts`)
+   - Import necessary tRPC utilities and Drizzle schema
+
+2. **Define Zod Validation Schemas**:
+   - Create input validation schemas for each procedure:
+     ```typescript
+     const createTodoSchema = z.object({
+       title: z.string().min(1).max(255),
+       description: z.string().optional(),
+       dueDate: z.date().optional(),
+       completed: z.boolean().default(false),
+       organizationId: z.string().uuid()
+     });
+     
+     const updateTodoSchema = z.object({
+       id: z.string().uuid(),
+       title: z.string().min(1).max(255).optional(),
+       description: z.string().optional(),
+       dueDate: z.date().optional(),
+       completed: z.boolean().optional()
+     });
+     
+     const deleteTodoSchema = z.object({
+       id: z.string().uuid()
+     });
+     ```
+
+3. **Implement CRUD Procedures**:
+   - **Create Todo**:
+     ```typescript
+     create: protectedProcedure
+       .input(createTodoSchema)
+       .mutation(async ({ ctx, input }) => {
+         // Verify user belongs to organization
+         // Insert todo using Drizzle
+         // Return created todo
+       }),
+     ```
+   
+   - **Read Todos**:
+     ```typescript
+     getAll: protectedProcedure
+       .input(z.object({
+         organizationId: z.string().uuid(),
+         limit: z.number().min(1).max(100).default(50),
+         cursor: z.string().nullish()
+       }))
+       .query(async ({ ctx, input }) => {
+         // Verify user belongs to organization
+         // Query todos with pagination
+         // Return todos with next cursor
+       }),
+     
+     getById: protectedProcedure
+       .input(z.object({ id: z.string().uuid() }))
+       .query(async ({ ctx, input }) => {
+         // Verify user has access to todo
+         // Query single todo
+         // Return todo or throw not found
+       }),
+     ```
+   
+   - **Update Todo**:
+     ```typescript
+     update: protectedProcedure
+       .input(updateTodoSchema)
+       .mutation(async ({ ctx, input }) => {
+         // Verify user has access to todo
+         // Update todo using Drizzle
+         // Return updated todo
+       }),
+     ```
+   
+   - **Delete Todo**:
+     ```typescript
+     delete: protectedProcedure
+       .input(deleteTodoSchema)
+       .mutation(async ({ ctx, input }) => {
+         // Verify user has access to todo
+         // Delete todo using Drizzle
+         // Return success message
+       }),
+     ```
+
+4. **Implement Filtering and Sorting**:
+   - Add procedures for filtered queries:
+     ```typescript
+     getFiltered: protectedProcedure
+       .input(z.object({
+         organizationId: z.string().uuid(),
+         completed: z.boolean().optional(),
+         search: z.string().optional(),
+         sortBy: z.enum(['createdAt', 'dueDate', 'title']).default('createdAt'),
+         sortDirection: z.enum(['asc', 'desc']).default('desc')
+       }))
+       .query(async ({ ctx, input }) => {
+         // Implement filtering and sorting logic
+       }),
+     ```
+
+5. **Add Batch Operations**:
+   - Implement batch update/delete for efficiency:
+     ```typescript
+     batchUpdate: protectedProcedure
+       .input(z.object({
+         ids: z.array(z.string().uuid()),
+         completed: z.boolean()
+       }))
+       .mutation(async ({ ctx, input }) => {
+         // Verify user has access to all todos
+         // Batch update todos
+       }),
+     ```
+
+6. **Error Handling**:
+   - Implement proper error handling with descriptive messages
+   - Use tRPC's error formatter for consistent error responses
+   - Handle database errors and validation failures gracefully
+
+7. **Integration with Electric SQL**:
+   - Ensure procedures work with the Electric SQL setup for real-time sync
+   - Implement proper shape queries for todos
+
+8. **Register Router**:
+   - Add the todo router to the main tRPC router in `src/server/api/root.ts`
+
+# Test Strategy:
+1. **Unit Testing**:
+   - Write unit tests for each tRPC procedure using Vitest
+   - Mock database interactions to test procedure logic in isolation
+   - Test validation error cases with invalid inputs
+   - Verify authorization checks work correctly
+
+2. **Integration Testing**:
+   - Test procedures against a test database
+   - Verify CRUD operations modify the database correctly
+   - Test pagination and filtering functionality
+   - Ensure proper error responses for invalid operations
+
+3. **Authorization Testing**:
+   - Test that users can only access todos in their organizations
+   - Verify users cannot modify todos they don't have access to
+   - Test organization admin privileges for managing all todos
+
+4. **Performance Testing**:
+   - Test batch operations with large datasets
+   - Verify query performance with indexes
+   - Test pagination with large result sets
+
+5. **End-to-End Testing**:
+   - Create Playwright tests that use the tRPC procedures from the frontend
+   - Test complete user flows for todo management
+   - Verify real-time updates work correctly with Electric SQL
+
+6. **Manual Testing**:
+   - Test procedures using tRPC client in the browser
+   - Verify type safety works correctly in the frontend
+   - Test error handling and user feedback
+
+7. **API Documentation Testing**:
+   - Generate and verify API documentation for the todo procedures
+   - Ensure all procedures are properly documented with examples
+
+# Subtasks:
+## 1. Setup tRPC Router and Zod Validation Schemas [done]
+### Dependencies: None
+### Description: Create the todo router file and define Zod validation schemas for all CRUD operations
+### Details:
+Create the router file at src/server/api/routers/todo.ts. Import necessary tRPC utilities and Drizzle schema. Define comprehensive Zod validation schemas for create, update, delete, and query operations with proper validation rules for each field. Include schemas for filtering, sorting, and pagination.
+<info added on 2025-08-05T04:31:42.755Z>
+Successfully completed the setup of tRPC router and Zod validation schemas for todos. Created comprehensive validation schemas including createTodoSchema, updateTodoSchema, todoIdSchema, todosByOrganizationSchema, and todosByStatusSchema. All schemas include proper validation rules with helpful error messages. Also exported the schema enums (todoPriority, todoStatus) from the CRUD package and registered the todo router in the main tRPC router. Build passes successfully with no TypeScript errors.
+</info added on 2025-08-05T04:31:42.755Z>
+
+## 2. Implement Create and Read Procedures [pending]
+### Dependencies: 42.1
+### Description: Create tRPC procedures for adding new todos and retrieving todos with various query options
+### Details:
+Implement the 'create' mutation that validates input, verifies user belongs to the organization, and inserts the todo using Drizzle. Implement 'getAll' query with pagination support, 'getById' for single todo retrieval, and 'getFiltered' for advanced filtering and sorting. Ensure proper error handling and authorization checks in each procedure.
+
+## 3. Implement Update and Delete Procedures [pending]
+### Dependencies: 42.1
+### Description: Create tRPC procedures for modifying and removing existing todos
+### Details:
+Implement the 'update' mutation that allows partial updates to todos, verifying user access before modification. Implement the 'delete' mutation that removes todos after authorization checks. Add proper error handling for cases like todo not found or unauthorized access. Return appropriate success responses and updated data.
+
+## 4. Implement Batch Operations [pending]
+### Dependencies: 42.3
+### Description: Create procedures for efficient batch updates and deletions of multiple todos
+### Details:
+Implement 'batchUpdate' mutation that can modify multiple todos at once (e.g., marking several todos as completed). Implement 'batchDelete' for removing multiple todos in one operation. Ensure proper transaction handling for atomicity. Verify user has access to all todos in the batch before proceeding with operations.
+
+## 5. Register Router and Integrate with Project [pending]
+### Dependencies: 42.2, 42.3, 42.4
+### Description: Add the todo router to the main tRPC router and ensure compatibility with Electric SQL for real-time sync
+### Details:
+Register the todo router in src/server/api/root.ts. Ensure procedures work with Electric SQL for real-time synchronization by implementing proper shape queries. Add comprehensive error handling with descriptive messages using tRPC's error formatter. Test the complete integration to verify all procedures work end-to-end with the existing Drizzle schema and Supabase setup.
+

@@ -6,6 +6,9 @@ export default {
   images: {
     remotePatterns: [{ hostname: 'images.unsplash.com' }],
   },
+  experimental: {
+    esmExternals: true,
+  },
   webpack(config) {
     // see https://github.com/vercel/next.js/issues/48177
     // Configures webpack to handle SVG files with SVGR. SVGR optimizes and transforms SVG files
@@ -36,6 +39,14 @@ export default {
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     fileLoaderRule.exclude = /\.svg$/i;
 
+    // Add rule to handle SQL files as raw text
+    config.module.rules.push({
+      test: /\.sql$/,
+      type: 'asset/source',
+    });
+
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+
     return config;
   },
   transpilePackages: [
@@ -45,40 +56,6 @@ export default {
     '@superscale/email',
     '@superscale/editor',
     '@superscale/ui',
+    '@superscale/pglite',
   ],
 };
-
-// const axiomConfig = withAxiom(nextConfig);
-//
-// const sentryConfig = {
-//   // For all available options, see:
-//   // https://github.com/getsentry/sentry-webpack-plugin#options
-//   // Suppresses source map uploading logs during build
-//   silent: true,
-//   org: 'scribblerdotso',
-//   project: 'superscale',
-// };
-//
-// const sentryWebpackConfig = {
-//   // For all available options, see:
-//   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-//
-//   // Upload a larger set of source maps for prettier stack traces (increases build time)
-//   widenClientFileUpload: true,
-//
-//   // Transpiles SDK to be compatible with IE11 (increases bundle size)
-//   transpileClientSDK: true,
-//
-//   // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-//   tunnelRoute: '/monitoring',
-//
-//   // Hides source maps from generated client bundles
-//   hideSourceMaps: true,
-//
-//   // Automatically tree-shake Sentry logger statements to reduce bundle size
-//   disableLogger: true,
-// };
-//
-// const config = withSentryConfig(axiomConfig, sentryConfig, sentryWebpackConfig);
-//
-// export default config;

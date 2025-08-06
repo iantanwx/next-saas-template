@@ -1,0 +1,74 @@
+# Task ID: 41
+# Title: Create Example Todos Table with Real-time Features
+# Status: done
+# Dependencies: 1, 2, 28, 31, 32, 33
+# Priority: high
+# Description: Implement a todos table as a demonstration of the real-time synchronization capabilities using Electric SQL, tRPC subscriptions, and local-first architecture.
+# Details:
+Create a fully-featured todos application that showcases:
+1. Database schema for todos with user ownership and organization support
+2. Electric SQL shape configuration for real-time sync
+3. tRPC subscription endpoints for todo updates
+4. Local-first CRUD operations with optimistic updates
+5. Real-time collaboration features (live cursors, presence)
+6. Offline support with sync queue
+7. Conflict resolution for concurrent edits
+8. UI components showing sync status and real-time updates
+
+# Test Strategy:
+1. Test todo creation, update, and deletion in online/offline modes
+2. Verify real-time sync between multiple clients
+3. Test conflict resolution with concurrent edits
+4. Validate offline queue processing
+5. Test presence and collaboration features
+6. Measure sync latency and performance
+
+# Subtasks:
+## 1. Design and implement database schema for todos [done]
+### Dependencies: None
+### Description: Create the database schema for todos with user ownership and organization support using Drizzle ORM.
+### Details:
+Define the todos table schema with the following fields: id (primary key), title, description, completed (boolean), user_id (foreign key), organization_id (foreign key), created_at, updated_at, due_date, priority (enum: low, medium, high), and tags (text array). Also create necessary indexes for efficient querying and relationships to users and organizations tables. Use Drizzle ORM for schema definition and migrations.
+
+## 2. Configure Electric SQL shapes for todos [done]
+### Dependencies: 41.1
+### Description: Set up Electric SQL shape configuration to enable real-time synchronization of todo items.
+### Details:
+Define Electric SQL shapes for todos that specify which fields should be synchronized in real-time. Create shapes for individual todos, user-specific todos, and organization-wide todos. Configure sync rules based on user permissions and organization membership. Implement proper namespacing to avoid conflicts. Set up appropriate sync intervals and conflict resolution strategies in the Electric configuration.
+
+## 3. Implement tRPC router with subscription endpoints [done]
+### Dependencies: 41.1, 41.2
+### Description: Create a tRPC router with CRUD operations and subscription endpoints for todo updates.
+### Details:
+Implement a tRPC router with procedures for creating, reading, updating, and deleting todos. Add subscription endpoints that emit events when todos are created, updated, or deleted. Implement proper authentication and authorization checks in the router. Create helper functions for filtering todos based on user permissions and organization membership. Ensure subscription endpoints handle connection management properly.
+
+## 4. Develop React components for todo management [done]
+### Dependencies: 41.3
+### Description: Create React components for displaying and interacting with todos, including list views, detail views, and forms.
+### Details:
+Build a TodoList component for displaying todos with filtering and sorting options. Create a TodoItem component for individual todo display with inline editing capabilities. Implement TodoForm for creating and editing todos. Add TodoFilters component for filtering by status, priority, and tags. Create TodoStats component for displaying summary information. Use React hooks for state management and implement proper loading and error states.
+
+## 5. Implement local-first CRUD operations with optimistic updates [done]
+### Dependencies: 41.3, 41.4
+### Description: Create hooks and utilities for local-first CRUD operations with optimistic UI updates.
+### Details:
+Develop custom hooks (useTodoCreate, useTodoUpdate, useTodoDelete) that perform operations locally first, then synchronize with the server. Implement optimistic updates to immediately reflect changes in the UI. Create a local storage cache for offline operation. Implement retry logic for failed operations. Add proper error handling and rollback mechanisms for failed optimistic updates. Create utilities for managing the local state and synchronization queue.
+
+## 6. Add real-time collaboration features [done]
+### Dependencies: 41.5
+### Description: Implement real-time collaboration features such as live cursors, presence indicators, and concurrent editing.
+### Details:
+Create a presence system that shows which users are currently viewing or editing a todo. Implement live cursors to show where other users are focusing. Add real-time indicators for who is editing which todo. Create a conflict resolution UI for handling concurrent edits. Implement a locking mechanism to prevent conflicting edits. Add visual indicators for sync status (synced, syncing, offline). Use WebSockets or a similar technology for real-time communication.
+
+## 7. Implement offline support with sync queue [done]
+### Dependencies: 41.5
+### Description: Create a robust offline support system with a synchronization queue for pending changes.
+### Details:
+Implement a sync queue that stores changes made while offline. Create a background synchronization process that applies queued changes when connectivity is restored. Add conflict detection and resolution for changes made offline. Implement a priority system for the sync queue to handle critical updates first. Create a UI for viewing the sync queue status. Add persistence for the sync queue to survive page reloads. Implement proper error handling for failed synchronizations.
+
+## 8. Create UI components for sync status and real-time updates [done]
+### Dependencies: 41.6, 41.7
+### Description: Develop UI components that display synchronization status and real-time update information.
+### Details:
+Create a SyncStatus component that shows the current synchronization state (online, offline, syncing). Implement a SyncQueue component that displays pending changes. Add toast notifications for successful/failed sync operations. Create a CollaborationPanel showing active users and their activities. Implement visual indicators for items being edited by others. Add animations for newly updated items. Create a debug panel for developers to inspect sync operations. Ensure all components are accessible and provide clear visual feedback.
+

@@ -1,0 +1,54 @@
+# Task ID: 28
+# Title: Implement WebSocket Support
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Add WebSocket support for real-time communication between clients and server.
+# Details:
+1. Set up WebSocket server
+2. Create WebSocket connection management
+3. Implement message serialization/deserialization
+4. Add authentication for WebSocket connections
+5. Create channel subscription mechanism
+6. Implement presence tracking
+7. Add reconnection handling
+8. Create WebSocket event hooks
+
+# Test Strategy:
+1. Test WebSocket connection establishment
+2. Verify message delivery in both directions
+3. Test authentication and security
+4. Ensure reconnection works after disconnection
+5. Validate performance with multiple concurrent connections
+
+# Subtasks:
+## 1. Set up WebSocket Server in CloudFlare Worker [pending]
+### Dependencies: None
+### Description: Implement a WebSocket server within a CloudFlare Worker that can accept and manage WebSocket connections from clients.
+### Details:
+Create a new CloudFlare Worker that listens for WebSocket upgrade requests. Implement the necessary event handlers for connection, message, error, and close events. Set up the appropriate routes and handlers in the worker to distinguish WebSocket connections from regular HTTP requests. Configure CORS settings to allow connections from authorized origins. Implement basic logging and monitoring for WebSocket connections.
+
+## 2. Implement WebSocket Connection Management [pending]
+### Dependencies: 28.1
+### Description: Create a system to track active WebSocket connections, handle authentication, and manage connection lifecycle.
+### Details:
+Develop a connection manager that maintains a registry of active WebSocket connections with unique identifiers. Implement authentication middleware that validates connection requests using JWT or similar tokens. Create mechanisms to handle connection timeouts, heartbeats, and graceful disconnections. Implement rate limiting to prevent abuse. Store connection metadata including client information, authentication status, and connection timestamp.
+
+## 3. Develop WebSocket to Long HTTP Poll Proxy [pending]
+### Dependencies: 28.1, 28.2
+### Description: Create the proxy mechanism that converts WebSocket messages to long HTTP poll requests for clients that cannot maintain WebSocket connections.
+### Details:
+Implement a proxy layer in the CloudFlare Worker that translates between WebSocket protocol and long HTTP polling. Create a message queue for each client to store messages when long polling connection is not active. Implement the HTTP endpoints for long polling clients to connect and receive queued messages. Develop a session management system to maintain state between polling requests. Ensure message ordering and delivery guarantees match WebSocket expectations.
+
+## 4. Implement Message Serialization and Channel Subscription [pending]
+### Dependencies: 28.2, 28.3
+### Description: Create a message format for communication and implement a channel-based subscription system for routing messages.
+### Details:
+Design and implement a standardized message format with headers for routing and metadata. Create serialization/deserialization functions for converting between JSON and binary formats as needed. Implement a channel subscription system allowing clients to subscribe to specific topics or channels. Develop message routing logic to deliver messages only to subscribed clients. Create APIs for clients to manage their channel subscriptions.
+
+## 5. Implement Reconnection Handling and Presence Tracking [pending]
+### Dependencies: 28.2, 28.3, 28.4
+### Description: Add robust reconnection capabilities and implement presence tracking to monitor which clients are online.
+### Details:
+Implement client-side reconnection logic with exponential backoff. Create server-side session resumption to maintain state across reconnections. Develop a presence system that tracks online status of users across different connection methods. Implement presence events that notify when users come online or go offline. Create a recovery mechanism to replay missed messages after reconnection. Add configurable timeouts for considering connections as stale.
+

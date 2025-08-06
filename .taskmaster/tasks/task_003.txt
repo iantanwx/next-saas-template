@@ -1,0 +1,22 @@
+# Task ID: 3
+# Title: Implement GitHub OAuth Authentication
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Add GitHub OAuth as an authentication option alongside the existing Google OAuth.
+# Details:
+1. Register a new OAuth application in GitHub Developer settings
+2. Install required packages: `npm install @supabase/auth-helpers-nextjs`
+3. Configure Supabase authentication settings for GitHub provider
+4. Create GitHub OAuth callback route in Next.js
+5. Add GitHub login button to authentication UI
+6. Implement user profile data retrieval from GitHub
+7. Handle GitHub authentication errors
+8. Update user model to store GitHub-specific information
+
+# Test Strategy:
+1. Test GitHub login flow end-to-end
+2. Verify user profile data is correctly retrieved and stored
+3. Test error handling for failed authentication
+4. Ensure existing Google OAuth still works properly
+5. Validate session management with GitHub authentication

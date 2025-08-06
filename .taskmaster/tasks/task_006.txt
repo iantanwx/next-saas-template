@@ -1,0 +1,22 @@
+# Task ID: 6
+# Title: Implement Magic Link Authentication
+# Status: pending
+# Dependencies: 4, 5
+# Priority: medium
+# Description: Add passwordless authentication using magic links sent via email.
+# Details:
+1. Configure Supabase for magic link authentication
+2. Create magic link request form
+3. Implement magic link token generation
+4. Design and implement magic link email template using Resend
+5. Create magic link callback handler
+6. Add rate limiting for magic link requests
+7. Implement security checks for magic link authentication
+8. Update authentication UI to include magic link option
+
+# Test Strategy:
+1. Test magic link authentication flow end-to-end
+2. Verify emails are sent correctly with valid links
+3. Test security of the magic link process
+4. Ensure rate limiting prevents abuse
+5. Validate user session is created correctly after magic link authentication

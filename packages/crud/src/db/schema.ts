@@ -231,20 +231,13 @@ export const todos = pgTable(
     priority: todoPriority('priority').notNull().default('medium'),
     status: todoStatus('status').notNull().default('pending'),
     tags: text('tags').array().notNull().default(sql`ARRAY[]::text[]`),
-    userId: uuid('user_id')
-      .notNull()
-      .references(() => users.id, {
-        onDelete: 'cascade',
-      }),
-    organizationId: text('organization_id')
-      .notNull()
-      .references(() => organizations.id, {
-        onDelete: 'cascade',
-      }),
+    // Remove FK constraints for local-first architecture
+    userId: uuid('user_id').notNull(),
+    organizationId: text('organization_id').notNull(),
     // For optimistic locking and conflict resolution
     version: text('version').notNull().default('1'),
     // For real-time collaboration
-    lastEditedBy: uuid('last_edited_by').references(() => users.id),
+    lastEditedBy: uuid('last_edited_by'),
     lastEditedAt: timestamp('last_edited_at'),
   },
   (table) => [

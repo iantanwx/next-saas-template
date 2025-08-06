@@ -1,0 +1,22 @@
+# Task ID: 36
+# Title: Implement Free Trial Logic
+# Status: pending
+# Dependencies: 7, 8, 9, 10
+# Priority: medium
+# Description: Add support for free trials of premium features with automatic conversion to paid plans.
+# Details:
+1. Design trial data model
+2. Implement trial activation process
+3. Create trial expiration handling
+4. Add trial status indicators
+5. Implement trial-to-paid conversion
+6. Create trial extension functionality
+7. Add trial usage analytics
+8. Implement trial notification emails
+
+# Test Strategy:
+1. Test trial activation and expiration
+2. Verify trial status is correctly displayed
+3. Test conversion from trial to paid subscription
+4. Ensure trial extensions work correctly
+5. Validate trial notification emails

@@ -4,7 +4,8 @@
   "description": "",
   "exports": {
     ".": "./src/index.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./schema": "./src/db/schema.ts"
   },
   "scripts": {
     "supabase": "supabase",
@@ -20,7 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "drizzle-orm": "^0.44.4",
+    "drizzle-orm": "catalog:",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
