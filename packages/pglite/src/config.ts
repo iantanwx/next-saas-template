@@ -4,27 +4,23 @@ import { z } from 'zod';
  * Electric SQL configuration schema
  */
 export const electricConfigSchema = z.object({
-  dbName: z.string().default('superscale-local').describe('Local database name'),
-  electricUrl: z.string().url().describe('Electric SQL service URL'),
-  debug: z.boolean().default(false).describe('Enable debug logging'),
+  NEXT_PUBLIC_PGLITE_DEBUG: z.coerce
+    .boolean()
+    .default(false)
+    .describe('Enable debug logging'),
+  NEXT_PUBLIC_ELECTRIC_URL: z
+    .string()
+    .url()
+    .optional()
+    .describe('Electric SQL service URL'),
 });
 
 export type ElectricConfig = z.infer<typeof electricConfigSchema>;
 
-/**
- * Default Electric SQL configuration
- * These values should be overridden via environment variables
- */
-export const defaultElectricConfig: ElectricConfig = {
-  dbName: process.env.NEXT_PUBLIC_ELECTRIC_DB_NAME || 'superscale-local',
-  electricUrl: process.env.NEXT_PUBLIC_ELECTRIC_URL || 'http://localhost:3000/electric',
-  debug: process.env.NODE_ENV === 'development',
+// Get environment variables in a way that works in both server and client
+const env = {
+  NEXT_PUBLIC_PGLITE_DEBUG: process.env.NEXT_PUBLIC_PGLITE_DEBUG,
+  NEXT_PUBLIC_ELECTRIC_URL: process.env.NEXT_PUBLIC_ELECTRIC_URL,
 };
 
-/**
- * Validate and return Electric SQL configuration
- */
-export function getElectricConfig(config?: Partial<ElectricConfig>): ElectricConfig {
-  const mergedConfig = { ...defaultElectricConfig, ...config };
-  return electricConfigSchema.parse(mergedConfig);
-}
+export const config = electricConfigSchema.parse(env);
