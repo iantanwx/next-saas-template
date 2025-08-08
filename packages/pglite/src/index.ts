@@ -1,10 +1,12 @@
-import type { PGlite } from '@electric-sql/pglite';
+import type { PGlite as PGClient } from '@electric-sql/pglite';
 import { live } from '@electric-sql/pglite/live';
 import { PGliteWorker } from '@electric-sql/pglite/worker';
-import { electricSync } from '@electric-sql/pglite-sync';
+import { electricSync as electricSyncExtension } from '@electric-sql/pglite-sync';
 import { drizzle } from 'drizzle-orm/pglite';
 import { config } from './config';
 import { schema } from './schema';
+
+export type PGlite = Awaited<ReturnType<typeof initializePGlite>>['pg'];
 
 /**
  * Initialize PGlite worker with Electric SQL sync and live queries
@@ -16,10 +18,10 @@ export async function initializePGlite() {
       type: 'module',
     }),
     {
-      dataDir: `idb://pglite-db`,
+      dataDir: 'idb://pglite-db',
       extensions: {
         live, // Enable live queries on the main thread
-        electric: electricSync({
+        electric: electricSyncExtension({
           debug: config.NEXT_PUBLIC_PGLITE_DEBUG,
         }),
       },
@@ -27,7 +29,16 @@ export async function initializePGlite() {
   );
 
   // Create Drizzle instance with the worker
-  const db = drizzle(client as unknown as PGlite, { schema });
+  const db = drizzle(client as unknown as PGClient, { schema });
 
   return { pg: client, db };
 }
+
+export { config } from './config';
+export { usePGlite } from './hooks';
+export { migrate } from './migrate';
+// React provider and hooks
+export { DBProvider } from './provider';
+export { schema } from './schema';
+// Re-export for convenience
+export { syncTodos } from './sync';

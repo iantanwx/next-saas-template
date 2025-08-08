@@ -1,6 +1,6 @@
 import { PGlite } from '@electric-sql/pglite';
 import { worker } from '@electric-sql/pglite/worker';
-import { migrate } from './init';
+import { migrate } from './migrate';
 
 worker({
   async init(options) {

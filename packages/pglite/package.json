@@ -10,15 +10,20 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.7",
+    "@electric-sql/pglite-react": "^0.2.25",
     "@electric-sql/pglite-sync": "^0.3.10",
     "@paralleldrive/cuid2": "^2.2.2",
+    "@supabase/supabase-js": "catalog:",
     "@superscale/crud": "workspace:^",
+    "@superscale/lib": "workspace:^",
     "drizzle-orm": "catalog:",
+    "react": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@superscale/tsconfig": "workspace:^",
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
     "@types/webpack-env": "^1.18.8",
     "drizzle-kit": "catalog:",
     "tsx": "catalog:",
@@ -27,7 +32,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./schema": "./src/schema.ts",
-    "./worker": "./src/worker.ts"
+    "./worker": "./src/worker.ts",
+    "./provider": "./src/provider.tsx",
+    "./hooks": "./src/hooks.ts"
   },
   "sideEffects": false,
   "license": "MIT"

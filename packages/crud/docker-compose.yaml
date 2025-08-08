@@ -1,0 +1,15 @@
+name: "electric_supabase"
+
+services:
+  electric:
+    image: docker.io/electricsql/electric:latest
+    environment:
+      # Connect to local Supabase PostgreSQL instance
+      DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:54322/postgres?sslmode=disable
+      # Not suitable for production. Only use insecure mode in development or if you've otherwise secured the Electric API.
+      # See https://electric-sql.com/docs/guides/security
+      ELECTRIC_INSECURE: true
+    ports:
+      - "3001:3000"  # Map to 3001 to avoid conflict with Next.js on 3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

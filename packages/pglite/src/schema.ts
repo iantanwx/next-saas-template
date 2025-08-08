@@ -1,9 +1,4 @@
-// Re-export the todos table and related types from the schema only (no Node.js deps)
-import {
-  todos,
-  todoPriority,
-  todoStatus,
-} from '@superscale/crud/schema';
+import { todoPriority, todoStatus, todos } from '@superscale/crud/schema';
 
 // Export the local schema for Electric SQL
 export const schema = {
@@ -14,3 +9,4 @@ export const schema = {
 
 // Export individual items for convenience
 export { todos, todoPriority, todoStatus };
+

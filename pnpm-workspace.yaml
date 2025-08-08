@@ -25,6 +25,7 @@ catalog:
 
   # Data fetching (used in web + trpc)
   '@tanstack/react-query': ^5.84.0
+  '@supabase/supabase-js': ^2.53.0
 
   # Form handling (used in web + ui)
   react-hook-form: ^7.62.0

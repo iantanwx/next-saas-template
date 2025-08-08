@@ -1,3 +1,5 @@
+import { getCurrentSession } from '@superscale/lib/auth';
+import { DBProvider } from '@superscale/pglite';
 import { TrpcProvider } from '@superscale/trpc/react';
 import { Toaster } from '@superscale/ui/components/toaster';
 import { siteConfig } from '@/config/site';
@@ -46,17 +48,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { user } = await getCurrentSession();
   return (
     <html lang="en">
       <body
         className={cn(inter.className, 'bg-background font-sans antialiased')}
       >
-        <TrpcProvider>{children}</TrpcProvider>
+        <DBProvider user={user}>
+          <TrpcProvider>{children}</TrpcProvider>
+        </DBProvider>
         <Toaster />
       </body>
     </html>
