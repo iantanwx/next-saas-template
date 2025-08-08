@@ -18,8 +18,8 @@ export default async function Dashboard() {
   }
 
   return (
-    <main className="container flex min-h-screen flex-col items-center justify-between p-24">
+    <div className="mx-auto w-full max-w-5xl px-4 py-8">
       <Todos user={user} />
-    </main>
+    </div>
   );
 }

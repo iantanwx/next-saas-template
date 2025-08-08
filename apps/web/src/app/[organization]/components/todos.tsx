@@ -5,18 +5,10 @@ import type { UserWithMemberships } from '@superscale/crud/types';
 import { usePGlite } from '@superscale/pglite';
 import { DBStatus } from '@superscale/pglite/provider';
 import { t } from '@superscale/trpc/client';
-import { Button } from '@superscale/ui/components/button';
-import { Input } from '@superscale/ui/components/input';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@superscale/ui/components/table';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import TodoList from './todo-list';
+import type { TaskFormValues } from './todo-form';
+import type { Task } from './todo-item';
 
 type Props = {
   user: UserWithMemberships;
@@ -44,95 +36,131 @@ export function Todos({ user }: Props) {
     );
   }
 
-  return <TodoList userId={userId} organizationId={organizationId} />;
+  return <TodoListContainer userId={userId} organizationId={organizationId} />;
 }
 
 type TodoRow = {
   id: string;
   title: string;
+  description: string | null;
   completed: boolean;
-  priority: string;
-  status: string;
+  priority: 'low' | 'medium' | 'high';
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  due_date: string | null;
+  tags: string[] | null;
   created_at: string | null;
+  updated_at: string | null;
+  version: string;
 };
 
-function TodoList({
+function TodoListContainer({
   userId,
   organizationId,
 }: {
   userId: string;
   organizationId: string;
 }) {
-  const [newTitle, setNewTitle] = useState('');
-
-  const query = `SELECT id, title, completed, priority, status, created_at FROM todos
-         WHERE user_id = '${userId}' AND organization_id = '${organizationId}'
-         ORDER BY created_at DESC`;
-  const todos = useLiveQuery(query);
+  // Live query to keep UI synced
+  const query = `SELECT id, title, description, completed, priority, status, due_date, tags, created_at, updated_at, version
+          FROM todos WHERE user_id = '${userId}' AND organization_id = '${organizationId}'
+          AND deleted_at IS NULL
+          ORDER BY updated_at DESC`;
+  const live = useLiveQuery(query);
 
   const rows: TodoRow[] = useMemo(() => {
-    if (!todos) return [];
-    const possible = todos as unknown as TodoRow[] | { rows?: TodoRow[] };
+    if (!live) return [];
+    const possible = live as unknown as TodoRow[] | { rows?: TodoRow[] };
     return Array.isArray(possible) ? possible : (possible.rows ?? []);
-  }, [todos]);
+  }, [live]);
 
+  // Mutations
   const createMutation = t.todo.create.useMutation();
+  const updateMutation = t.todo.update.useMutation();
+  const deleteMutation = t.todo.delete.useMutation();
 
-  const onAdd = useCallback(async () => {
-    const title = newTitle.trim();
-    if (!title) return;
-    try {
-      await createMutation.mutateAsync({ title, organizationId });
-      setNewTitle('');
-    } catch (_) {}
-  }, [createMutation, newTitle, organizationId]);
+  const mappedTasks: Task[] = useMemo(
+    () =>
+      rows.map((r) => ({
+        id: r.id,
+        title: r.title,
+        notes: r.description ?? '',
+        completed: Boolean(r.completed),
+        priority: r.priority,
+        dueDate: r.due_date,
+        tags: r.tags ?? [],
+        createdAt: r.created_at ?? new Date().toISOString(),
+        updatedAt: r.updated_at ?? new Date().toISOString(),
+      })),
+    [rows]
+  );
+
+  const onAdd = useCallback(
+    async (values: TaskFormValues) => {
+      const title = values.title.trim();
+      if (!title) return;
+      await createMutation.mutateAsync({
+        title,
+        description: values.notes.trim() || undefined,
+        priority: values.priority,
+        dueDate: values.dueDate ?? undefined,
+        tags: values.tags,
+        organizationId,
+      });
+    },
+    [createMutation, organizationId]
+  );
+
+  const onEdit = useCallback(
+    async (task: Task, values: TaskFormValues) => {
+      const row = rows.find((r) => r.id === task.id);
+      if (!row) return;
+      await updateMutation.mutateAsync({
+        id: task.id,
+        title: values.title.trim(),
+        description: values.notes.trim() || undefined,
+        priority: values.priority,
+        dueDate: values.dueDate ?? null,
+        tags: values.tags,
+        completed: task.completed,
+        status: task.completed ? 'completed' : 'pending',
+        version: row.version,
+      });
+    },
+    [rows, updateMutation]
+  );
+
+  const onToggle = useCallback(
+    async (id: string, checked: boolean) => {
+      const row = rows.find((r) => r.id === id);
+      if (!row) return;
+      await updateMutation.mutateAsync({
+        id,
+        completed: checked,
+        status: checked ? 'completed' : 'pending',
+        version: row.version,
+      });
+    },
+    [rows, updateMutation]
+  );
+
+  const onDelete = useCallback(
+    async (id: string) => {
+      const row = rows.find((r) => r.id === id);
+      if (!row) return;
+      await deleteMutation.mutateAsync({ id, version: row.version });
+    },
+    [rows, deleteMutation]
+  );
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <Input
-          value={newTitle}
-          placeholder="Add a todo title…"
-          onChange={(e) => setNewTitle(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') onAdd();
-          }}
-        />
-        <Button
-          onClick={onAdd}
-          disabled={!newTitle.trim() || createMutation.isPending}
-        >
-          {createMutation.isPending ? 'Adding…' : 'Add'}
-        </Button>
-      </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Priority</TableHead>
-            <TableHead>Completed</TableHead>
-            <TableHead>Created</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rows.map((t) => (
-            <TableRow key={t.id}>
-              <TableCell>{t.title}</TableCell>
-              <TableCell className="capitalize">{t.status}</TableCell>
-              <TableCell className="capitalize">{t.priority}</TableCell>
-              <TableCell>{t.completed ? 'Yes' : 'No'}</TableCell>
-              <TableCell>
-                {t.created_at ? new Date(t.created_at).toLocaleString() : ''}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableCaption>
-          Live synced with Electric SQL (local-first via PGlite)
-        </TableCaption>
-      </Table>
+    <div className="mx-auto w-full max-w-4xl px-4 py-6">
+      <TodoList
+        tasks={mappedTasks}
+        onAdd={onAdd}
+        onEdit={onEdit}
+        onToggle={onToggle}
+        onDelete={onDelete}
+      />
     </div>
   );
 }
