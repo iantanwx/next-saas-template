@@ -1,0 +1,24 @@
+---
+description: Vitest testing patterns and integration test layout
+globs: apps/web/tests/**/*, packages/**/tests/**/*
+---
+
+- **Test runner**
+  - Use Vitest; app script `test:integration` runs `vitest run tests/integration` ([apps/web/package.json](mdc:apps/web/package.json))
+
+- **Layout**
+  - Place app-level integration tests under `apps/web/tests/integration` (see examples: `auth.test.ts`, `database.test.ts`)
+  - Co-locate package tests under `packages/<name>/tests` where relevant
+
+- **Do**
+  - Favor integration tests around auth, DB access, and routers
+  - Use realistic data via `@superscale/crud` helpers where possible
+
+- **Don't**
+  - Mock internal packages unnecessarily; prefer using real implementations with test DB
+
+```bash
+# ✅ Commands
+pnpm --filter=@superscale/web test:integration
+```
+

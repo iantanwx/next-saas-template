@@ -1,0 +1,25 @@
+---
+description: Authentication/session access patterns and org-based redirects
+globs: packages/lib/src/auth/**/*, apps/web/src/app/auth/**/*
+---
+
+- **Session source of truth**
+  - Use `getCurrentSession()` to resolve the authenticated DB user via Supabase and `@superscale/crud.users` ([session.ts](mdc:packages/lib/src/auth/session.ts))
+  - Prefer importing from `@superscale/lib/auth` barrel export ([index.ts](mdc:packages/lib/src/auth/index.ts))
+
+- **Sign-in flow**
+  - In server components, load session and redirect to the first organization when appropriate
+  - Preserve invitation acceptance by skipping redirect when `invitationId` is present ([sign-in page](mdc:apps/web/src/app/auth/sign-in/page.tsx))
+
+```typescript
+// ✅ apps/web/src/app/auth/sign-in/page.tsx (excerpt)
+const { user } = await getCurrentSession();
+if (!invitationId && user && user.memberships.length > 0) redirect(`/${user.memberships[0]!.organization.slug}`);
+```
+
+- **Invitations and roles**
+  - tRPC org router manages invite lifecycle and role updates; use admin/member procedures for authorization ([organization router](mdc:packages/trpc/src/router/organization.ts))
+
+- **Environment**
+  - Keep provider secrets in env; validate via Zod where applicable (see placeholder in [config.ts](mdc:packages/lib/src/auth/config.ts))
+

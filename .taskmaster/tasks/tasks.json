@@ -2,109 +2,14 @@
   "master": {
     "tasks": [
       {
-        "id": 1,
-        "title": "Set up Electric SQL for Real-time Sync",
-        "description": "Integrate Electric SQL into the existing Next.js template to enable real-time synchronization capabilities.",
+        "id": 2,
+        "title": "Implement Local-First Architecture",
+        "description": "Design and implement a local-first architecture that allows the application to work offline with seamless synchronization using Rocicorp Zero as the sync engine.",
         "status": "pending",
         "dependencies": [],
         "priority": "high",
-        "details": "1. Install Electric SQL packages: `npm install electric-sql`\n2. Configure Electric SQL with Supabase PostgreSQL database\n3. Set up the Electric client in a provider component\n4. Create initial sync configuration for core data models\n5. Implement connection status monitoring\n6. Add necessary environment variables for Electric SQL configuration\n7. Update Drizzle schema to support Electric SQL requirements\n8. Implement tRPC subscriptions for Electric SQL proxy",
-        "testStrategy": "1. Verify successful connection to Electric SQL service\n2. Test data synchronization between multiple clients\n3. Validate that data changes are properly tracked\n4. Ensure proper error handling for connection issues\n5. Confirm Electric SQL is properly integrated with existing Supabase setup",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Install and Configure Electric SQL Packages",
-            "description": "Install the necessary Electric SQL packages and set up the initial configuration for the project.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Run `npm install electric-sql` to install the required packages. Create a basic configuration file at `lib/electric/config.ts` that includes connection parameters for the Supabase PostgreSQL database. Note that we're using Drizzle ORM instead of Prisma.\n<info added on 2025-08-05T04:58:08.813Z>\nSuccessfully implemented Electric SQL with PGlite integration:\n- Installed electric-sql and @electric-sql/pglite packages\n- Created local/ folder with PGlite schema that reuses main Drizzle todos schema  \n- Set up PGlite connection with Drizzle ORM integration\n- Created Electric client helpers for authenticated and non-authenticated connections\n- Added connection monitoring utilities\n- Configured proper exports from @superscale/crud package\n- Architecture uses PGlite (WASM PostgreSQL) instead of SQLite for better compatibility with existing Drizzle setup\n</info added on 2025-08-05T04:58:08.813Z>",
-            "testStrategy": "Verify successful installation by checking package.json and node_modules. Ensure configuration file is properly set up with correct connection parameters."
-          },
-          {
-            "id": 2,
-            "title": "Set Up Electric SQL Client Provider",
-            "description": "Create a provider component that initializes the Electric SQL client and makes it available throughout the application.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Create an ElectricProvider.tsx component that initializes the Electric client using the configuration from step 1. Implement React context to make the client available to child components. Add connection status monitoring with appropriate UI feedback. Wrap the application with this provider in _app.tsx or layout.tsx.\n<info added on 2025-08-05T08:39:13.205Z>\nThe task should be updated to create a PGliteProvider.tsx component instead of ElectricProvider.tsx. This provider will initialize PGlite database in a web worker for better performance and thread isolation. The component needs to handle Drizzle migrations to set up the local database schema that matches the subset of the remote Supabase schema required by Electric SQL. The provider should expose database operation methods through React context, including CRUD operations, transaction handling, and schema migration status. Web worker implementation will prevent database operations from blocking the main UI thread. The provider should monitor both PGlite initialization status and migration completion, providing appropriate loading states and error handling for the application.\n</info added on 2025-08-05T08:39:13.205Z>\n<info added on 2025-08-07T03:20:50.895Z>\nThe sync implementation has been significantly refactored for simplicity and efficiency. Instead of the original complex 250+ line class that handled manual message processing, the implementation now leverages the built-in syncShapeToTable method from the pglite-sync extension. This reduces the codebase to just 69 lines while maintaining full functionality. The extension automatically handles all database operations (inserts, updates, deletes) internally, so the implementation only needs to focus on applying user and organization-specific filtering as required by the application. This change greatly reduces complexity while maintaining the same sync capabilities.\n</info added on 2025-08-07T03:20:50.895Z>",
-            "testStrategy": "Test the provider by creating a simple component that connects to Electric and displays connection status."
-          },
-          {
-            "id": 3,
-            "title": "Configure Drizzle Schema for Electric SQL",
-            "description": "Update the Drizzle schema to support Electric SQL requirements and generate the necessary client code.",
-            "status": "pending",
-            "dependencies": [],
-            "details": "Modify Drizzle schema to add Electric-specific annotations to models that need synchronization. Create the necessary adapters to connect Electric SQL with Drizzle ORM. Update database migrations to include Electric SQL required tables and extensions. Configure the initial sync rules for core data models.\n<info added on 2025-08-05T08:39:40.203Z>\nRefactor the subtask to create a separate local database schema for PGlite instead of modifying the main Drizzle schema. This involves setting up a PGlite-specific schema that represents a subset of the main Supabase schema, designed specifically for offline-first functionality. Create new migration files for the local schema that include only the essential tables and fields needed for offline operations. Ensure the local schema structure is compatible with Electric SQL's synchronization requirements, including proper primary keys, timestamps, and data types. The local schema should be optimized for client-side performance while maintaining referential integrity for the subset of data being synchronized.\n</info added on 2025-08-05T08:39:40.203Z>",
-            "testStrategy": "Verify schema integration by checking the output files. Test basic database operations to ensure the schema is correctly configured with Electric SQL."
-          },
-          {
-            "id": 4,
-            "title": "Configure Existing CloudFlare Worker for Electric SQL",
-            "description": "Configure the existing CloudFlare Worker project at apps/electric-proxy/ to work with Electric SQL.",
-            "status": "pending",
-            "dependencies": [],
-            "details": "Explore the existing CloudFlare Worker project that uses Hono framework. Add necessary configuration for Electric SQL connectivity. Set up environment variables for the worker to connect to Electric SQL backend. Configure the worker to handle Electric SQL specific requests.",
-            "testStrategy": "Deploy the worker to a development environment and verify it can connect to the Electric SQL backend."
-          },
-          {
-            "id": 5,
-            "title": "Implement JWT Validation in CloudFlare Worker",
-            "description": "Add JWT validation to the CloudFlare Worker using Supabase symmetric keys.",
-            "status": "pending",
-            "dependencies": [],
-            "details": "Implement JWT validation middleware in the worker that verifies tokens using Supabase symmetric keys. Extract and validate user information from the JWT. Configure the worker to reject requests with invalid or expired tokens. Add appropriate error responses for authentication failures.",
-            "testStrategy": "Test with valid and invalid JWTs to ensure proper validation. Verify that expired tokens are correctly rejected."
-          },
-          {
-            "id": 6,
-            "title": "Implement tRPC Subscriptions for Electric SQL",
-            "description": "Create tRPC subscription endpoints to handle Electric SQL real-time updates instead of direct HTTP proxy.",
-            "status": "pending",
-            "dependencies": [],
-            "details": "Implement tRPC subscription handlers for Electric SQL events. Configure the subscription endpoints to forward data from Electric SQL backend. Set up proper authentication for subscription endpoints. Implement error handling and reconnection logic for subscription streams. Update the client to use tRPC subscriptions for real-time updates.",
-            "testStrategy": "Test subscription functionality by connecting clients and verifying they receive real-time updates. Test reconnection behavior when connection is interrupted."
-          },
-          {
-            "id": 7,
-            "title": "Configure Environment Variables and Secrets",
-            "description": "Set up all necessary environment variables for both the Next.js application and CloudFlare Worker.",
-            "status": "pending",
-            "dependencies": [],
-            "details": "Create environment variable configurations for the Next.js application including Electric SQL connection details. Set up CloudFlare Worker environment variables and secrets for JWT validation keys and Electric SQL backend URL. Document all required environment variables in a .env.example file. Implement environment variable validation at startup.",
-            "testStrategy": "Verify application starts correctly with the configured environment variables. Test error handling when required variables are missing."
-          },
-          {
-            "id": 8,
-            "title": "Integrate Electric SQL with Existing Supabase Setup",
-            "description": "Ensure Electric SQL works seamlessly with the existing Supabase authentication and database setup.",
-            "status": "pending",
-            "dependencies": [],
-            "details": "Configure Electric SQL to use Supabase authentication tokens. Set up proper permissions for Electric SQL tables in Supabase. Create integration points between Supabase and Electric SQL for user data. Test the complete flow from Supabase authentication to Electric SQL synchronization.",
-            "testStrategy": "Verify authenticated users can properly sync data. Test permissions are correctly applied based on user roles. Ensure data consistency between Supabase and Electric SQL."
-          },
-          {
-            "id": 9,
-            "title": "Configure tRPC Client for Dual Endpoints",
-            "description": "Configure the tRPC client to handle both the main Next.js API routes and CloudFlare Worker subscriptions with separate endpoints.",
-            "details": "Update the tRPC client configuration to support dual endpoints: one for regular API calls to the Next.js backend and another for Electric SQL subscriptions to the CloudFlare Worker. Configure the client to use different URLs for different operation types. Implement proper authentication forwarding for both endpoints. Set up environment variables for both API endpoint and worker subscription endpoint.",
-            "status": "pending",
-            "dependencies": [],
-            "parentTaskId": 1
-          }
-        ]
-      },
-      {
-        "id": 2,
-        "title": "Implement Local-First Architecture",
-        "description": "Design and implement a local-first architecture that allows the application to work offline with seamless synchronization.",
-        "status": "pending",
-        "dependencies": [
-          1
-        ],
-        "priority": "high",
-        "details": "1. Set up local SQLite database with Electric SQL\n2. Create data access layer that prioritizes local data\n3. Implement optimistic UI updates\n4. Design sync conflict detection mechanism\n5. Create data models with appropriate timestamps for sync\n6. Implement background sync process\n7. Add network status detection\n8. Create fallback mechanisms for when server is unreachable",
-        "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronizes correctly when connection is restored\n3. Simulate network interruptions to ensure resilience\n4. Validate that local changes are preserved during sync\n5. Measure performance impact of local-first approach",
+        "details": "1. Set up Rocicorp Zero client with local storage\n2. Create data access layer that prioritizes local data\n3. Implement optimistic UI updates with Zero's mutation system\n4. Design sync conflict detection using Zero's conflict resolution\n5. Create data models compatible with Zero's schema system\n6. Implement background sync process using Zero's sync engine\n7. Add network status detection\n8. Create fallback mechanisms for when server is unreachable",
+        "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronizes correctly when connection is restored using Zero\n3. Simulate network interruptions to ensure resilience\n4. Validate that local changes are preserved during sync\n5. Measure performance impact of local-first approach with Zero\n6. Test Zero's conflict resolution mechanisms",
         "subtasks": [
           {
             "id": 1,
@@ -112,11 +17,20 @@
             "description": "Initialize and configure a local SQLite database using Electric SQL to enable offline data storage and synchronization capabilities.",
             "status": "done",
             "dependencies": [],
-            "details": "Install Electric SQL dependencies and configure the client. Set up the SQLite database schema with appropriate tables for the application data. Define the necessary migrations for the database structure. Configure Electric SQL with the appropriate connection settings for both local development and production environments. Initialize the database connection in the application startup process.\n<info added on 2025-08-05T08:40:05.149Z>\nUpdated to use PGlite instead of SQLite for better PostgreSQL compatibility. PGlite is a lightweight PostgreSQL implementation that runs in the browser and provides full PostgreSQL features while maintaining compatibility with Electric SQL. The setup should initialize PGlite in a dedicated web worker to avoid blocking the main thread and improve performance. This includes configuring the web worker communication layer, setting up the PGlite instance with appropriate memory limits, and establishing the Electric SQL client connection through the worker interface. The database schema should leverage PostgreSQL-specific features that PGlite supports, such as JSON columns and advanced indexing capabilities.\n</info added on 2025-08-05T08:40:05.149Z>",
+            "details": "Install Electric SQL dependencies and configure the client. Set up the SQLite database schema with appropriate tables for the application data. Define the necessary migrations for the database structure. Configure Electric SQL with the appropriate connection settings for both local development and production environments. Initialize the database connection in the application startup process.\n<info added on 2025-08-05T08:40:05.149Z>\nUpdated to use PGlite instead of SQLite for better PostgreSQL compatibility. PGlite is a lightweight PostgreSQL implementation that runs in the browser and provides full PostgreSQL features while maintaining compatibility with Electric SQL. The setup should initialize PGlite in a dedicated web worker to avoid blocking the main thread and improve performance. This includes configuring the web worker communication layer, setting up the PGlite instance with appropriate memory limits, and establishing the Electric SQL client connection through the worker interface. The database schema should leverage PostgreSQL-specific features that PGlite supports, such as JSON columns and advanced indexing capabilities.\n</info added on 2025-08-05T08:40:05.149Z>\n<info added on 2025-08-09T02:12:36.413Z>\nSince we're now migrating to Rocicorp Zero instead of Electric SQL/PGlite, this subtask needs to be completely reoriented. The new focus should be on setting up Zero's local storage system which uses a fundamentally different architecture. Zero provides its own local storage layer that doesn't require manual SQLite or PGlite configuration. Instead, we need to install the @rocicorp/zero package, initialize the Zero client with appropriate server configuration, define data schemas using Zero's schema definition system, set up the local cache storage that Zero manages automatically, and configure the initial sync settings. Zero handles the local storage internally using IndexedDB in browsers, so we don't need to manage database files directly. The setup involves creating Zero mutators for data operations, defining the initial data model schemas, configuring the Zero server connection settings, and initializing the Zero client in the application bootstrap process.\n</info added on 2025-08-09T02:12:36.413Z>",
             "testStrategy": "Verify database connection and initialization. Test basic CRUD operations against the local database. Ensure database schema matches the expected structure."
           },
           {
             "id": 2,
+            "title": "Migrate from Electric SQL to Rocicorp Zero",
+            "description": "Replace the existing PGlite/Electric SQL setup with Rocicorp Zero for local-first synchronization.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "Install Rocicorp Zero client dependencies. Configure Zero client with appropriate server connection settings. Migrate existing data models to Zero's schema format. Set up Zero's local storage system to replace PGlite. Initialize Zero client in the application with proper authentication and sync configuration. Remove Electric SQL and PGlite dependencies and related worker setup. Update existing data access patterns to use Zero's API instead of direct SQL queries.",
+            "testStrategy": "Verify Zero client initializes correctly. Test data model compatibility with Zero's schema system. Ensure local storage functionality works as expected. Validate that existing functionality is preserved after migration."
+          },
+          {
+            "id": 3,
             "title": "Configure tRPC split link architecture",
             "description": "Implement a tRPC split link configuration that supports both WebSocket connections for subscriptions and HTTP connections for queries and mutations.",
             "status": "pending",
@@ -125,64 +39,63 @@
             "testStrategy": "Test both subscription and query/mutation operations to ensure they're routed correctly. Verify reconnection behavior when connections are interrupted. Measure performance impact of request batching."
           },
           {
-            "id": 3,
-            "title": "Implement data access layer with local-first priority",
-            "description": "Create a data access layer that prioritizes local data access while handling synchronization with the server when online.",
+            "id": 4,
+            "title": "Implement data access layer with Zero's local-first priority",
+            "description": "Create a data access layer that uses Zero's built-in local-first capabilities for data operations.",
             "status": "pending",
             "dependencies": [
-              1,
               2
             ],
-            "details": "Develop a data access abstraction that first attempts to retrieve and manipulate data locally using the PGlite implementation. Implement methods for CRUD operations that work with the local PGlite database through the established worker interface. Create a synchronization mechanism that pushes local changes to the server when online. Implement data fetching strategies that prioritize local data but update from the server when available. Add caching mechanisms to optimize data access performance. Leverage the existing migration bundling system to ensure schema consistency between local and server environments.",
-            "testStrategy": "Test data access methods in both online and offline scenarios. Verify that local data is prioritized when available. Test synchronization behavior when transitioning between online and offline states."
-          },
-          {
-            "id": 4,
-            "title": "Design and implement shape-based subscriptions",
-            "description": "Create a subscription system based on data shapes, with one subscription per data type to efficiently manage real-time updates.",
-            "status": "pending",
-            "dependencies": [
-              2,
-              3
-            ],
-            "details": "Define subscription shapes for each major data type in the application. Implement subscription handlers that process incoming data changes and apply them to the local PGlite database. Create client-side subscription management that efficiently subscribes and unsubscribes based on active views. Implement data normalization to handle overlapping subscriptions. Add subscription throttling and batching to prevent overwhelming the client with updates. Ensure compatibility with the existing foreign key constraint-free schema design for isolated local environments.",
-            "testStrategy": "Test subscription activation and deactivation as views change. Verify that data updates are correctly processed and applied to the local state. Test performance with high-frequency updates to ensure client stability."
+            "details": "Develop a data access abstraction that leverages Zero's local-first architecture. Implement methods for CRUD operations using Zero's query and mutation APIs. Utilize Zero's automatic synchronization mechanisms for server updates. Create query hooks that work with Zero's reactive data system. Implement Zero's subscription system for real-time updates. Add caching strategies that complement Zero's built-in local storage.",
+            "testStrategy": "Test data access methods with Zero's local-first behavior. Verify that Zero's automatic sync works correctly. Test Zero's reactive queries and subscriptions. Ensure compatibility with existing application patterns."
           },
           {
             "id": 5,
-            "title": "Implement optimistic UI updates and offline queue",
-            "description": "Create a system for optimistic UI updates that immediately reflects user actions while queueing operations for synchronization when offline.",
+            "title": "Design and implement Zero-based subscriptions",
+            "description": "Utilize Zero's built-in subscription system for real-time data updates.",
             "status": "pending",
             "dependencies": [
-              3
+              2,
+              4
             ],
-            "details": "Implement optimistic updates that immediately update the UI and local PGlite database when actions are performed. Create an offline queue that stores operations when the application is offline. Develop a queue processing mechanism that executes queued operations when connectivity is restored. Add transaction support to ensure operations are atomic using PGlite's transaction capabilities. Implement rollback mechanisms for failed operations to maintain data consistency. Utilize the Web Crypto API for generating consistent operation IDs for deduplication.",
-            "testStrategy": "Test optimistic updates by verifying immediate UI changes. Verify that operations are queued when offline. Test queue processing when connectivity is restored. Validate rollback behavior for failed operations."
+            "details": "Configure Zero's subscription system for real-time data updates. Implement subscription queries using Zero's query API. Create client-side subscription management that integrates with Zero's reactive system. Utilize Zero's built-in data normalization and caching. Implement subscription filtering and optimization using Zero's query capabilities. Ensure subscriptions work seamlessly with Zero's offline-first approach.",
+            "testStrategy": "Test Zero's subscription system activation and data updates. Verify real-time updates are correctly processed. Test subscription behavior in offline/online transitions. Validate performance with Zero's built-in optimizations."
           },
           {
             "id": 6,
-            "title": "Implement network status detection and fallback mechanisms",
-            "description": "Add network status detection to the application and implement fallback mechanisms for when the server is unreachable.",
+            "title": "Implement optimistic UI updates using Zero's mutation system",
+            "description": "Leverage Zero's built-in optimistic updates and mutation system for immediate UI feedback.",
             "status": "pending",
             "dependencies": [
-              3,
-              5
+              4
             ],
-            "details": "Implement network status detection using browser APIs and heartbeat mechanisms. Create a network status store that provides the current connectivity state to the application. Develop fallback mechanisms that gracefully handle server unavailability by relying on the local PGlite database. Implement retry strategies with exponential backoff for failed requests. Add user notifications for connectivity changes to improve the user experience. Ensure fallback behavior works seamlessly with the worker-based PGlite architecture.",
-            "testStrategy": "Test network status detection by simulating connectivity changes. Verify fallback mechanisms activate when the server is unreachable. Test retry strategies to ensure they correctly handle temporary outages."
+            "details": "Implement optimistic updates using Zero's mutation system that provides automatic rollback capabilities. Utilize Zero's built-in offline queue for mutations when disconnected. Configure Zero's conflict resolution strategies for concurrent modifications. Implement custom mutation logic where needed using Zero's mutation API. Leverage Zero's automatic retry mechanisms for failed operations. Add custom error handling for mutations that complement Zero's built-in error handling.",
+            "testStrategy": "Test Zero's optimistic updates for immediate UI feedback. Verify Zero's automatic rollback behavior for failed mutations. Test offline mutation queueing and processing. Validate Zero's conflict resolution in concurrent scenarios."
           },
           {
             "id": 7,
-            "title": "Implement sync conflict detection and resolution",
-            "description": "Design and implement mechanisms for detecting and resolving conflicts that occur during data synchronization.",
+            "title": "Implement network status detection with Zero integration",
+            "description": "Add network status detection that works seamlessly with Zero's sync engine and connection management.",
             "status": "pending",
             "dependencies": [
-              3,
-              5,
+              4,
               6
             ],
-            "details": "Implement timestamp-based conflict detection using last-modified timestamps. Create data models with appropriate timestamp fields for tracking changes, compatible with the foreign key constraint-free schema. Develop conflict resolution strategies based on application-specific rules (e.g., last-write-wins, manual resolution). Implement a conflict resolution UI for cases requiring user intervention. Add logging and analytics for conflict occurrences to identify patterns and improve resolution strategies. Utilize the runtime migration processing system to handle schema evolution during conflicts.",
-            "testStrategy": "Test conflict detection by creating concurrent modifications to the same data. Verify that resolution strategies correctly handle various conflict scenarios. Test the conflict resolution UI to ensure it presents clear options to users."
+            "details": "Implement network status detection that integrates with Zero's connection state. Utilize Zero's built-in sync status indicators for user feedback. Create a network status store that combines browser APIs with Zero's connection information. Implement user notifications that leverage Zero's sync state changes. Add retry strategies that complement Zero's built-in retry mechanisms. Ensure network status UI reflects Zero's actual sync state.",
+            "testStrategy": "Test network status detection with Zero's connection management. Verify sync status indicators reflect Zero's actual state. Test user notifications during connection changes. Validate that retry mechanisms work with Zero's built-in retry logic."
+          },
+          {
+            "id": 8,
+            "title": "Configure Zero's conflict resolution system",
+            "description": "Set up and customize Zero's built-in conflict detection and resolution mechanisms.",
+            "status": "pending",
+            "dependencies": [
+              4,
+              6,
+              7
+            ],
+            "details": "Configure Zero's conflict resolution strategies based on application requirements. Implement custom conflict resolution handlers where Zero's built-in strategies are insufficient. Set up conflict logging and monitoring using Zero's conflict detection system. Create user interfaces for manual conflict resolution when needed. Implement conflict resolution rules that work with Zero's operational transform system. Add analytics for conflict patterns using Zero's conflict metadata.",
+            "testStrategy": "Test Zero's conflict detection with concurrent modifications. Verify custom conflict resolution handlers work correctly. Test manual conflict resolution UI integration. Ensure conflict resolution maintains data consistency with Zero's system."
           }
         ]
       },
@@ -413,7 +326,6 @@
         "testStrategy": "1. Test real-time update flow with multiple clients\n2. Verify optimistic updates work correctly\n3. Test conflict resolution UI\n4. Ensure offline status is clearly indicated\n5. Validate user experience during synchronization",
         "priority": "medium",
         "dependencies": [
-          1,
           2,
           15
         ],
@@ -610,7 +522,6 @@
         "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronization when connection is restored\n3. Test conflict resolution with concurrent changes\n4. Ensure offline indicator correctly shows connection status\n5. Validate offline action queue processing",
         "priority": "medium",
         "dependencies": [
-          1,
           2
         ],
         "status": "pending",
@@ -624,7 +535,6 @@
         "testStrategy": "1. Test conflict detection with concurrent edits\n2. Verify automatic resolution strategies\n3. Test manual conflict resolution UI\n4. Ensure conflict metadata is correctly tracked\n5. Validate merge strategies for different data types",
         "priority": "medium",
         "dependencies": [
-          1,
           2,
           31
         ],
@@ -639,7 +549,6 @@
         "testStrategy": "1. Test real-time updates with multiple users\n2. Verify presence indicators show correct information\n3. Test collaborative editing functionality\n4. Ensure permissions are enforced in collaboration\n5. Validate performance with multiple collaborators",
         "priority": "medium",
         "dependencies": [
-          1,
           2,
           28,
           31,
@@ -726,7 +635,6 @@
         "testStrategy": "1. Test sync status updates during synchronization\n2. Verify error notifications for sync issues\n3. Test manual sync trigger functionality\n4. Ensure sync history correctly logs events\n5. Validate user experience of sync status UI",
         "priority": "medium",
         "dependencies": [
-          1,
           2,
           31
         ],
@@ -827,7 +735,6 @@
         "testStrategy": "1. Test todo creation, update, and deletion in online/offline modes\n2. Verify real-time sync between multiple clients\n3. Test conflict resolution with concurrent edits\n4. Validate offline queue processing\n5. Test presence and collaboration features\n6. Measure sync latency and performance",
         "status": "done",
         "dependencies": [
-          1,
           2,
           28,
           31,
@@ -997,11 +904,108 @@
             "testStrategy": "Perform integration testing to verify the router works correctly within the full application. Test real-time sync capabilities with Electric SQL. Verify error messages are properly formatted and helpful for debugging."
           }
         ]
+      },
+      {
+        "id": 43,
+        "title": "Set up Rocicorp Zero as Real-time Sync Engine",
+        "description": "Replace Electric SQL with Rocicorp Zero for local-first, real-time synchronization. Configure Zero server and client, integrate with Supabase auth, and establish initial sync configuration.",
+        "details": "1. Install Rocicorp Zero packages:\n   - Add @rocicorp/zero and @rocicorp/zero-nextjs to dependencies\n   - Install @rocicorp/reflect for server-side sync\n   - Add @rocicorp/replicache for client-side persistence\n\n2. Configure Zero Server:\n   - Create zero-server configuration in packages/zero/server\n   - Set up Reflect server with WebSocket support\n   - Configure server-side authentication middleware\n   - Implement server-side data access patterns\n   - Set up server-side change subscriptions\n\n3. Set up Zero Client:\n   - Create Zero client configuration in packages/zero/client\n   - Configure Replicache for local persistence\n   - Set up client-side mutators for data operations\n   - Implement optimistic UI update patterns\n   - Configure sync intervals and retry logic\n\n4. Integrate with Supabase Authentication:\n   - Create auth adapter for Zero to use Supabase sessions\n   - Implement JWT validation for WebSocket connections\n   - Set up user ID mapping between Supabase and Zero\n   - Configure permission checks using Supabase RLS\n   - Implement session refresh handling\n\n5. Create Initial Sync Configuration:\n   - Define initial data schema for Zero\n   - Set up entity definitions and relationships\n   - Configure sync rules and filters\n   - Implement initial data loading strategy\n   - Create migration plan from existing data\n\n6. Implement Connection Management:\n   - Create connection status monitoring\n   - Implement reconnection logic with exponential backoff\n   - Add connection state to React context\n   - Create hooks for sync status\n   - Implement offline queue management\n\n7. Configure Development Environment:\n   - Set up local Zero server for development\n   - Create Docker configuration for Zero server\n   - Configure environment variables\n   - Set up development proxy for WebSockets\n   - Create development data seeding scripts\n\n8. Create Zero Provider Component:\n   - Implement ZeroProvider React component\n   - Configure provider with auth context\n   - Set up error boundaries for sync failures\n   - Create development tools integration\n   - Implement sync debugging utilities",
+        "testStrategy": "1. Test Zero server initialization and configuration\n2. Verify client-server WebSocket connection establishment\n3. Test authentication flow with Supabase sessions\n4. Validate data synchronization between multiple clients\n5. Test offline functionality and data persistence\n6. Verify optimistic updates and rollback on conflicts\n7. Test reconnection logic under various network conditions\n8. Validate permission enforcement through Supabase RLS\n9. Test data migration from existing database\n10. Verify performance with concurrent users and large datasets",
+        "status": "pending",
+        "dependencies": [
+          2,
+          31,
+          32,
+          33
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Install Rocicorp Zero packages",
+            "description": "Install @rocicorp/zero, @rocicorp/zero-nextjs, @rocicorp/reflect, and @rocicorp/replicache packages",
+            "details": "Run pnpm add @rocicorp/zero @rocicorp/zero-nextjs @rocicorp/reflect @rocicorp/replicache. Create basic package structure under packages/zero with client and server subdirectories.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 43
+          },
+          {
+            "id": 2,
+            "title": "Configure Zero Server",
+            "description": "Set up Reflect server with WebSocket support and authentication middleware",
+            "details": "Create zero-server configuration in packages/zero/server. Set up Reflect server with WebSocket support. Configure server-side authentication middleware using Supabase JWT validation. Implement server-side data access patterns.",
+            "status": "pending",
+            "dependencies": [
+              "43.1"
+            ],
+            "parentTaskId": 43
+          },
+          {
+            "id": 3,
+            "title": "Set up Zero Client",
+            "description": "Configure Replicache client for local persistence and optimistic updates",
+            "details": "Create Zero client configuration in packages/zero/client. Configure Replicache for local persistence. Set up client-side mutators for data operations. Implement optimistic UI update patterns. Configure sync intervals and retry logic.",
+            "status": "pending",
+            "dependencies": [
+              "43.1"
+            ],
+            "parentTaskId": 43
+          },
+          {
+            "id": 4,
+            "title": "Integrate with Supabase Authentication",
+            "description": "Create auth adapter for Zero to use Supabase sessions and JWT validation",
+            "details": "Create auth adapter for Zero to use Supabase sessions. Implement JWT validation for WebSocket connections. Set up user ID mapping between Supabase and Zero. Configure permission checks using Supabase RLS.",
+            "status": "pending",
+            "dependencies": [
+              "43.2",
+              "43.3"
+            ],
+            "parentTaskId": 43
+          },
+          {
+            "id": 5,
+            "title": "Create Initial Sync Configuration",
+            "description": "Define data schema and sync rules for Zero",
+            "details": "Define initial data schema for Zero. Set up entity definitions and relationships. Configure sync rules and filters. Implement initial data loading strategy. Create migration plan from existing data.",
+            "status": "pending",
+            "dependencies": [
+              "43.4"
+            ],
+            "parentTaskId": 43
+          },
+          {
+            "id": 6,
+            "title": "Create Zero Provider Component",
+            "description": "Implement React provider for Zero client with auth and sync status",
+            "details": "Implement ZeroProvider React component. Configure provider with auth context. Set up error boundaries for sync failures. Create hooks for sync status. Implement sync debugging utilities.",
+            "status": "pending",
+            "dependencies": [
+              "43.5"
+            ],
+            "parentTaskId": 43
+          }
+        ]
+      },
+      {
+        "id": 44,
+        "title": "Remove Electric SQL and PGlite References",
+        "description": "Clean up Electric SQL and PGlite dependencies and code references from the web application while preserving package structure for future use.",
+        "details": "1. **Remove Electric SQL Dependencies**:\n   - Remove @electric-sql/client, @electric-sql/pglite, and related packages from package.json\n   - Clean up pnpm-lock.yaml by running pnpm install after dependency removal\n   - Remove electric-proxy app entirely from apps/ directory\n\n2. **Clean Up Code References**:\n   - Remove Electric provider components and context\n   - Remove PGlite worker setup and configuration files\n   - Remove Electric SQL specific imports and type definitions\n   - Clean up database connection and sync configuration related to Electric\n   - Remove Electric-specific environment variables and configuration\n\n3. **Update Application Code**:\n   - Replace Electric SQL data access patterns with direct tRPC calls\n   - Remove Electric SQL hooks and reactive queries\n   - Update components that used Electric SQL subscriptions\n   - Remove Electric SQL schema definitions and migrations\n   - Clean up Electric SQL specific middleware and utilities\n\n4. **Preserve Package Structure**:\n   - Keep packages/zero directory structure intact for future Rocicorp Zero implementation\n   - Maintain database schema compatibility for future sync engine integration\n   - Document removed functionality for potential future reference\n   - Keep configuration placeholders for real-time sync features\n\n5. **Update Documentation and Configuration**:\n   - Update README and documentation to remove Electric SQL references\n   - Clean up configuration files and environment variable documentation\n   - Update deployment scripts and Docker configurations if applicable",
+        "testStrategy": "1. Verify application builds successfully without Electric SQL dependencies\n2. Test that all pages and components render without Electric SQL errors\n3. Confirm tRPC queries work correctly as replacement for Electric subscriptions\n4. Test todo functionality works with direct database access via tRPC\n5. Verify no Electric SQL imports remain in the codebase\n6. Ensure packages/zero directory structure is preserved\n7. Test development and build commands work without errors\n8. Validate that removed functionality doesn't break existing features",
+        "status": "pending",
+        "dependencies": [
+          41,
+          42,
+          43
+        ],
+        "priority": "high",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-08-05T02:58:50.419Z",
-      "updated": "2025-08-07T04:15:03.637Z",
+      "updated": "2025-08-09T02:09:29.096Z",
       "description": "Tasks for master context"
     }
   }

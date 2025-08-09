@@ -1,0 +1,34 @@
+---
+description: Supabase SSR client, middleware session refresh, and environment key usage
+globs: packages/lib/src/supabase/**/*, apps/web/src/middleware.ts
+---
+
+- **Server-side client**
+  - Use `@supabase/ssr.createServerClient` with `cookies()` for SSR in server code only ([server.ts](mdc:packages/lib/src/supabase/server.ts))
+  - Provide custom `cookies.getAll()` and `cookies.setAll()` bridging to Next `cookies()` API
+  - Read `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` from env; never expose service key to client
+
+```typescript
+// ✅ packages/lib/src/supabase/server.ts (excerpt)
+export async function createClient() {
+  const cookieStore = await cookies();
+  return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { cookies: { ... } });
+}
+```
+
+- **Middleware-driven session refresh**
+  - `apps/web/src/middleware.ts` delegates to `updateSession(request)` ([middleware.ts](mdc:apps/web/src/middleware.ts))
+  - `updateSession` calls `supabase.auth.getUser()` to sync auth cookies, returning `NextResponse.next()` ([middleware.ts](mdc:packages/lib/src/supabase/middleware.ts))
+  - Configure `matcher` to exclude static assets and images
+
+- **Auth helpers**
+  - Use `@superscale/lib/auth/session.getCurrentSession()` to obtain DB-backed user (via `@superscale/crud`) ([session.ts](mdc:packages/lib/src/auth/session.ts))
+
+- **Do**
+  - Keep Supabase service role operations on the server only
+  - Use shared helpers for session access across routers and pages
+
+- **Don't**
+  - Initialize Supabase SSR client in client components
+  - Directly mutate cookies in app code; rely on provided cookie bridge
+

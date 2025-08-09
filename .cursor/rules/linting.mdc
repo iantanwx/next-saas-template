@@ -1,0 +1,25 @@
+---
+description: Biome and TypeScript configuration conventions
+globs: apps/web/biome.json, **/*.ts, **/*.tsx
+---
+
+- **Biome** ([apps/web/biome.json](mdc:apps/web/biome.json))
+  - Run `pnpm lint` (check) and `pnpm lint:fix` (write) at app/package level
+  - Rules: warn on `console` usage; enforce sorted Tailwind classes via `nursery.useSortedClasses`
+  - Provide `React` and `JSX` as globals in Biome config for DX
+
+- **Formatting**
+  - Use `pnpm format` to run `biome format --write .` (repo/app scope)
+
+- **TypeScript**
+  - Extend shared config `@superscale/tsconfig/*` (see [base.tsconfig.json](mdc:packages/tsconfig/base.tsconfig.json))
+  - Strict mode, ES2022 target, bundler `moduleResolution`, DOM libs
+  - Prefer path aliases over deep relative imports
+
+```bash
+# ✅ Commands
+pnpm lint
+pnpm lint:fix
+pnpm format
+```
+

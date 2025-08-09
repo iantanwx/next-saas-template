@@ -90,7 +90,7 @@ A complete SaaS development toolkit optimized for real-time, long-running workfl
 |                          | Invoice Generation            | ❌ Missing      | P3       | 3             |
 |                          | Alternative Payment Providers | ❌ Missing      | P3       | 3             |
 | **Real-time & Sync**     |                               |                |          |               |
-|                          | Electric SQL Setup            | ❌ Missing      | P0       | 3             |
+|                          | Rocicorp Zero Setup           | ❌ Missing      | P0       | 3             |
 |                          | Local-First Architecture      | ❌ Missing      | P0       | 5             |
 |                          | Offline Support               | ❌ Missing      | P1       | 3             |
 |                          | Conflict Resolution           | ❌ Missing      | P1       | 3             |
@@ -184,7 +184,7 @@ A complete SaaS development toolkit optimized for real-time, long-running workfl
 | --------------- | --------------------- | ------------------------------------------------------------- |
 | Framework       | Next.js 15            | Latest features, app router, React Server Components          |
 | Database        | Supabase (PostgreSQL) | Real-time capabilities, auth included, generous free tier     |
-| Real-time Sync  | Electric SQL          | Local-first, offline support, automatic conflict resolution   |
+| Real-time Sync  | Rocicorp Zero         | Local-first, offline support, automatic conflict resolution   |
 | Type Safety     | tRPC                  | End-to-end type safety without code generation                |
 | Workflow Engine | Inngest               | Serverless-first, deep Next.js integration, simple deployment |
 | Email           | Resend                | Modern API, developer-friendly, good deliverability           |
@@ -210,7 +210,7 @@ Build core infrastructure for real-time workflows
 
 | Week | Focus Area               | Key Deliverables                                                                                            |
 | ---- | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| 1    | Real-time Infrastructure | Electric SQL setup, local-first architecture, sync configuration, real-time hooks, sync status UI           |
+| 1    | Real-time Infrastructure | Rocicorp Zero setup, local-first architecture, sync configuration, real-time hooks, sync status UI           |
 | 2    | Authentication System    | Complete auth implementation, GitHub OAuth, email/password, magic links, password reset, session management |
 | 3    | Inngest Workflows        | Inngest setup, workflow functions, progress tracking, state persistence, error handling                     |
 | 4    | Payment System           | Stripe integration, webhook handling, subscription management, customer portal, usage tracking              |
@@ -250,7 +250,7 @@ Polish and prepare for production deployment
 
 | Risk                       | Impact | Probability | Mitigation Strategy                                  |
 | -------------------------- | ------ | ----------- | ---------------------------------------------------- |
-| Electric SQL Complexity    | High   | Medium      | Start with simple sync rules, iterate based on needs |
+| Rocicorp Zero Complexity   | High   | Medium      | Start with simple sync rules, iterate based on needs |
 | Inngest Learning Curve     | Low    | Low         | Good documentation, simpler than alternatives        |
 | Real-time Sync Conflicts   | Medium | High        | Implement robust conflict resolution strategies      |
 | Scope Creep                | High   | High        | Strict prioritization, time-boxed development        |

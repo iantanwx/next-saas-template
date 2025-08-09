@@ -1,0 +1,60 @@
+---
+description: Monorepo architecture and high-level conventions for the Next.js SaaS template
+alwaysApply: true
+---
+
+- **Monorepo layout**
+  - Apps live under `apps/*`; primary web app is `apps/web` ([package.json](mdc:apps/web/package.json))
+  - Shared packages live under `packages/*`:
+    - `@superscale/crud` (DB access + Drizzle ORM) ([index.ts](mdc:packages/crud/src/index.ts))
+    - `@superscale/trpc` (server router, context, adapters) ([router/index.ts](mdc:packages/trpc/src/router/index.ts))
+    - `@superscale/lib` (auth helpers, Supabase clients) ([supabase/server.ts](mdc:packages/lib/src/supabase/server.ts))
+    - `@superscale/ui` (shared UI components) ([index.ts](mdc:packages/ui/src/index.ts))
+    - `@superscale/email`, `@superscale/editor`, `@superscale/tsconfig`, `@superscale/pglite`
+
+- **Primary stack**
+  - Next.js 15 (App Router), React 19, TypeScript strict ([tsconfig base](mdc:packages/tsconfig/base.tsconfig.json))
+  - tRPC with SuperJSON transformer and Zod validation ([trpc.ts](mdc:packages/trpc/src/trpc.ts))
+  - Supabase Auth + Drizzle ORM over Postgres ([schema.ts](mdc:packages/crud/src/db/schema.ts))
+  - Sentry for error tracking; Axiom for logging ([sentry.*.ts](mdc:apps/web/sentry.server.config.ts))
+
+- **Workspace scripts** ([root package.json](mdc:package.json))
+  - **dev:web**: `pnpm --filter=@superscale/web dev`
+  - **supabase:** start/stop/db push/reset routed to `@superscale/crud`
+  - **lint/format**: Biome across repo (`biome check .`, `--write`)
+
+- **Transpilation and bundling**
+  - `apps/web/next.config.mjs` transpiles local packages via `transpilePackages` ([next.config.mjs](mdc:apps/web/next.config.mjs))
+  - SVG handled via SVGR, with `?url` passthrough; `.sql` treated as raw source
+
+- **Code style (TypeScript)**
+  - Strict typing; avoid `any`; annotate exported APIs and function signatures
+  - Meaningful names (no 1–2 char identifiers). Prefer full words over abbreviations
+  - Use guard clauses and shallow control flow; handle error/edge cases first
+  - Keep comments sparse and focused on the "why"; avoid inline narration
+
+- **Directory and import conventions**
+  - `apps/web/tsconfig.json` uses `@/*` to reference `apps/web/src/*` ([tsconfig.json](mdc:apps/web/tsconfig.json))
+  - Import shared code via workspace aliases (e.g., `@superscale/trpc`, `@superscale/lib`)
+
+- **Environment configuration**
+  - Sentry: `SENTRY_DSN`; Supabase: `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (server-only)
+  - Use server-only keys only in server code (see [server.ts](mdc:packages/lib/src/supabase/server.ts))
+
+- **Do**
+  - Keep DB access in `@superscale/crud`; call from tRPC routers
+  - Co-locate Zod schemas with procedure handlers and export them for reuse
+  - Centralize auth/session access in `@superscale/lib/auth`
+
+- **Don't**
+  - Access DB directly from React components
+  - Use service role keys in client code
+  - Duplicate validation logic across layers; reuse Zod schemas
+
+```typescript
+// ✅ DO: Import from shared packages instead of re-implementing
+import { appRouter } from '@superscale/trpc';
+import { users } from '@superscale/crud';
+import { getCurrentSession } from '@superscale/lib/auth';
+```
+

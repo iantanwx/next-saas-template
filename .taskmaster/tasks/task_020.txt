@@ -1,7 +1,7 @@
 # Task ID: 20
 # Title: Implement Real-time Updates UI
 # Status: pending
-# Dependencies: 1, 2, 15
+# Dependencies: 2, 15
 # Priority: medium
 # Description: Create UI components and patterns for displaying real-time data updates throughout the application.
 # Details:

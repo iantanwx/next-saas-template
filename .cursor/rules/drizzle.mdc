@@ -1,0 +1,35 @@
+---
+description: Drizzle ORM schema and data-access conventions for Supabase Postgres
+globs: packages/crud/src/**/*
+---
+
+- **Schema patterns** ([schema.ts](mdc:packages/crud/src/db/schema.ts))
+  - Mirror `auth.users` via a lightweight `_users` table to establish FKs; app `users` table references it
+  - Prefer `deletedAt` for soft-deletes; cascade on real FKs where appropriate
+  - Enforce case-insensitive uniqueness using `lower()` in unique indexes (e.g., `organizations.slug`)
+  - Use `pgEnum` for role/status fields; export enums to reuse in Zod
+  - For local-first data (`todos`), avoid hard FKs; add indices and fields for conflict resolution (`version`, `lastEditedBy`, `lastEditedAt`)
+
+- **Access patterns** ([organization.ts](mdc:packages/crud/src/organization.ts), [user.ts](mdc:packages/crud/src/user.ts))
+  - Use `db.query.<table>.findFirst/findMany` with `with: { relation: true }` to eagerly load graphs
+  - Wrap multi-write flows in `db.transaction`
+  - Centralize slug generation (`toLowerCase().replace(/\s/g, '-')`) on create; validate uniqueness before update
+  - Provide narrow exported functions (e.g., `getMemberById`, `updateMemberRole`) consumed by tRPC
+
+- **Do**
+  - Export inferred types from CRUD functions when needed for API typing
+  - Co-locate read/update helpers with their table domain files
+
+- **Don't**
+  - Query directly from UI or pages; always go through `@superscale/crud`
+  - Duplicate slug logic in multiple places
+
+```typescript
+// ✅ DO: Wrap write sequences in a transaction
+const id = await db.transaction(async (tx) => {
+  const [{ organizationId }] = await tx.insert(organizations).values({...}).returning({ organizationId: organizations.id });
+  await tx.insert(organizationMembers).values({ role: 'owner', userId, organizationId });
+  return organizationId;
+});
+```
+

@@ -6,15 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Development
 
-- `pnpm dev` - Start all applications (web, chat, convex)
+- `pnpm dev` - Start the web application
 - `pnpm dev:web` - Start only the Next.js web application
-- `pnpm dev:convex` - Start only the Convex backend
 - `pnpm dev:email` - Start email development server
 
 ### Build and Linting
 
 - `pnpm build:web` - Build the web application
-- `pnpm build:chat` - Build the chat application
 - `pnpm lint` - Run ESLint on the web application (from apps/web directory)
 
 ### Database (Supabase + Drizzle)
@@ -37,7 +35,7 @@ This is a monorepo SaaS template built with:
 - **Frontend**: Next.js 15 with React 19, TypeScript, Tailwind CSS
 - **Backend**: tRPC for API layer
 - **Database**: Supabase with Drizzle ORM
-- **Real-time Sync**: Electric SQL for local-first architecture (planned)
+- **Real-time Sync**: Rocicorp Zero for local-first architecture (planned)
 - **Workflow Engine**: Inngest for serverless workflow orchestration (planned)
 - **Auth**: Supabase Auth with Google OAuth integration
 - **Payments**: Stripe integration (planned)
@@ -51,13 +49,11 @@ The project uses pnpm workspaces with the following structure:
 **Apps:**
 
 - `apps/web` - Main Next.js SaaS application
-- `apps/chat` - Svelte chat application
 
 **Packages:**
 
 - `@superscale/crud` - Database layer with Drizzle ORM and Supabase
 - `@superscale/trpc` - tRPC router and client configuration
-- `@superscale/convex` - Convex functions for real-time features
 - `@superscale/lib` - Shared utilities, auth helpers, Supabase clients
 - `@superscale/ui` - Shared UI components built with Radix UI
 - `@superscale/email` - Email templates using React Email
@@ -92,7 +88,7 @@ Uses Drizzle ORM with Supabase PostgreSQL:
 ### API Architecture
 
 - tRPC for type-safe API calls between frontend and backend
-- Convex for real-time features and WebSocket connections
+- WebSocket support for real-time features (via Rocicorp Zero)
 - REST API routes for webhooks (Slack)
 - Server-side authentication context
 
@@ -121,7 +117,7 @@ This template is designed for building **real-time, workflow-driven SaaS applica
 ### Current Implementation Status
 
 - **Authentication**: Google OAuth implemented, email/password and GitHub OAuth needed
-- **Real-time Sync**: Not implemented, Electric SQL setup needed for local-first architecture
+- **Real-time Sync**: Not implemented, Rocicorp Zero setup needed for local-first architecture
 - **Workflow Engine**: Not implemented, Inngest integration needed for serverless workflows
 - **Payments**: Not implemented, comprehensive Stripe integration needed
 - **UI**: Basic components, full component library with workflow status UI needed
@@ -133,7 +129,7 @@ This template is designed for building **real-time, workflow-driven SaaS applica
 
 **Phase 1: Foundation (Weeks 1-4)**
 
-- Week 1: Electric SQL setup, local-first architecture, offline support
+- Week 1: Rocicorp Zero setup, local-first architecture, offline support
 - Week 2: Complete authentication (GitHub OAuth, email/password, magic links)
 - Week 3: Inngest workflow engine, progress tracking, error recovery
 - Week 4: Stripe integration, webhook handling, customer portal
@@ -166,7 +162,7 @@ This template is designed for building **real-time, workflow-driven SaaS applica
 
 ### Key Differentiators
 
-- **Local-first architecture** with Electric SQL for automatic sync
+- **Local-first architecture** with Rocicorp Zero for automatic sync
 - **Serverless workflow orchestration** with Inngest (zero infrastructure)
 - **Full offline functionality** (100% feature availability)
 - **Real-time collaboration** built-in by design

@@ -1,7 +1,7 @@
 # Task ID: 31
 # Title: Implement Offline Support
 # Status: pending
-# Dependencies: 1, 2
+# Dependencies: 2
 # Priority: medium
 # Description: Enhance the application to fully support offline usage with data synchronization when connection is restored.
 # Details:

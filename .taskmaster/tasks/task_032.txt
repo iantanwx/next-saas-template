@@ -1,7 +1,7 @@
 # Task ID: 32
 # Title: Implement Conflict Resolution
 # Status: pending
-# Dependencies: 1, 2, 31
+# Dependencies: 2, 31
 # Priority: medium
 # Description: Create a system for detecting and resolving data conflicts during synchronization.
 # Details:

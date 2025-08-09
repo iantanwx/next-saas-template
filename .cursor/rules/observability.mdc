@@ -1,0 +1,17 @@
+---
+description: Sentry and Axiom setup and usage patterns
+globs: apps/web/sentry.*.ts, apps/web/next.config.mjs
+---
+
+- **Sentry initialization**
+  - Initialize in client, server, and edge configs with `enabled: process.env.NODE_ENV === 'production'` and `dsn` from env ([sentry files](mdc:apps/web/sentry.server.config.ts))
+  - Client config optionally enables Session Replay with redaction ([sentry.client.config.ts](mdc:apps/web/sentry.client.config.ts))
+
+- **Axiom logging**
+  - Use `next-axiom`; `withAxiom` is available for Next config ([next.config.mjs](mdc:apps/web/next.config.mjs))
+  - Prefer structured logging (e.g., `pino`) server-side
+
+- **Do**
+  - Keep sampling rates adjustable via env for production
+  - Avoid logging secrets or PII; rely on Sentry PII scrubbing where necessary
+

@@ -1,0 +1,50 @@
+---
+description: tRPC router, context, and procedure conventions with Zod and SuperJSON
+globs: packages/trpc/src/**/*, apps/web/src/app/api/trpc/**/*
+---
+
+- **Initialization**
+  - Use `initTRPC` with typed `TrpcContext` and `superjson` transformer ([trpc.ts](mdc:packages/trpc/src/trpc.ts))
+  - Export `router`, `middleware`, `publicProcedure`, `protectedProcedure`
+  - Define `memberProcedure` and `adminProcedure` for org-scoped authorization
+
+```typescript
+// ✅ packages/trpc/src/trpc.ts (excerpt)
+const t = initTRPC.context<TrpcContext>().create({ transformer: superjson });
+export const protectedProcedure = t.procedure.use(authMiddleware);
+export const memberProcedure = protectedProcedure.input(z.object({ organizationId: z.string() })).use(async ({ next, ctx, input, ...rest }) => { /* ... */ });
+export const adminProcedure = protectedProcedure.input(z.object({ organizationId: z.string() })).use(async ({ next, ctx, input, ...rest }) => { /* ... */ });
+```
+
+- **Context**
+  - Build context from `@superscale/lib/auth/session.getCurrentSession()`; include `{ user, req }` ([context.ts](mdc:packages/trpc/src/context.ts))
+  - Treat unauthenticated as `user: null` and enforce in `protectedProcedure`
+
+- **Router composition**
+  - Compose sub-routers under `router/index.ts` and export `AppRouter` type ([router/index.ts](mdc:packages/trpc/src/router/index.ts))
+  - Keep business logic in `@superscale/crud`; call from procedures
+
+- **Validation**
+  - Co-locate Zod schemas next to handlers and export them for reuse (see [router/todo.ts](mdc:packages/trpc/src/router/todo.ts))
+  - Prefer enums from schema exports (e.g., `todoPriority.enumValues`)
+
+- **Error handling**
+  - Throw `TRPCError` with specific `code` values (`UNAUTHORIZED`, `NOT_FOUND`, `BAD_REQUEST`, `INTERNAL_SERVER_ERROR`)
+  - Log server errors; rethrow known `TRPCError` instances
+
+- **HTTP adapter**
+  - Use `fetchRequestHandler` at `/api/trpc`; export both `GET` and `POST` ([route.ts](mdc:apps/web/src/app/api/trpc/%5Btrpc%5D/route.ts))
+
+```typescript
+// ✅ DO: Co-locate schema + handler and reuse enums
+export const createTodoSchema = z.object({
+  title: z.string().min(1).max(255),
+  priority: z.enum(todoPriority.enumValues).default('medium'),
+  organizationId: z.string().min(1),
+});
+
+const create = memberProcedure.input(createTodoSchema).mutation(async ({ ctx, input }) => {
+  return await todos.create({ ...input, userId: ctx.user.id });
+});
+```
+

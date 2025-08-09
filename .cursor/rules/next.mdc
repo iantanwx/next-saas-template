@@ -1,0 +1,50 @@
+---
+description: Next.js App Router conventions, middleware, and build configuration
+globs: apps/web/src/**/*, apps/web/next.config.mjs, apps/web/tsconfig.json, apps/web/sentry.*.ts
+---
+
+- **App Router API routes**
+  - Use `fetchRequestHandler` with `appRouter` and `createTrpcContext` at `apps/web/src/app/api/trpc/[trpc]/route.ts` ([route.ts](mdc:apps/web/src/app/api/trpc/%5Btrpc%5D/route.ts))
+  - Export `GET` and `POST` from a single `handler`
+
+```typescript
+// ✅ apps/web/src/app/api/trpc/[trpc]/route.ts
+import { appRouter, createTrpcContext, fetchRequestHandler } from '@superscale/trpc';
+import type { NextRequest } from 'next/server';
+
+function handler(req: NextRequest) {
+  return fetchRequestHandler({ endpoint: '/api/trpc', req, router: appRouter, createContext: createTrpcContext });
+}
+
+export { handler as GET, handler as POST };
+```
+
+- **Middleware**
+  - Delegate session refresh to `@superscale/lib/supabase/middleware.updateSession`
+  - Configure `matcher` to exclude static assets and common image formats ([middleware.ts](mdc:apps/web/src/middleware.ts))
+
+- **Build configuration** ([next.config.mjs](mdc:apps/web/next.config.mjs))
+  - **SVG**: Use SVGR for component imports; keep `?url` for asset URLs
+  - **Raw SQL**: `.sql` files as `asset/source`
+  - **Experiments**: Enable `topLevelAwait` when needed
+  - **Transpile**: List all internal packages under `transpilePackages`
+  - **Images**: Allow external sources via `images.remotePatterns`
+
+- **TypeScript project setup** ([tsconfig.json](mdc:apps/web/tsconfig.json))
+  - Extend shared config `@superscale/tsconfig/nextjs.tsconfig.json`
+  - Use path alias `@/*` for `apps/web/src/*`
+
+- **Client/server boundaries**
+  - Keep server-only code (e.g., Supabase service role) out of client bundles
+  - Use server components by default; mark interactive components with `"use client"` only when necessary
+
+- **Page-level auth flows**
+  - Read session via `@superscale/lib/auth.getCurrentSession` in server components; use `redirect(...)` based on org membership
+  - Example: `apps/web/src/app/auth/sign-in/page.tsx` checks invitation and redirects to first org slug
+
+```typescript
+// ✅ apps/web/src/app/auth/sign-in/page.tsx (excerpt)
+const { user } = await getCurrentSession();
+if (!invitationId && user && user.memberships.length > 0) redirect(`/${user.memberships[0]!.organization.slug}`);
+```
+

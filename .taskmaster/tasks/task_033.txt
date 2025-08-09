@@ -1,7 +1,7 @@
 # Task ID: 33
 # Title: Implement Real-time Collaboration
 # Status: pending
-# Dependencies: 1, 2, 28, 31, 32
+# Dependencies: 2, 28, 31, 32
 # Priority: medium
 # Description: Create features for real-time collaboration between users working on the same data.
 # Details:

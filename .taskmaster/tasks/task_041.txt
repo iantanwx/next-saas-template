@@ -1,7 +1,7 @@
 # Task ID: 41
 # Title: Create Example Todos Table with Real-time Features
 # Status: done
-# Dependencies: 1, 2, 28, 31, 32, 33
+# Dependencies: 2, 28, 31, 32, 33
 # Priority: high
 # Description: Implement a todos table as a demonstration of the real-time synchronization capabilities using Electric SQL, tRPC subscriptions, and local-first architecture.
 # Details:

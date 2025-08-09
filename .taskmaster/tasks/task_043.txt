@@ -1,0 +1,110 @@
+# Task ID: 43
+# Title: Set up Rocicorp Zero as Real-time Sync Engine
+# Status: pending
+# Dependencies: 2, 31, 32, 33
+# Priority: high
+# Description: Replace Electric SQL with Rocicorp Zero for local-first, real-time synchronization. Configure Zero server and client, integrate with Supabase auth, and establish initial sync configuration.
+# Details:
+1. Install Rocicorp Zero packages:
+   - Add @rocicorp/zero and @rocicorp/zero-nextjs to dependencies
+   - Install @rocicorp/reflect for server-side sync
+   - Add @rocicorp/replicache for client-side persistence
+
+2. Configure Zero Server:
+   - Create zero-server configuration in packages/zero/server
+   - Set up Reflect server with WebSocket support
+   - Configure server-side authentication middleware
+   - Implement server-side data access patterns
+   - Set up server-side change subscriptions
+
+3. Set up Zero Client:
+   - Create Zero client configuration in packages/zero/client
+   - Configure Replicache for local persistence
+   - Set up client-side mutators for data operations
+   - Implement optimistic UI update patterns
+   - Configure sync intervals and retry logic
+
+4. Integrate with Supabase Authentication:
+   - Create auth adapter for Zero to use Supabase sessions
+   - Implement JWT validation for WebSocket connections
+   - Set up user ID mapping between Supabase and Zero
+   - Configure permission checks using Supabase RLS
+   - Implement session refresh handling
+
+5. Create Initial Sync Configuration:
+   - Define initial data schema for Zero
+   - Set up entity definitions and relationships
+   - Configure sync rules and filters
+   - Implement initial data loading strategy
+   - Create migration plan from existing data
+
+6. Implement Connection Management:
+   - Create connection status monitoring
+   - Implement reconnection logic with exponential backoff
+   - Add connection state to React context
+   - Create hooks for sync status
+   - Implement offline queue management
+
+7. Configure Development Environment:
+   - Set up local Zero server for development
+   - Create Docker configuration for Zero server
+   - Configure environment variables
+   - Set up development proxy for WebSockets
+   - Create development data seeding scripts
+
+8. Create Zero Provider Component:
+   - Implement ZeroProvider React component
+   - Configure provider with auth context
+   - Set up error boundaries for sync failures
+   - Create development tools integration
+   - Implement sync debugging utilities
+
+# Test Strategy:
+1. Test Zero server initialization and configuration
+2. Verify client-server WebSocket connection establishment
+3. Test authentication flow with Supabase sessions
+4. Validate data synchronization between multiple clients
+5. Test offline functionality and data persistence
+6. Verify optimistic updates and rollback on conflicts
+7. Test reconnection logic under various network conditions
+8. Validate permission enforcement through Supabase RLS
+9. Test data migration from existing database
+10. Verify performance with concurrent users and large datasets
+
+# Subtasks:
+## 1. Install Rocicorp Zero packages [pending]
+### Dependencies: None
+### Description: Install @rocicorp/zero, @rocicorp/zero-nextjs, @rocicorp/reflect, and @rocicorp/replicache packages
+### Details:
+Run pnpm add @rocicorp/zero @rocicorp/zero-nextjs @rocicorp/reflect @rocicorp/replicache. Create basic package structure under packages/zero with client and server subdirectories.
+
+## 2. Configure Zero Server [pending]
+### Dependencies: 43.1
+### Description: Set up Reflect server with WebSocket support and authentication middleware
+### Details:
+Create zero-server configuration in packages/zero/server. Set up Reflect server with WebSocket support. Configure server-side authentication middleware using Supabase JWT validation. Implement server-side data access patterns.
+
+## 3. Set up Zero Client [pending]
+### Dependencies: 43.1
+### Description: Configure Replicache client for local persistence and optimistic updates
+### Details:
+Create Zero client configuration in packages/zero/client. Configure Replicache for local persistence. Set up client-side mutators for data operations. Implement optimistic UI update patterns. Configure sync intervals and retry logic.
+
+## 4. Integrate with Supabase Authentication [pending]
+### Dependencies: 43.2, 43.3
+### Description: Create auth adapter for Zero to use Supabase sessions and JWT validation
+### Details:
+Create auth adapter for Zero to use Supabase sessions. Implement JWT validation for WebSocket connections. Set up user ID mapping between Supabase and Zero. Configure permission checks using Supabase RLS.
+
+## 5. Create Initial Sync Configuration [pending]
+### Dependencies: 43.4
+### Description: Define data schema and sync rules for Zero
+### Details:
+Define initial data schema for Zero. Set up entity definitions and relationships. Configure sync rules and filters. Implement initial data loading strategy. Create migration plan from existing data.
+
+## 6. Create Zero Provider Component [pending]
+### Dependencies: 43.5
+### Description: Implement React provider for Zero client with auth and sync status
+### Details:
+Implement ZeroProvider React component. Configure provider with auth context. Set up error boundaries for sync failures. Create hooks for sync status. Implement sync debugging utilities.
+

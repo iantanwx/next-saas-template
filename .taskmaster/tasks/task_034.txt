@@ -1,7 +1,7 @@
 # Task ID: 34
 # Title: Implement Sync Status UI
 # Status: pending
-# Dependencies: 1, 2, 31
+# Dependencies: 2, 31
 # Priority: medium
 # Description: Create UI components to display synchronization status and progress to users.
 # Details:
