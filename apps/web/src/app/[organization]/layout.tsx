@@ -1,5 +1,3 @@
-import { AppSidebar } from '@/components/nav/app-sidebar';
-import { SidebarWrapper } from '@/components/nav/sidebar-wrapper';
 import { getCurrentUser } from '@superscale/lib/auth';
 import {
   Breadcrumb,
@@ -13,6 +11,8 @@ import {
   SidebarTrigger,
 } from '@superscale/ui/components/sidebar';
 import { notFound, redirect } from 'next/navigation';
+import { AppSidebar } from '@/components/nav/app-sidebar';
+import { SidebarWrapper } from '@/components/nav/sidebar-wrapper';
 
 interface Props {
   children: React.ReactNode;

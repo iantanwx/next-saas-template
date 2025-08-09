@@ -4,7 +4,7 @@ import {
   type PermissionsConfig,
   type Row,
 } from '@rocicorp/zero';
-import { schema, type Schema } from './schema.gen';
+import { type Schema, schema } from './schema.gen';
 
 export { schema, type Schema };
 
