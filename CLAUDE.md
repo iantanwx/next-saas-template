@@ -26,6 +26,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 No test setup detected in the codebase. Tests should be configured before running any test commands.
 
+## MCP Usage (Required during planning)
+
+- Use the following MCP tools by default when planning and before implementation:
+  - context7: Resolve library ID then fetch up-to-date docs for impacted libraries (e.g., Next.js, tRPC, Supabase, Drizzle, Sentry, TanStack Query, Shadcn, Stripe)
+  - github: For any referenced GitHub URLs, fetch the PR/issue/diff/files as appropriate
+  - taskmaster: List/expand tasks, log implementation plans via update-subtask, and track status
+  - shadcn-ui: When asked to make UI changes, consult Shadcn docs and prefer primitives from `@superscale/ui`
+
+Checklist before implementation:
+- [ ] context7 docs fetched for impacted libs
+- [ ] taskmaster: task viewed/expanded; plan logged via update_subtask
+- [ ] github: any referenced PR/issue/file fetched
+- [ ] shadcn-ui: components/design patterns reviewed (if UI)
+
 ## Architecture
 
 This is a monorepo SaaS template built with:

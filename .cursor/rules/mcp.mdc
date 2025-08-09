@@ -1,0 +1,39 @@
+---
+description: Mandatory MCP usage during planning and implementation (docs, GitHub, tasks, UI)
+alwaysApply: true
+---
+
+- **Planning defaults (Always use these MCPs):**
+  - **context7 (docs)**: Resolve and fetch up-to-date documentation for libraries you touch
+    - Use `resolve-library-id` then `get-library-docs`
+    - Typical libs: Next.js (`/vercel/next.js`), tRPC (`/trpc/trpc`), Supabase (`/supabase/supabase`), Drizzle (`/drizzle-team/drizzle-orm`), Sentry (`/sentry-javascript/sentry-javascript`), TanStack Query (`/TanStack/query`), Shadcn (`/shadcn/ui`), Stripe (`/stripe/stripe-js`)
+    - Prefer targeted topics (e.g., "routing", "middleware", "procedures", "auth") and keep tokens reasonable
+  - **github**: For any GitHub URL/refs in tasks/PRDs, fetch details (PRs, issues, files, diffs, reviews)
+    - Use the specific action by type: get_pull_request, get_files, get_diff, get_issue, get_file_contents
+  - **taskmaster**: Manage tasks and log plans using MCP tools
+    - At session start: list tasks or use `next_task`
+    - Before coding large tasks: `expand_task` or `expand_all`
+    - Log implementation plans/findings with `update_subtask` (append, timestamped)
+    - Track progress with `set_task_status`
+  - **shadcn-ui**: When asked for UI changes
+    - Prefer existing primitives from `@superscale/ui`; otherwise generate via Shadcn (and consult docs via context7)
+
+- **When to call which MCP**
+  - If you need current API details or patterns: call context7 first
+  - If a GitHub link or ref appears: call GitHub APIs to fetch authoritative context
+  - If planning work: call taskmaster to view, expand, and update tasks; append plans to subtasks
+  - If UI work requested: consult Shadcn docs via context7 and prefer `@superscale/ui` components or run the generator as needed
+
+- **Execution style**
+  - Parallelize independent MCP calls (docs + tasks + GH lookups)
+  - Cite code/links in updates; keep high-signal notes in task logs
+  - Avoid duplicating validation logic across layers; reuse exported Zod schemas and enums
+
+```text
+Checklist before implementation
+- [ ] context7 docs fetched for impacted libs
+- [ ] taskmaster: task viewed/expanded; plan logged via update_subtask
+- [ ] github: any referenced PR/issue/file fetched
+- [ ] shadcn-ui: components/design patterns reviewed (if UI)
+```
+
