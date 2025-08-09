@@ -1,0 +1,59 @@
+# Task ID: 7
+# Title: Replace tRPC mutations with Zero mutators
+# Status: pending
+# Dependencies: 4, 6
+# Priority: high
+# Description: Replace existing tRPC mutation calls (onAdd/onEdit/onToggle/onDelete) with Zero mutator functions, implementing a short-term feature flag fallback to ensure smooth transition and rollback capability.
+# Details:
+1. Locate existing tRPC mutation usage in the Todos component:
+   - Find onAdd, onEdit, onToggle, and onDelete handlers
+   - Identify current tRPC mutation calls and their parameters
+   - Document existing error handling and loading states
+
+2. Implement Zero mutator integration:
+   - Import createTodo, updateTodo, deleteTodo from packages/zero/src/mutators
+   - Replace tRPC onAdd with createTodo mutator call
+   - Replace tRPC onEdit with updateTodo mutator call
+   - Replace tRPC onToggle with updateTodo mutator call (toggle completed status)
+   - Replace tRPC onDelete with deleteTodo mutator call
+   - Maintain existing parameter structure and response handling
+
+3. Implement feature flag fallback system:
+   - Add NEXT_PUBLIC_USE_ZERO_MUTATIONS environment variable
+   - Create conditional logic to switch between tRPC and Zero mutations
+   - Ensure both code paths maintain identical UI behavior
+   - Add error boundary handling for both mutation systems
+
+4. Update error handling and loading states:
+   - Adapt existing loading states to work with Zero mutations
+   - Ensure error messages are consistent between tRPC and Zero
+   - Maintain optimistic updates where applicable
+
+5. Clean up imports and dependencies:
+   - Remove unused tRPC mutation imports when feature flag is disabled
+   - Ensure Zero mutator imports are properly typed
+
+# Test Strategy:
+1. Test Zero mutator integration:
+   - Verify onAdd creates todos with correct data and organization scoping
+   - Test onEdit updates todo fields while maintaining version control
+   - Confirm onToggle properly flips completed status
+   - Validate onDelete marks todos as deleted (soft delete)
+
+2. Test feature flag functionality:
+   - Test with NEXT_PUBLIC_USE_ZERO_MUTATIONS=true (Zero mutations active)
+   - Test with NEXT_PUBLIC_USE_ZERO_MUTATIONS=false (tRPC fallback active)
+   - Verify identical UI behavior in both modes
+   - Test feature flag toggle during runtime
+
+3. Test error handling and edge cases:
+   - Network failures during mutation calls
+   - Permission denied scenarios
+   - Invalid data validation
+   - Concurrent modification conflicts
+
+4. Integration testing:
+   - Test full CRUD workflow with Zero mutations
+   - Verify real-time updates work correctly with Zero queries
+   - Test rollback capability by switching feature flag
+   - Validate performance compared to tRPC mutations

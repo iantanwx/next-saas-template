@@ -1,0 +1,73 @@
+# Task ID: 4
+# Title: Todo mutators: Implement packages/zero/src/mutators.ts with createTodo, updateTodo, deleteTodo
+# Status: pending
+# Dependencies: 3
+# Priority: high
+# Description: Implement CRUD operations for todos including creation, versioned updates, and deletion in the Zero package mutators module.
+# Details:
+1. Create packages/zero/src/mutators.ts:
+   - Import necessary types from schema.gen.ts and schema.ts
+   - Import zero client types and utilities
+
+2. Implement createTodo function:
+   - Accept todo data (title, description, organization_id, etc.)
+   - Validate user permissions using organization membership
+   - Generate unique ID and timestamps
+   - Insert new todo record into database
+   - Return created todo with generated fields
+   - Handle validation errors and database constraints
+
+3. Implement updateTodo function with optimistic concurrency control:
+   - Accept todo ID, update data, and version number
+   - Validate user has write permissions for the todo
+   - Check version matches current record (prevent lost updates)
+   - Update only provided fields, preserve others
+   - Increment version number atomically
+   - Return updated todo with new version
+   - Handle version conflicts with descriptive errors
+
+4. Implement deleteTodo function:
+   - Accept todo ID and current version
+   - Validate user permissions and ownership
+   - Soft delete or hard delete based on requirements
+   - Handle cascading relationships if any
+   - Return success confirmation
+
+5. Add TypeScript interfaces:
+   - CreateTodoInput, UpdateTodoInput types
+   - TodoMutationResult with success/error states
+   - Version conflict error types
+
+6. Export all mutator functions and types from the module
+
+# Test Strategy:
+1. Unit test createTodo function:
+   - Valid todo creation with all required fields
+   - Permission validation for different organization memberships
+   - Input validation and error handling
+   - Database constraint violations
+
+2. Unit test updateTodo function:
+   - Successful update with version increment
+   - Version conflict detection and error handling
+   - Partial updates preserve unchanged fields
+   - Permission validation for todo ownership
+   - Non-existent todo ID handling
+
+3. Unit test deleteTodo function:
+   - Successful deletion with proper permissions
+   - Permission denied scenarios
+   - Non-existent todo handling
+   - Verify cascading effects if applicable
+
+4. Integration tests:
+   - Test mutators work with actual Zero client instance
+   - Verify schema permissions integrate correctly
+   - Test concurrent operations and version conflicts
+   - End-to-end CRUD workflow testing
+
+5. Error handling tests:
+   - Network failures and timeouts
+   - Database connection issues
+   - Malformed input data
+   - Authentication/authorization failures

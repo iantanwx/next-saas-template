@@ -1,0 +1,181 @@
+# Task ID: 11
+# Title: Implement comprehensive Zero ZQL mutations for all schema tables
+# Status: pending
+# Dependencies: 3, 4
+# Priority: high
+# Description: Create a complete set of custom ZQL mutation functions in packages/zero/src/mutations/ directory with one module per major table, including proper organization-based permission validation, optimistic concurrency control, and comprehensive TypeScript typing.
+# Details:
+1. Create packages/zero/src/mutations/ directory structure:
+   - Create index.ts to re-export all mutation modules
+   - Create separate files: todos.ts, organizations.ts, organizationMembers.ts, tags.ts, todoTags.ts, users.ts
+
+2. Implement todos.ts mutations:
+   - createTodo: Accept title, description, organization_id, user_id; validate organization membership
+   - updateTodo: Include version checking for optimistic concurrency control
+   - deleteTodo: Implement soft delete with deleted_at timestamp
+   - toggleTodoCompletion: Toggle completed status with proper validation
+   - Each mutation should check user's organization membership before allowing operations
+
+3. Implement organizations.ts mutations:
+   - createOrganization: Create org and automatically add creator as admin member
+   - updateOrganization: Only allow admins to update org details
+   - deleteOrganization: Soft delete with cascade handling for related data
+   - Include proper role-based access control
+
+4. Implement organizationMembers.ts mutations:
+   - inviteMember: Generate invitation with unique token and expiry
+   - acceptInvitation: Validate token and create membership
+   - removeMember: Check permissions (admins can remove anyone, users can remove themselves)
+   - updateMemberRole: Only admins can change roles
+   - Handle edge cases like preventing removal of last admin
+
+5. Implement tags.ts mutations:
+   - createTag: Scoped to organization with unique name constraint
+   - updateTag: Update name/color with organization scope validation
+   - deleteTag: Cascade delete tag associations
+   - Include organization-based permissions
+
+6. Implement todoTags.ts mutations:
+   - addTagToTodo: Validate both todo and tag belong to same organization
+   - removeTagFromTodo: Check permissions through todo ownership
+   - bulkAddTags: Efficiently add multiple tags to a todo
+   - bulkRemoveTags: Efficiently remove multiple tags
+
+7. Implement users.ts mutations:
+   - updateProfile: Allow users to update their own profile data
+   - updatePreferences: Handle user preferences/settings
+   - Include self-only permission validation
+
+8. Common patterns across all mutations:
+   - Import Zero client and types from schema.gen.ts
+   - Use Zero's transaction support for multi-step operations
+   - Include comprehensive error handling with specific error codes
+   - Add TypeScript interfaces for all input/output types
+   - Implement audit logging for sensitive operations
+   - Use Zero's built-in validation capabilities
+   - Return consistent response formats with success indicators
+
+# Test Strategy:
+1. Unit test each mutation module:
+   - Test successful operations with valid inputs
+   - Test permission denials for unauthorized users
+   - Test organization scope validation
+   - Test optimistic concurrency control for updates
+   - Test error handling for constraint violations
+
+2. Integration test cross-table mutations:
+   - Test createOrganization creates admin membership
+   - Test deleteOrganization cascades properly
+   - Test tag associations with todos
+   - Test invitation flow end-to-end
+
+3. Test TypeScript typing:
+   - Verify all mutations have proper input/output types
+   - Test type inference works correctly
+   - Validate error types are properly typed
+
+4. Test Zero-specific features:
+   - Verify transactions roll back on errors
+   - Test optimistic UI updates work correctly
+   - Validate mutations integrate with Zero's caching
+
+5. Security testing:
+   - Test SQL injection attempts are blocked
+   - Verify permissions can't be bypassed
+   - Test rate limiting if implemented
+   - Validate input sanitization
+
+6. Performance testing:
+   - Test bulk operations with large datasets
+   - Verify N+1 queries are avoided
+   - Test mutation response times
+
+7. Edge case testing:
+   - Test concurrent updates to same record
+   - Test operations on deleted records
+   - Test maximum field lengths
+   - Test null/undefined handling
+
+# Subtasks:
+## 1. Todo mutations: createTodo, updateTodo, deleteTodo, toggleTodo [pending]
+### Dependencies: None
+### Description: Implement ZQL mutations for todo CRUD operations with organization-based permissions
+### Details:
+Create packages/zero/src/mutations/todos.ts with:
+- createTodo: Create new todos with organization membership validation
+- updateTodo: Update todo fields with version control and ownership checks  
+- deleteTodo: Soft/hard delete with permission validation
+- toggleTodo: Toggle completion status with optimistic updates
+- Proper TypeScript types and error handling
+
+## 2. Organization mutations: createOrganization, updateOrganization, deleteOrganization [pending]
+### Dependencies: None
+### Description: Implement ZQL mutations for organization management with proper ownership and admin role validation
+### Details:
+Create packages/zero/src/mutations/organizations.ts with:
+- createOrganization: Create new organization and make creator the owner
+- updateOrganization: Update org details (name, settings) with admin/owner permissions
+- deleteOrganization: Soft delete organization with proper cascade handling
+- Handle organization member cleanup and data migration
+- Proper TypeScript types and role-based access control
+
+## 3. OrganizationMember mutations: inviteMember, acceptInvitation, removeMember, updateMemberRole [pending]
+### Dependencies: None
+### Description: Implement ZQL mutations for organization membership management with role-based permissions
+### Details:
+Create packages/zero/src/mutations/organizationMembers.ts with:
+- inviteMember: Send invitations with admin/owner permissions, create pending membership
+- acceptInvitation: Accept pending invitations and activate membership
+- removeMember: Remove members with proper permission checks (admin/owner, self-removal)
+- updateMemberRole: Change member roles (owner, admin, member) with permission validation
+- Handle invitation flow integration with existing email system
+- Proper TypeScript types and comprehensive role validation
+
+## 4. Tag mutations: createTag, updateTag, deleteTag [pending]
+### Dependencies: None
+### Description: Implement ZQL mutations for tag management with organization-scoped permissions
+### Details:
+Create packages/zero/src/mutations/tags.ts with:
+- createTag: Create new tags within organization with membership validation
+- updateTag: Update tag properties (name, color, description) with permission checks
+- deleteTag: Delete tags and handle associated todoTags cleanup
+- Ensure tags are organization-scoped and validate member permissions
+- Handle tag uniqueness constraints within organizations
+- Proper TypeScript types and validation
+
+## 5. TodoTag mutations: addTagToTodo, removeTagFromTodo [pending]
+### Dependencies: None
+### Description: Implement ZQL mutations for todo-tag associations with secure organization-based permissions
+### Details:
+Create packages/zero/src/mutations/todoTags.ts with:
+- addTagToTodo: Associate tags with todos, validating user access to both entities
+- removeTagFromTodo: Remove tag associations with proper permission checks
+- Validate both todo and tag belong to organizations user has access to
+- Handle duplicate associations gracefully
+- Integrate with the secure permissions we implemented in schema.ts
+- Proper TypeScript types and comprehensive validation
+
+## 6. User mutations: updateUserProfile [pending]
+### Dependencies: None
+### Description: Implement ZQL mutations for user profile management with self-access validation
+### Details:
+Create packages/zero/src/mutations/users.ts with:
+- updateUserProfile: Update user profile data (name, email, avatar, preferences)
+- Validate users can only update their own profile data
+- Handle email change verification if needed
+- Integrate with Supabase auth system for email updates
+- Proper TypeScript types and validation
+- Handle avatar upload/management if applicable
+
+## 7. Mutations index and integration [pending]
+### Dependencies: None
+### Description: Create main mutations export and integration with Zero client
+### Details:
+Create packages/zero/src/mutations/index.ts with:
+- Export all mutation functions from individual modules
+- Create unified mutation client/registry for easy consumption
+- Add comprehensive TypeScript types for all mutations
+- Document usage patterns and error handling
+- Update packages/zero/src/index.ts to export mutations
+- Add integration examples and JSDoc documentation
+

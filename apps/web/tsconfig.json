@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@superscale/ui/*": ["../../packages/ui/src/*"]
+      "@superscale/ui/*": ["../../packages/ui/src/*"],
     },
     "plugins": [
       {

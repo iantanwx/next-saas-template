@@ -47,7 +47,8 @@ type TodoRow = {
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   due_date: string | null;
-  tags: string[] | null;
+  // TODO: Re-add tags support with new schema after Zero migration
+  // tags: string[] | null;
   created_at: string | null;
   updated_at: string | null;
   version: string;
@@ -61,7 +62,7 @@ function TodoListContainer({
   organizationId: string;
 }) {
   // Live query to keep UI synced
-  const query = `SELECT id, title, description, completed, priority, status, due_date, tags, created_at, updated_at, version
+  const query = `SELECT id, title, description, completed, priority, status, due_date, created_at, updated_at, version
           FROM todos WHERE user_id = '${userId}' AND organization_id = '${organizationId}'
           AND deleted_at IS NULL
           ORDER BY updated_at DESC`;
@@ -87,7 +88,7 @@ function TodoListContainer({
         completed: Boolean(r.completed),
         priority: r.priority,
         dueDate: r.due_date,
-        tags: r.tags ?? [],
+        tags: [], // TODO: Fetch tags separately after Zero migration
         createdAt: r.created_at ?? new Date().toISOString(),
         updatedAt: r.updated_at ?? new Date().toISOString(),
       })),
@@ -103,7 +104,8 @@ function TodoListContainer({
         description: values.notes.trim() || undefined,
         priority: values.priority,
         dueDate: values.dueDate ?? undefined,
-        tags: values.tags,
+        // TODO: Re-implement tags with new schema after Zero migration
+        // tags: values.tags,
         organizationId,
       });
     },
@@ -120,7 +122,8 @@ function TodoListContainer({
         description: values.notes.trim() || undefined,
         priority: values.priority,
         dueDate: values.dueDate ?? null,
-        tags: values.tags,
+        // TODO: Re-implement tags with new schema after Zero migration  
+        // tags: values.tags,
         completed: task.completed,
         status: task.completed ? 'completed' : 'pending',
         version: row.version,

@@ -228,6 +228,29 @@ pnpm supabase:db:push
 pnpm dev
 ```
 
+### Zero (Rocicorp) local development
+
+Zero local cache can be run alongside the app for the Zero-powered Todos feature.
+
+1. Start the Zero cache (in a separate terminal):
+   ```bash
+   pnpm run dev:zero
+   ```
+   This will print the local cache URL (default often `http://localhost:4243`).
+
+2. Configure the web app to point to Zero:
+   - Add to `apps/web/.env.local`:
+     ```bash
+     NEXT_PUBLIC_ZERO_URL=http://localhost:4243
+     # Optional feature flag to toggle Zero in the Todos page while migrating
+     # NEXT_PUBLIC_USE_ZERO=true
+     ```
+
+Auth token strategy (Zero path): the app now passes the Supabase session `access_token` to Zero via a client wrapper. When `NEXT_PUBLIC_USE_ZERO` is enabled and `NEXT_PUBLIC_ZERO_URL` is set, the organization layout wraps content with a Zero provider using the current Supabase session's `access_token` for `auth`. In local development, Supabase uses a symmetric JWT secret, so the `access_token` is a symmetrically signed JWT. Ensure your Zero cache/server validates this token appropriately in non-local environments.
+
+References:
+- ztunes (Zero example app): [github.com/rocicorp/ztunes](https://github.com/rocicorp/ztunes)
+
 ## Production Deployment
 
 ### Vercel (Recommended)

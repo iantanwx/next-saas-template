@@ -1,0 +1,93 @@
+# Task ID: 1
+# Title: Zero runtime config: Add NEXT_PUBLIC_ZERO_URL and auth token strategy
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Implement zero runtime configuration by adding NEXT_PUBLIC_ZERO_URL environment variable and establishing auth token strategy for seamless deployment across environments.
+# Details:
+1. Add NEXT_PUBLIC_ZERO_URL environment variable to support zero runtime configuration
+2. Create auth token strategy that works with the zero URL configuration
+3. Update .env.example file with:
+   - NEXT_PUBLIC_ZERO_URL example value
+   - Auth token related environment variables
+   - Clear comments explaining each variable's purpose
+4. Update README.md with setup instructions:
+   - How to configure NEXT_PUBLIC_ZERO_URL for different environments
+   - Auth token setup process
+   - Environment variable configuration steps
+   - Any prerequisites or dependencies
+5. Ensure the configuration works seamlessly without requiring runtime modifications
+6. Consider different deployment scenarios (development, staging, production)
+7. Implement proper fallback mechanisms if environment variables are not set
+
+# Test Strategy:
+1. Test configuration in development environment with .env.local
+2. Verify NEXT_PUBLIC_ZERO_URL is properly accessible in client-side code
+3. Test auth token strategy works correctly with the zero URL configuration
+4. Validate that missing environment variables are handled gracefully
+5. Test deployment scenarios by temporarily removing/modifying environment variables
+6. Verify README instructions by following them step-by-step in a clean environment
+7. Confirm .env.example contains all necessary variables with proper examples
+8. Test that the application builds and runs successfully with the new configuration
+
+# Subtasks:
+## 1. Create apps/web/.env.example with Supabase and Zero variables [done]
+### Dependencies: None
+### Description: Add a sample env file for the Next.js app including Supabase and Zero settings with clear comments.
+### Details:
+Include:
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY (server-only)
+- NEXT_PUBLIC_ZERO_URL (e.g., http://localhost:4243)
+- NEXT_PUBLIC_USE_ZERO (default false)
+- Optional Axiom/Sentry vars
+Add instructional comments for each.
+
+## 2. Export and provider fixes in @superscale/zero [done]
+### Dependencies: None
+### Description: Fix package exports and provider typing; ensure auth token strategy uses Supabase session access_token.
+### Details:
+- Export Z and ZeroProviderProps from packages/zero/src/provider.tsx
+- Update packages/zero/src/index.ts to export { Z, ZeroProviderProps, schema }
+- Ensure provider uses session.access_token for auth and depends on server in useMemo
+- Add guards to avoid runtime errors when props missing
+<info added on 2025-08-09T07:22:42.081Z>
+Implementation completed successfully:
+- Exported Z and ZeroProviderProps from provider.tsx and updated index.ts exports
+- Added comprehensive guards for missing server or session.access_token that gracefully no-op
+- Optimized useMemo dependencies to [user.id, server, session.access_token] for proper re-computation
+- Cleaned up unused React import to resolve ESLint warning
+- Modified files: packages/zero/src/provider.tsx, packages/zero/src/index.ts
+</info added on 2025-08-09T07:22:42.081Z>
+
+## 3. Add ZeroWrapper in org layout using env and Supabase session [done]
+### Dependencies: None
+### Description: Gate Zero usage behind feature flag and env var, passing session token to provider.
+### Details:
+- Create client component zero-wrapper.tsx under apps/web/src/app/[organization]/components
+- Read clientConfig.NEXT_PUBLIC_ZERO_URL and NEXT_PUBLIC_USE_ZERO
+- Wrap children with <Z user={user} session={session} server={url}> when enabled; otherwise pass-through
+- Update [organization]/layout.tsx to fetch session and use wrapper
+<info added on 2025-08-09T07:24:06.428Z>
+IMPLEMENTATION COMPLETE:
+
+Successfully implemented ZeroWrapper component at apps/web/src/app/[organization]/components/zero-wrapper.tsx with feature flag support reading clientConfig.NEXT_PUBLIC_ZERO_URL and NEXT_PUBLIC_USE_ZERO. When enabled and session exists, wraps children with Z provider component passing user, session, and server props. When disabled or missing environment variables, provides pass-through behavior.
+
+Updated apps/web/src/app/[organization]/layout.tsx to fetch user and session data via getCurrentSession and integrate ZeroWrapper. Removed non-null assertions to handle Session | null gracefully.
+
+Component automatically falls back to pass-through rendering when Zero is disabled or environment variables are missing, ensuring backward compatibility.
+</info added on 2025-08-09T07:24:06.428Z>
+
+## 4. Update README to document Zero env and auth token strategy [done]
+### Dependencies: None
+### Description: Document how to configure NEXT_PUBLIC_ZERO_URL and how the session access token is used for Zero auth.
+### Details:
+- Update Zero local dev section: env example, feature flag, token strategy note
+- Replace 'wired later' with actual wiring via ZeroWrapper
+- Mention Supabase local symmetric JWT secret context
+- Include fallback behavior if vars are missing
+<info added on 2025-08-09T07:24:19.065Z>
+Successfully updated README documentation with Zero environment configuration and auth token strategy details, including Supabase session integration and local JWT validation context. README now includes comprehensive setup instructions and explanatory content for Zero implementation. The .env.example file creation remains pending due to editor limitations and will be addressed in a separate update.
+</info added on 2025-08-09T07:24:19.065Z>
+

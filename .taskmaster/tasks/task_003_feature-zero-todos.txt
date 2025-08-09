@@ -1,0 +1,154 @@
+# Task ID: 3
+# Title: Zero schema and permissions: Generate packages/zero/src/schema.gen.ts from Drizzle; add packages/zero/src/schema.ts with read permissions for todos by organization_id and current user membership
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Implement permission-based data access controls and mutators for todos based on organization membership and user authentication, building on existing schema generation.
+# Details:
+1. Create packages/zero/src/schema.ts:
+   - Import generated types from existing schema.gen.ts
+   - Implement read permissions system for todos table
+   - Add organization_id-based access control logic
+   - Implement current user membership validation
+   - Create permission functions that check:
+     * User belongs to the organization that owns the todo
+     * User has appropriate role/permissions within that organization
+     * Handle edge cases for public/private todos if applicable
+
+2. Implement mutators in packages/zero/src/mutators.ts:
+   - Create createTodo function with proper authorization checks
+   - Implement updateTodo with version control and permissions
+   - Add deleteTodo with organization membership validation
+   - Ensure all mutators respect organization-based access controls
+   - Handle concurrent updates and data consistency
+
+3. Permission implementation details:
+   - Define getUserOrganizations() helper function
+   - Create canReadTodo(userId, todoId) permission check
+   - Implement organizationMembershipCheck() utility
+   - Add proper error handling for unauthorized access attempts
+   - Ensure permissions are enforced at the data layer level
+
+4. Integration with existing infrastructure:
+   - Wire up with existing Supabase auth system
+   - Leverage established organization structure
+   - Ensure schema.ts works seamlessly with the Zero client from Task 2
+   - Make permissions configurable through the zero URL and auth strategy from Task 1
+   - Add TypeScript interfaces for permission contexts and user roles
+
+# Test Strategy:
+1. Test permission functions with various user/organization combinations:
+   - User with valid organization membership can read todos
+   - User without membership cannot access organization todos
+   - Invalid user IDs are handled gracefully
+2. Test mutator functions with proper authorization:
+   - createTodo respects organization membership
+   - updateTodo validates user permissions and handles concurrent updates
+   - deleteTodo prevents unauthorized deletions
+3. Integration test with Supabase auth to verify authentication flow
+4. Test permission enforcement at different access levels
+5. Test error handling for malformed organization IDs and user contexts
+6. Performance test permission checks with large datasets to ensure scalability
+7. Test integration with Zero client configuration and auth token strategy from Task 1
+8. Verify CRUD operations maintain data consistency and proper audit trails
+
+# Subtasks:
+## 1. Generate schema.gen.ts from existing Drizzle schema [done]
+### Dependencies: None
+### Description: Create the schema.gen.ts file by generating TypeScript types from the existing Drizzle schema definitions, focusing on the todos table and related entities
+### Details:
+1. Locate the existing Drizzle schema definitions in the codebase (likely in packages/db/src/schema.ts or similar)
+2. Set up the Zero schema generation process to create packages/zero/src/schema.gen.ts
+3. Generate TypeScript types for todos table including all fields (id, title, description, organization_id, created_at, updated_at, etc.)
+4. Include related entity types needed for permissions (users, organizations, organization_members)
+5. Ensure generated types are compatible with Zero's type system and include all necessary metadata
+
+## 2. Create schema.ts with Zero permission definitions [done]
+### Dependencies: 3.1
+### Description: Implement the schema.ts file that imports generated types and defines the Zero schema with permission rules for todos based on organization membership
+### Details:
+1. Create packages/zero/src/schema.ts file
+2. Import generated types from schema.gen.ts
+3. Define the Zero schema using Zero's schema definition API
+4. Configure the todos table with proper field definitions
+5. Set up relationships between todos, organizations, and users
+6. Define basic schema structure that will be extended with permissions in the next subtask
+<info added on 2025-08-09T07:57:37.688Z>
+Completed implementation using SQL-based permission expressions following the ztunes pattern from https://github.com/rocicorp/ztunes/blob/676a8fbe208369c7c2ed0620b763ca82933f414e/zero/schema.ts. Implemented comprehensive organization-based permissions for all tables (todos, organizationMembers, organizations, tags, users) using EXISTS clauses with organizationMembers table for membership validation. Applied authUserID checks and role-based permissions for admin, owner, and member roles. Successfully exported schema from index.ts with no lint errors.
+</info added on 2025-08-09T07:57:37.688Z>
+<info added on 2025-08-09T08:03:25.912Z>
+Final Zero schema implementation completed. The schema.ts file now uses the official Zero permissions API with:
+
+- Proper `definePermissions` function with `AuthData` type matching Supabase JWT structure (`sub` field)
+- Organization-based permission functions using `exists` and `whereExists` APIs correctly
+- Comprehensive permissions for all tables (todos, organizationMembers, organizations, tags, users)
+- Proper relationship-based access control for todos via organization membership
+- `ANYONE_CAN` permissions for todoTags junction table
+- Full TypeScript compliance with all lint errors resolved
+- Exported types ready for Zero client integration: Todo, User, Organization, OrganizationMember, Tag, AuthData, Schema
+
+The implementation follows Zero's official documentation patterns and is ready for production use.
+</info added on 2025-08-09T08:03:25.912Z>
+<info added on 2025-08-09T08:11:28.075Z>
+Security vulnerability fix applied for todoTags junction table permissions. Previously used insecure ANYONE_CAN permissions allowing unauthorized access to tag associations across organizations. Implemented allowIfTodoTagOrganizationMember function with proper organization membership validation through todo->organization->members relationship chain. Updated all operations (select, insert, delete) to enforce organization-based access control, ensuring multi-tenant data isolation and preventing cross-organization tag manipulation. Verified permission function properly filters by deletedAt and maintains consistent security model across all schema tables.
+</info added on 2025-08-09T08:11:28.075Z>
+
+## 3. Implement read permissions for todos based on organization membership [done]
+### Dependencies: 3.2
+### Description: Add permission functions to schema.ts that enforce organization-based access control for reading todos, checking user membership and roles
+### Details:
+1. Implement canReadTodo permission function that checks:
+   - User is authenticated
+   - Todo belongs to an organization
+   - User is a member of that organization
+2. Create getUserOrganizations helper to fetch user's organization memberships
+3. Add organizationMembershipCheck utility function
+4. Define permission rules in Zero schema for the todos table
+5. Handle edge cases like system admins or public todos if applicable
+6. Integrate with existing Supabase auth to get current user context
+<info added on 2025-08-09T08:10:34.762Z>
+Fixed critical security vulnerability in todoTags junction table permissions.
+
+**Security Issue Identified:**
+- Previous implementation used `ANYONE_CAN` for todoTags, allowing anyone to read, create, or delete todo-tag relationships across all organizations
+- This was a major data leak and privilege escalation vulnerability
+
+**Security Fix Implemented:**
+- Created `allowIfTodoTagOrganizationMember` permission function
+- Now verifies user is a member of the organization that owns the todo before allowing any todoTag operations
+- Applied to all todoTag operations: select, insert, delete
+- Uses proper relationship traversal: todoTags -> todo -> organization -> members
+
+**Current Security Model:**
+- Users can only see todo-tag relationships for todos in their organizations
+- Users can only create todo-tag relationships for todos they can access
+- Users can only delete todo-tag relationships for todos they can access
+- All operations properly enforce organization-based access control
+
+This fix ensures data isolation between organizations and prevents unauthorized access to todo-tag relationships.
+</info added on 2025-08-09T08:10:34.762Z>
+
+## 4. Create organization membership validation utilities [done]
+### Dependencies: 3.3
+### Description: Implement helper functions for validating user organization membership and roles, integrating with the existing Supabase auth system
+### Details:
+1. Create packages/zero/src/permissions/organizationHelpers.ts
+2. Implement getUserOrganizationRole(userId, organizationId) function
+3. Create isOrganizationMember(userId, organizationId) checker
+4. Add getUserPermissionsContext() to gather user's full permission context
+5. Implement caching strategy for organization membership lookups
+6. Handle error cases and provide meaningful error messages
+7. Ensure utilities work with existing organization_members table structure
+
+## 5. Export schema and configure Zero client integration [done]
+### Dependencies: 3.3, 3.4
+### Description: Export the completed schema with permissions and ensure it integrates properly with the Zero client configuration from Task 2
+### Details:
+1. Export the schema from packages/zero/src/schema.ts as default export
+2. Create index.ts in packages/zero/src to re-export schema and related utilities
+3. Ensure schema works with Zero client initialization using NEXT_PUBLIC_ZERO_URL
+4. Add TypeScript types for permission contexts and results
+5. Document the expected auth token format for Zero client
+6. Create example usage showing how to initialize Zero with the schema and permissions
+7. Verify schema is ready for use by the mutators in Task 4
+

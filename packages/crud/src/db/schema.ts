@@ -230,7 +230,6 @@ export const todos = pgTable(
     dueDate: timestamp('due_date'),
     priority: todoPriority('priority').notNull().default('medium'),
     status: todoStatus('status').notNull().default('pending'),
-    tags: text('tags').array().notNull().default(sql`ARRAY[]::text[]`),
     // Remove FK constraints for local-first architecture
     userId: uuid('user_id').notNull(),
     organizationId: text('organization_id').notNull(),
@@ -250,7 +249,39 @@ export const todos = pgTable(
   ]
 );
 
-export const todosRelations = relations(todos, ({ one }) => ({
+export const tags = pgTable(
+  'tags',
+  {
+    id: text('id').primaryKey().$defaultFn(cuid),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    deletedAt: timestamp('deleted_at'),
+    name: text('name').notNull(),
+    color: text('color'), // Optional hex color for UI
+    organizationId: text('organization_id').notNull(),
+  },
+  (table) => [
+    index('tags_organization_idx').on(table.organizationId),
+    unique('tags_org_name_unique').on(table.organizationId, table.name),
+  ]
+);
+
+export const todoTags = pgTable(
+  'todo_tags',
+  {
+    id: text('id').primaryKey().$defaultFn(cuid),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    todoId: text('todo_id').notNull(),
+    tagId: text('tag_id').notNull(),
+  },
+  (table) => [
+    index('todo_tags_todo_idx').on(table.todoId),
+    index('todo_tags_tag_idx').on(table.tagId),
+    unique('todo_tags_unique').on(table.todoId, table.tagId),
+  ]
+);
+
+export const todosRelations = relations(todos, ({ one, many }) => ({
   user: one(users, {
     fields: [todos.userId],
     references: [users.id],
@@ -262,5 +293,25 @@ export const todosRelations = relations(todos, ({ one }) => ({
   lastEditedByUser: one(users, {
     fields: [todos.lastEditedBy],
     references: [users.id],
+  }),
+  todoTags: many(todoTags),
+}));
+
+export const tagsRelations = relations(tags, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [tags.organizationId],
+    references: [organizations.id],
+  }),
+  todoTags: many(todoTags),
+}));
+
+export const todoTagsRelations = relations(todoTags, ({ one }) => ({
+  todo: one(todos, {
+    fields: [todoTags.todoId],
+    references: [todos.id],
+  }),
+  tag: one(tags, {
+    fields: [todoTags.tagId],
+    references: [tags.id],
   }),
 }));

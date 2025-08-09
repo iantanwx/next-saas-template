@@ -1,0 +1,47 @@
+# Task ID: 10
+# Title: Tests, lint, docs: Update integration tests for Zero path; run lint; docs for envs and rollout
+# Status: pending
+# Dependencies: 6, 7, 8, 9
+# Priority: medium
+# Description: Comprehensive testing, linting, and documentation updates for the Zero implementation path, including integration test updates, code quality checks, and environment/rollout documentation.
+# Details:
+1. Update integration tests for Zero implementation:
+   - Update existing integration tests to work with Zero query system instead of Electric
+   - Create new integration tests for Zero mutators (createTodo, updateTodo, deleteTodo)
+   - Test feature flag switching between Electric and Zero implementations
+   - Update test data setup to work with Zero schema and permissions
+   - Test preloading functionality and TTL configurations
+   - Verify organization-scoped filtering works correctly in tests
+
+2. Run comprehensive linting:
+   - Execute ESLint across all modified files in packages/zero/
+   - Run TypeScript compiler checks on new Zero implementation
+   - Fix any linting errors in todo component updates
+   - Ensure code formatting consistency across Electric to Zero migration
+   - Run Prettier on all modified files
+
+3. Create environment and rollout documentation:
+   - Document NEXT_PUBLIC_ZERO_URL configuration for different environments (dev/staging/prod)
+   - Create rollout guide explaining feature flag usage and Electric to Zero migration
+   - Document ENABLE_ZERO_TODOS feature flag behavior and testing procedures
+   - Add troubleshooting section for common Zero implementation issues
+   - Update deployment documentation with Zero-specific environment requirements
+   - Create developer onboarding guide for Zero vs Electric differences
+
+# Test Strategy:
+1. Integration test verification:
+   - Run updated integration test suite and verify 100% pass rate with Zero implementation
+   - Test feature flag integration tests with both ENABLE_ZERO_TODOS=true and false
+   - Verify organization-scoped data isolation in integration tests
+   - Test preloading integration tests show performance improvements
+
+2. Linting verification:
+   - Ensure zero linting errors across all modified files
+   - Verify TypeScript compilation passes without warnings
+   - Confirm code formatting meets project standards
+
+3. Documentation validation:
+   - Test environment setup instructions with fresh development environment
+   - Validate feature flag rollout procedures work as documented
+   - Verify troubleshooting documentation resolves common issues
+   - Confirm all environment variables are properly documented with examples

@@ -1,10 +1,21 @@
 import { and, desc, eq, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { db } from './db/connection';
-import { todos, todoPriority, todoStatus } from './db/schema';
+import { todos, todoPriority, todoStatus, tags, todoTags } from './db/schema';
 
 export type Todo = InferSelectModel<typeof todos>;
 export type InsertTodo = InferInsertModel<typeof todos>;
 export type UpdateTodoData = Partial<Omit<InsertTodo, 'id' | 'createdAt'>>;
+
+export type Tag = InferSelectModel<typeof tags>;
+export type InsertTag = InferInsertModel<typeof tags>;
+export type TodoTag = InferSelectModel<typeof todoTags>;
+
+// Extended todo type with tags included
+export type TodoWithTags = Todo & {
+  todoTags?: Array<{
+    tag: Tag;
+  }>;
+};
 
 export async function create(data: InsertTodo): Promise<Todo> {
   const [todo] = await db
@@ -24,20 +35,25 @@ export async function create(data: InsertTodo): Promise<Todo> {
   return todo;
 }
 
-export async function findById(id: string): Promise<Todo | null> {
+export async function findById(id: string): Promise<TodoWithTags | null> {
   const todo = await db.query.todos.findFirst({
     where: and(eq(todos.id, id), sql`${todos.deletedAt} IS NULL`),
     with: {
       user: true,
       organization: true,
       lastEditedByUser: true,
+      todoTags: {
+        with: {
+          tag: true,
+        },
+      },
     },
   });
   
   return todo || null;
 }
 
-export async function findByUser(userId: string, organizationId: string): Promise<Todo[]> {
+export async function findByUser(userId: string, organizationId: string): Promise<TodoWithTags[]> {
   return await db.query.todos.findMany({
     where: and(
       eq(todos.userId, userId),
@@ -49,11 +65,16 @@ export async function findByUser(userId: string, organizationId: string): Promis
       user: true,
       organization: true,
       lastEditedByUser: true,
+      todoTags: {
+        with: {
+          tag: true,
+        },
+      },
     },
   });
 }
 
-export async function findByOrganization(organizationId: string): Promise<Todo[]> {
+export async function findByOrganization(organizationId: string): Promise<TodoWithTags[]> {
   return await db.query.todos.findMany({
     where: and(
       eq(todos.organizationId, organizationId),
@@ -64,6 +85,11 @@ export async function findByOrganization(organizationId: string): Promise<Todo[]
       user: true,
       organization: true,
       lastEditedByUser: true,
+      todoTags: {
+        with: {
+          tag: true,
+        },
+      },
     },
   });
 }
@@ -71,7 +97,7 @@ export async function findByOrganization(organizationId: string): Promise<Todo[]
 export async function findByStatus(
   organizationId: string,
   status: (typeof todoStatus.enumValues)[number]
-): Promise<Todo[]> {
+): Promise<TodoWithTags[]> {
   return await db.query.todos.findMany({
     where: and(
       eq(todos.organizationId, organizationId),
@@ -83,6 +109,11 @@ export async function findByStatus(
       user: true,
       organization: true,
       lastEditedByUser: true,
+      todoTags: {
+        with: {
+          tag: true,
+        },
+      },
     },
   });
 }
@@ -163,42 +194,111 @@ export async function updatePriority(
   return update(id, { priority }, version, lastEditedBy);
 }
 
-export async function addTag(
-  id: string,
-  tag: string,
-  version: string,
-  lastEditedBy: string
-): Promise<Todo> {
-  // First get the current todo to access its tags
-  const currentTodo = await findById(id);
-  if (!currentTodo) {
-    throw new Error('Todo not found');
+// Tag management functions
+export async function findOrCreateTag(
+  name: string,
+  organizationId: string,
+  color?: string
+): Promise<Tag> {
+  // Try to find existing tag
+  const existingTag = await db.query.tags.findFirst({
+    where: and(
+      eq(tags.name, name),
+      eq(tags.organizationId, organizationId),
+      sql`${tags.deletedAt} IS NULL`
+    ),
+  });
+
+  if (existingTag) {
+    return existingTag;
   }
 
-  const currentTags = currentTodo.tags || [];
-  if (currentTags.includes(tag)) {
-    return currentTodo; // Tag already exists
+  // Create new tag
+  const [newTag] = await db
+    .insert(tags)
+    .values({
+      name,
+      organizationId,
+      color,
+      updatedAt: new Date(),
+    })
+    .returning();
+
+  if (!newTag) {
+    throw new Error('Failed to create tag');
   }
 
-  const newTags = [...currentTags, tag];
-  return update(id, { tags: newTags }, version, lastEditedBy);
+  return newTag;
 }
 
-export async function removeTag(
-  id: string,
-  tag: string,
-  version: string,
-  lastEditedBy: string
-): Promise<Todo> {
-  // First get the current todo to access its tags
-  const currentTodo = await findById(id);
-  if (!currentTodo) {
-    throw new Error('Todo not found');
+export async function addTagToTodo(
+  todoId: string,
+  tagName: string,
+  organizationId: string,
+  tagColor?: string
+): Promise<TodoWithTags> {
+  // Find or create the tag
+  const tag = await findOrCreateTag(tagName, organizationId, tagColor);
+
+  // Check if the todo-tag relationship already exists
+  const existingTodoTag = await db.query.todoTags.findFirst({
+    where: and(
+      eq(todoTags.todoId, todoId),
+      eq(todoTags.tagId, tag.id)
+    ),
+  });
+
+  if (!existingTodoTag) {
+    // Create the todo-tag relationship
+    await db
+      .insert(todoTags)
+      .values({
+        todoId,
+        tagId: tag.id,
+        createdAt: new Date(),
+      });
   }
 
-  const currentTags = currentTodo.tags || [];
-  const newTags = currentTags.filter(t => t !== tag);
-  return update(id, { tags: newTags }, version, lastEditedBy);
+  // Return the updated todo with tags
+  const updatedTodo = await findById(todoId);
+  if (!updatedTodo) {
+    throw new Error('Todo not found after adding tag');
+  }
+
+  return updatedTodo;
+}
+
+export async function removeTagFromTodo(
+  todoId: string,
+  tagId: string
+): Promise<TodoWithTags> {
+  // Remove the todo-tag relationship
+  await db
+    .delete(todoTags)
+    .where(
+      and(
+        eq(todoTags.todoId, todoId),
+        eq(todoTags.tagId, tagId)
+      )
+    );
+
+  // Return the updated todo with tags
+  const updatedTodo = await findById(todoId);
+  if (!updatedTodo) {
+    throw new Error('Todo not found after removing tag');
+  }
+
+  return updatedTodo;
+}
+
+export async function getTagsByOrganization(organizationId: string): Promise<Tag[]> {
+  return await db.query.tags.findMany({
+    where: and(
+      eq(tags.organizationId, organizationId),
+      sql`${tags.deletedAt} IS NULL`
+    ),
+    orderBy: [desc(tags.createdAt)],
+  });
 }
 
 export async function softDelete(

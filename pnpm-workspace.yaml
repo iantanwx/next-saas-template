@@ -1,45 +1,28 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - apps/*
+  - packages/*
 
 catalog:
-  # Core React ecosystem (used in 5+ packages)
-  react: 19.1.1
-  react-dom: 19.1.1
+  '@supabase/supabase-js': 2.54.0
+  '@tanstack/react-query': ^5.84.0
+  '@types/node': ^22.14.1
   '@types/react': ^19.0.2
   '@types/react-dom': ^19.0.2
-
-  # Core build tools (used in 3+ packages)
-  typescript: 5.9.2
-  '@types/node': ^22.14.1
-  next: 15.4.5
-
-  # Shared utilities (used in 3+ packages)
-  clsx: ^2.1.1
-  tailwind-merge: ^3.3.1
-  zod: ^3.24.1
-  'class-variance-authority': ^0.7.1
-  'date-fns': ^2.30.0
-  'drizzle-orm': ^0.38.3
-  'drizzle-kit': ^0.31.4
-
-  # Data fetching (used in web + trpc)
-  '@tanstack/react-query': ^5.84.0
-  '@supabase/supabase-js': ^2.53.0
-
-  # Form handling (used in web + ui)
-  react-hook-form: ^7.62.0
-
-  # CSS pipeline (standardize across all packages)
-  tailwindcss: 4.0.0
-  postcss: 8.4.49
   autoprefixer: 10.4.14
-
-  # Code quality (workspace-wide standards)
-  prettier: ^3.4.2
-  eslint: ^8.56.0
-
-  # Testing (used in packages that need testing)
-  vitest: ^2.1.8
+  class-variance-authority: ^0.7.1
+  clsx: ^2.1.1
+  date-fns: ^2.30.0
   dotenv: ^16.4.7
+  drizzle-kit: ^0.31.4
+  drizzle-orm: ^0.38.3
+  next: 15.4.5
+  postcss: 8.4.49
+  react: 19.1.1
+  react-dom: 19.1.1
+  react-hook-form: ^7.62.0
+  tailwind-merge: ^3.3.1
+  tailwindcss: 4.0.0
   tsx: ^4.19.2
+  typescript: 5.9.2
+  vitest: ^2.1.8
+  zod: ^3.24.1

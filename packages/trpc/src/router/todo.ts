@@ -1,4 +1,4 @@
-import { todos, todoPriority, todoStatus } from '@superscale/crud';
+import { todos, todoPriority, todoStatus, addTagToTodo, removeTagFromTodo, getTagsByOrganization } from '@superscale/crud';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { memberProcedure, protectedProcedure, router } from '../trpc';
@@ -10,7 +10,6 @@ export const createTodoSchema = z.object({
   dueDate: z.date().optional(),
   priority: z.enum(todoPriority.enumValues).default('medium'),
   status: z.enum(todoStatus.enumValues).default('pending'),
-  tags: z.array(z.string()).default([]),
   organizationId: z.string().min(1, 'Organization ID is required'),
 });
 
@@ -21,9 +20,21 @@ export const updateTodoSchema = z.object({
   dueDate: z.date().nullable().optional(),
   priority: z.enum(todoPriority.enumValues).optional(),
   status: z.enum(todoStatus.enumValues).optional(),
-  tags: z.array(z.string()).optional(),
   completed: z.boolean().optional(),
   version: z.string().min(1, 'Version is required'),
+});
+
+// New schemas for tag management
+export const addTagToTodoSchema = z.object({
+  todoId: z.string().min(1, 'Todo ID is required'),
+  tagName: z.string().min(1, 'Tag name is required'),
+  organizationId: z.string().min(1, 'Organization ID is required'),
+  tagColor: z.string().optional(),
+});
+
+export const removeTagFromTodoSchema = z.object({
+  todoId: z.string().min(1, 'Todo ID is required'),
+  tagId: z.string().min(1, 'Tag ID is required'),
 });
 
 export const todoIdSchema = z.object({
@@ -47,7 +58,6 @@ const filteredTodosSchema = z.object({
   status: z.enum(todoStatus.enumValues).optional(),
   priority: z.enum(todoPriority.enumValues).optional(),
   search: z.string().optional(),
-  tags: z.array(z.string()).optional(),
   sortBy: z.enum(['createdAt', 'updatedAt', 'dueDate', 'title', 'priority']).default('updatedAt'),
   sortDirection: z.enum(['asc', 'desc']).default('desc'),
   limit: z.number().min(1).max(100).default(50),
@@ -81,10 +91,9 @@ const updatePrioritySchema = z.object({
   version: z.string().min(1, 'Version is required'),
 });
 
-const tagManagementSchema = z.object({
-  id: z.string().min(1, 'Todo ID is required'),
-  tag: z.string().min(1, 'Tag is required').max(50, 'Tag must be 50 characters or less'),
-  version: z.string().min(1, 'Version is required'),
+// Schema for getting organization tags
+const getOrganizationTagsSchema = z.object({
+  organizationId: z.string().min(1, 'Organization ID is required'),
 });
 
 const deleteSchema = z.object({
@@ -294,15 +303,15 @@ const updateTodoPriorityHandler = protectedProcedure
     }
   });
 
-// Add Tag Handler
-const addTagHandler = protectedProcedure
-  .input(tagManagementSchema)
+// Add Tag to Todo Handler
+const addTagHandler = memberProcedure
+  .input(addTagToTodoSchema)
   .mutation(async ({ ctx, input }) => {
     try {
       // Verify access to the todo
-      await verifyTodoAccess(input.id, ctx.user.id);
+      await verifyTodoAccess(input.todoId, ctx.user.id, input.organizationId);
 
-      const updatedTodo = await todos.addTag(input.id, input.tag, input.version, ctx.user.id);
+      const updatedTodo = await addTagToTodo(input.todoId, input.tagName, input.organizationId, input.tagColor);
       return updatedTodo;
     } catch (error) {
       if (error instanceof TRPCError) {
@@ -316,15 +325,15 @@ const addTagHandler = protectedProcedure
     }
   });
 
-// Remove Tag Handler
+// Remove Tag from Todo Handler
 const removeTagHandler = protectedProcedure
-  .input(tagManagementSchema)
+  .input(removeTagFromTodoSchema)
   .mutation(async ({ ctx, input }) => {
     try {
       // Verify access to the todo
-      await verifyTodoAccess(input.id, ctx.user.id);
+      await verifyTodoAccess(input.todoId, ctx.user.id);
 
-      const updatedTodo = await todos.removeTag(input.id, input.tag, input.version, ctx.user.id);
+      const updatedTodo = await removeTagFromTodo(input.todoId, input.tagId);
       return updatedTodo;
     } catch (error) {
       if (error instanceof TRPCError) {
@@ -334,6 +343,22 @@ const removeTagHandler = protectedProcedure
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Failed to remove tag from todo',
+      });
+    }
+  });
+
+// Get Organization Tags Handler
+const getTagsHandler = memberProcedure
+  .input(getOrganizationTagsSchema)
+  .query(async ({ ctx, input }) => {
+    try {
+      const organizationTags = await getTagsByOrganization(input.organizationId);
+      return organizationTags;
+    } catch (error) {
+      console.error('Error fetching organization tags:', error);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch organization tags',
       });
     }
   });
@@ -393,6 +418,7 @@ export default router({
   // Tag Management
   addTag: addTagHandler,
   removeTag: removeTagHandler,
+  getTags: getTagsHandler,
 
   // Statistics
   getStats: getTodoStatsHandler,

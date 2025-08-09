@@ -1,0 +1,53 @@
+# Task ID: 9
+# Title: Feature flag + cleanup: Add flag to switch Electric/Zero for Todos screen; remove Electric usage in this page after validation
+# Status: pending
+# Dependencies: 6, 7, 8
+# Priority: medium
+# Description: Implement a feature flag system to toggle between Electric and Zero implementations for the Todos screen, with cleanup logic to remove Electric usage after Zero validation is complete.
+# Details:
+1. Create feature flag infrastructure:
+   - Add ENABLE_ZERO_TODOS environment variable to control the feature flag
+   - Update .env.example with ENABLE_ZERO_TODOS=false (default to Electric)
+   - Create a feature flag utility function in packages/zero/src/featureFlags.ts to check flag status
+
+2. Implement conditional rendering in Todos component:
+   - Import feature flag utility and both Electric and Zero implementations
+   - Use conditional logic to render either Electric or Zero version based on flag
+   - Ensure both implementations maintain identical UI/UX behavior
+   - Add loading states and error boundaries for both paths
+
+3. Create cleanup mechanism:
+   - Add utility function to detect when Zero validation is complete (e.g., after successful query execution and mutations)
+   - Implement automatic Electric code removal after validation period
+   - Add logging to track feature flag usage and validation status
+   - Create migration guide for removing Electric dependencies
+
+4. Update organization layout:
+   - Conditionally mount Electric or Zero providers based on feature flag
+   - Ensure session auth works correctly with both implementations
+   - Handle provider switching gracefully without breaking existing sessions
+
+# Test Strategy:
+1. Test feature flag functionality:
+   - Verify ENABLE_ZERO_TODOS=false renders Electric implementation
+   - Verify ENABLE_ZERO_TODOS=true renders Zero implementation
+   - Test feature flag changes without app restart
+   - Confirm both implementations show identical todo data
+
+2. Test conditional provider mounting:
+   - Verify Electric provider works when flag is disabled
+   - Verify Zero provider works when flag is enabled
+   - Test session auth persistence across provider switches
+   - Validate no memory leaks occur during provider transitions
+
+3. Test cleanup mechanism:
+   - Verify Electric code removal triggers after successful Zero validation
+   - Test that cleanup doesn't break active Zero functionality
+   - Confirm all Electric imports and dependencies are properly removed
+   - Validate error handling during cleanup process
+
+4. Integration testing:
+   - Test full todo CRUD operations with both implementations enabled
+   - Verify performance metrics are comparable between Electric and Zero
+   - Test edge cases like network failures with both implementations
+   - Confirm rollback capability by switching flag back to Electric

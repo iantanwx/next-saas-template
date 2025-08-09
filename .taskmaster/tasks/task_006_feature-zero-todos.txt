@@ -1,0 +1,51 @@
+# Task ID: 6
+# Title: Replace Electric live query in Todos with Zero query
+# Status: pending
+# Dependencies: 3
+# Priority: high
+# Description: Replace the existing Electric useLiveQuery implementation in the Todos component with Zero's query system, implementing proper filtering and sorting while maintaining the current UI mapping.
+# Details:
+1. Locate and update the Todos component (likely in apps/web/src/components or similar):
+   - Remove Electric imports (useLiveQuery, Electric client)
+   - Import Zero query hooks and client from packages/zero
+   - Replace useLiveQuery call with Zero's equivalent query method
+
+2. Implement Zero query with proper filtering:
+   - Filter todos by user_id (current authenticated user)
+   - Filter by organization_id (current user's organization context)
+   - Filter by deleted_at IS NULL to exclude soft-deleted records
+   - Order results by updated_at DESC for most recent first
+
+3. Maintain existing UI mapping:
+   - Ensure the query result structure matches what the UI expects
+   - Preserve any existing data transformations or computed properties
+   - Keep loading states, error handling, and empty states intact
+
+4. Update component dependencies:
+   - Ensure ZeroProvider is available in component tree (from Task 5)
+   - Use organization context for organization_id filtering
+   - Integrate with session auth for user_id filtering
+
+5. Test data flow:
+   - Verify todos load correctly with new query system
+   - Confirm filtering works properly (user sees only their org's todos)
+   - Ensure real-time updates still function as expected
+
+# Test Strategy:
+1. Verify todos component renders without errors after Zero query integration
+2. Test filtering functionality:
+   - Confirm only todos belonging to current user's organization are displayed
+   - Verify deleted todos (deleted_at IS NOT NULL) are properly excluded
+   - Test with multiple users in same organization see shared todos
+3. Test sorting and ordering:
+   - Verify todos appear in descending order by updated_at timestamp
+   - Test that newly updated todos move to top of list
+4. Test real-time updates:
+   - Create new todo and verify it appears immediately
+   - Update existing todo and confirm changes reflect in UI
+   - Delete todo and verify it disappears from list
+5. Test UI mapping compatibility:
+   - Ensure all existing todo properties are still accessible
+   - Verify loading states work correctly during query execution
+   - Test error handling when query fails
+6. Cross-browser testing to ensure Zero query works consistently across different environments

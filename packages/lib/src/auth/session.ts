@@ -9,13 +9,13 @@ export async function getCurrentUser() {
 export async function getCurrentSession() {
   const supabase = await createClient();
   const {
-    data: { user: _user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!_user) {
+  if (!session) {
     return { user: null };
   }
- 
-  const user = await users.getById(_user.id);
-  return { user };
+
+  const user = await users.getById(session.user.id);
+  return { user, session };
 }

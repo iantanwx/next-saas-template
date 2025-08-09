@@ -6,10 +6,13 @@
     "dev": "pnpm --filter=@superscale/web",
     "dev:web": "pnpm --filter=@superscale/web dev",
     "dev:email": "pnpm --filter=@superscale/email dev",
+    "zero:start": "pnpm --filter=@superscale/zero zero:start",
+    "zero:generate": "pnpm --filter=@superscale/zero zero:generate",
     "supabase:start": "pnpm --filter=@superscale/crud supabase:start",
     "supabase:stop": "pnpm --filter=@superscale/crud supabase:stop",
     "supabase:db:push": "pnpm --filter=@superscale/crud supabase db push",
     "supabase:db:reset": "pnpm --filter=@superscale/crud supabase db reset",
+    "drizzle:generate": "pnpm --filter=@superscale/crud drizzle:gen",
     "electric:up": "pnpm --filter=@superscale/crud electric:up",
     "electric:down": "pnpm --filter=@superscale/crud electric:down",
     "electric:logs": "pnpm --filter=@superscale/crud electric:logs",
@@ -23,10 +26,21 @@
     "apps/*",
     "packages/*"
   ],
-  "dependencies": {},
-  "packageManager": "pnpm@9.15.2",
+  "packageManager": "pnpm@10.14.0",
   "devDependencies": {
     "@biomejs/biome": "2.1.3",
-    "turbo": "^2.3.3"
+    "turbo": "^2.5.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@rocicorp/zero-sqlite3",
+      "@sentry/cli",
+      "@swc/core",
+      "@tailwindcss/oxide",
+      "esbuild",
+      "protobufjs",
+      "sharp",
+      "supabase"
+    ]
   }
 }

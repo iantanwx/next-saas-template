@@ -2,14 +2,33 @@
   "name": "@superscale/zero",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "module": "esnext",
+  "exports": {
+    ".": "./src/index.ts",
+    "./provider": "./src/provider.tsx"
+  },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "zero:start": "zero-cache-dev",
+    "zero:generate": "drizzle-zero generate -s ../crud/src/db/schema.ts -o src/schema.gen.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rocicorp/zero": "^0.22.2025080200"
+    "@rocicorp/zero": "^0.22.2025080200",
+    "@supabase/supabase-js": "catalog:",
+    "@superscale/crud": "workspace:^",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@superscale/tsconfig": "workspace:^",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "dotenv": "catalog:",
+    "drizzle-zero": "^0.11.0",
+    "typescript": "catalog:"
   }
 }

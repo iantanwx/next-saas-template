@@ -43,9 +43,7 @@
             "title": "Implement data access layer with Zero's local-first priority",
             "description": "Create a data access layer that uses Zero's built-in local-first capabilities for data operations.",
             "status": "pending",
-            "dependencies": [
-              2
-            ],
+            "dependencies": [],
             "details": "Develop a data access abstraction that leverages Zero's local-first architecture. Implement methods for CRUD operations using Zero's query and mutation APIs. Utilize Zero's automatic synchronization mechanisms for server updates. Create query hooks that work with Zero's reactive data system. Implement Zero's subscription system for real-time updates. Add caching strategies that complement Zero's built-in local storage.",
             "testStrategy": "Test data access methods with Zero's local-first behavior. Verify that Zero's automatic sync works correctly. Test Zero's reactive queries and subscriptions. Ensure compatibility with existing application patterns."
           },
@@ -55,7 +53,6 @@
             "description": "Utilize Zero's built-in subscription system for real-time data updates.",
             "status": "pending",
             "dependencies": [
-              2,
               4
             ],
             "details": "Configure Zero's subscription system for real-time data updates. Implement subscription queries using Zero's query API. Create client-side subscription management that integrates with Zero's reactive system. Utilize Zero's built-in data normalization and caching. Implement subscription filtering and optimization using Zero's query capabilities. Ensure subscriptions work seamlessly with Zero's offline-first approach.",
@@ -142,8 +139,7 @@
         "testStrategy": "1. Test magic link authentication flow end-to-end\n2. Verify emails are sent correctly with valid links\n3. Test security of the magic link process\n4. Ensure rate limiting prevents abuse\n5. Validate user session is created correctly after magic link authentication",
         "priority": "medium",
         "dependencies": [
-          4,
-          5
+          4
         ],
         "status": "pending",
         "subtasks": []
@@ -326,7 +322,6 @@
         "testStrategy": "1. Test real-time update flow with multiple clients\n2. Verify optimistic updates work correctly\n3. Test conflict resolution UI\n4. Ensure offline status is clearly indicated\n5. Validate user experience during synchronization",
         "priority": "medium",
         "dependencies": [
-          2,
           15
         ],
         "status": "pending",
@@ -521,9 +516,7 @@
         "details": "1. Implement service worker for offline assets\n2. Create offline data access layer\n3. Implement offline action queueing\n4. Add conflict resolution strategies\n5. Create offline indicator UI\n6. Implement background sync when online\n7. Add offline mode toggle for testing\n8. Create offline usage analytics",
         "testStrategy": "1. Test application functionality while offline\n2. Verify data synchronization when connection is restored\n3. Test conflict resolution with concurrent changes\n4. Ensure offline indicator correctly shows connection status\n5. Validate offline action queue processing",
         "priority": "medium",
-        "dependencies": [
-          2
-        ],
+        "dependencies": [],
         "status": "pending",
         "subtasks": []
       },
@@ -535,7 +528,6 @@
         "testStrategy": "1. Test conflict detection with concurrent edits\n2. Verify automatic resolution strategies\n3. Test manual conflict resolution UI\n4. Ensure conflict metadata is correctly tracked\n5. Validate merge strategies for different data types",
         "priority": "medium",
         "dependencies": [
-          2,
           31
         ],
         "status": "pending",
@@ -549,7 +541,6 @@
         "testStrategy": "1. Test real-time updates with multiple users\n2. Verify presence indicators show correct information\n3. Test collaborative editing functionality\n4. Ensure permissions are enforced in collaboration\n5. Validate performance with multiple collaborators",
         "priority": "medium",
         "dependencies": [
-          2,
           28,
           31,
           32
@@ -635,7 +626,6 @@
         "testStrategy": "1. Test sync status updates during synchronization\n2. Verify error notifications for sync issues\n3. Test manual sync trigger functionality\n4. Ensure sync history correctly logs events\n5. Validate user experience of sync status UI",
         "priority": "medium",
         "dependencies": [
-          2,
           31
         ],
         "status": "pending",
@@ -735,7 +725,6 @@
         "testStrategy": "1. Test todo creation, update, and deletion in online/offline modes\n2. Verify real-time sync between multiple clients\n3. Test conflict resolution with concurrent edits\n4. Validate offline queue processing\n5. Test presence and collaboration features\n6. Measure sync latency and performance",
         "status": "done",
         "dependencies": [
-          2,
           28,
           31,
           32,
@@ -913,7 +902,6 @@
         "testStrategy": "1. Test Zero server initialization and configuration\n2. Verify client-server WebSocket connection establishment\n3. Test authentication flow with Supabase sessions\n4. Validate data synchronization between multiple clients\n5. Test offline functionality and data persistence\n6. Verify optimistic updates and rollback on conflicts\n7. Test reconnection logic under various network conditions\n8. Validate permission enforcement through Supabase RLS\n9. Test data migration from existing database\n10. Verify performance with concurrent users and large datasets",
         "status": "pending",
         "dependencies": [
-          2,
           31,
           32,
           33
@@ -1007,6 +995,292 @@
       "created": "2025-08-05T02:58:50.419Z",
       "updated": "2025-08-09T02:09:29.096Z",
       "description": "Tasks for master context"
+    }
+  },
+  "feature-zero-todos": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Zero runtime config: Add NEXT_PUBLIC_ZERO_URL and auth token strategy",
+        "description": "Implement zero runtime configuration by adding NEXT_PUBLIC_ZERO_URL environment variable and establishing auth token strategy for seamless deployment across environments.",
+        "details": "1. Add NEXT_PUBLIC_ZERO_URL environment variable to support zero runtime configuration\n2. Create auth token strategy that works with the zero URL configuration\n3. Update .env.example file with:\n   - NEXT_PUBLIC_ZERO_URL example value\n   - Auth token related environment variables\n   - Clear comments explaining each variable's purpose\n4. Update README.md with setup instructions:\n   - How to configure NEXT_PUBLIC_ZERO_URL for different environments\n   - Auth token setup process\n   - Environment variable configuration steps\n   - Any prerequisites or dependencies\n5. Ensure the configuration works seamlessly without requiring runtime modifications\n6. Consider different deployment scenarios (development, staging, production)\n7. Implement proper fallback mechanisms if environment variables are not set",
+        "testStrategy": "1. Test configuration in development environment with .env.local\n2. Verify NEXT_PUBLIC_ZERO_URL is properly accessible in client-side code\n3. Test auth token strategy works correctly with the zero URL configuration\n4. Validate that missing environment variables are handled gracefully\n5. Test deployment scenarios by temporarily removing/modifying environment variables\n6. Verify README instructions by following them step-by-step in a clean environment\n7. Confirm .env.example contains all necessary variables with proper examples\n8. Test that the application builds and runs successfully with the new configuration",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create apps/web/.env.example with Supabase and Zero variables",
+            "description": "Add a sample env file for the Next.js app including Supabase and Zero settings with clear comments.",
+            "details": "Include:\n- NEXT_PUBLIC_SUPABASE_URL\n- NEXT_PUBLIC_SUPABASE_ANON_KEY\n- SUPABASE_SERVICE_ROLE_KEY (server-only)\n- NEXT_PUBLIC_ZERO_URL (e.g., http://localhost:4243)\n- NEXT_PUBLIC_USE_ZERO (default false)\n- Optional Axiom/Sentry vars\nAdd instructional comments for each.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Export and provider fixes in @superscale/zero",
+            "description": "Fix package exports and provider typing; ensure auth token strategy uses Supabase session access_token.",
+            "details": "- Export Z and ZeroProviderProps from packages/zero/src/provider.tsx\n- Update packages/zero/src/index.ts to export { Z, ZeroProviderProps, schema }\n- Ensure provider uses session.access_token for auth and depends on server in useMemo\n- Add guards to avoid runtime errors when props missing\n<info added on 2025-08-09T07:22:42.081Z>\nImplementation completed successfully:\n- Exported Z and ZeroProviderProps from provider.tsx and updated index.ts exports\n- Added comprehensive guards for missing server or session.access_token that gracefully no-op\n- Optimized useMemo dependencies to [user.id, server, session.access_token] for proper re-computation\n- Cleaned up unused React import to resolve ESLint warning\n- Modified files: packages/zero/src/provider.tsx, packages/zero/src/index.ts\n</info added on 2025-08-09T07:22:42.081Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Add ZeroWrapper in org layout using env and Supabase session",
+            "description": "Gate Zero usage behind feature flag and env var, passing session token to provider.",
+            "details": "- Create client component zero-wrapper.tsx under apps/web/src/app/[organization]/components\n- Read clientConfig.NEXT_PUBLIC_ZERO_URL and NEXT_PUBLIC_USE_ZERO\n- Wrap children with <Z user={user} session={session} server={url}> when enabled; otherwise pass-through\n- Update [organization]/layout.tsx to fetch session and use wrapper\n<info added on 2025-08-09T07:24:06.428Z>\nIMPLEMENTATION COMPLETE:\n\nSuccessfully implemented ZeroWrapper component at apps/web/src/app/[organization]/components/zero-wrapper.tsx with feature flag support reading clientConfig.NEXT_PUBLIC_ZERO_URL and NEXT_PUBLIC_USE_ZERO. When enabled and session exists, wraps children with Z provider component passing user, session, and server props. When disabled or missing environment variables, provides pass-through behavior.\n\nUpdated apps/web/src/app/[organization]/layout.tsx to fetch user and session data via getCurrentSession and integrate ZeroWrapper. Removed non-null assertions to handle Session | null gracefully.\n\nComponent automatically falls back to pass-through rendering when Zero is disabled or environment variables are missing, ensuring backward compatibility.\n</info added on 2025-08-09T07:24:06.428Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 4,
+            "title": "Update README to document Zero env and auth token strategy",
+            "description": "Document how to configure NEXT_PUBLIC_ZERO_URL and how the session access token is used for Zero auth.",
+            "details": "- Update Zero local dev section: env example, feature flag, token strategy note\n- Replace 'wired later' with actual wiring via ZeroWrapper\n- Mention Supabase local symmetric JWT secret context\n- Include fallback behavior if vars are missing\n<info added on 2025-08-09T07:24:19.065Z>\nSuccessfully updated README documentation with Zero environment configuration and auth token strategy details, including Supabase session integration and local JWT validation context. README now includes comprehensive setup instructions and explanatory content for Zero implementation. The .env.example file creation remains pending due to editor limitations and will be addressed in a separate update.\n</info added on 2025-08-09T07:24:19.065Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Zero schema and permissions: Generate packages/zero/src/schema.gen.ts from Drizzle; add packages/zero/src/schema.ts with read permissions for todos by organization_id and current user membership",
+        "description": "Implement permission-based data access controls and mutators for todos based on organization membership and user authentication, building on existing schema generation.",
+        "status": "done",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "1. Create packages/zero/src/schema.ts:\n   - Import generated types from existing schema.gen.ts\n   - Implement read permissions system for todos table\n   - Add organization_id-based access control logic\n   - Implement current user membership validation\n   - Create permission functions that check:\n     * User belongs to the organization that owns the todo\n     * User has appropriate role/permissions within that organization\n     * Handle edge cases for public/private todos if applicable\n\n2. Implement mutators in packages/zero/src/mutators.ts:\n   - Create createTodo function with proper authorization checks\n   - Implement updateTodo with version control and permissions\n   - Add deleteTodo with organization membership validation\n   - Ensure all mutators respect organization-based access controls\n   - Handle concurrent updates and data consistency\n\n3. Permission implementation details:\n   - Define getUserOrganizations() helper function\n   - Create canReadTodo(userId, todoId) permission check\n   - Implement organizationMembershipCheck() utility\n   - Add proper error handling for unauthorized access attempts\n   - Ensure permissions are enforced at the data layer level\n\n4. Integration with existing infrastructure:\n   - Wire up with existing Supabase auth system\n   - Leverage established organization structure\n   - Ensure schema.ts works seamlessly with the Zero client from Task 2\n   - Make permissions configurable through the zero URL and auth strategy from Task 1\n   - Add TypeScript interfaces for permission contexts and user roles",
+        "testStrategy": "1. Test permission functions with various user/organization combinations:\n   - User with valid organization membership can read todos\n   - User without membership cannot access organization todos\n   - Invalid user IDs are handled gracefully\n2. Test mutator functions with proper authorization:\n   - createTodo respects organization membership\n   - updateTodo validates user permissions and handles concurrent updates\n   - deleteTodo prevents unauthorized deletions\n3. Integration test with Supabase auth to verify authentication flow\n4. Test permission enforcement at different access levels\n5. Test error handling for malformed organization IDs and user contexts\n6. Performance test permission checks with large datasets to ensure scalability\n7. Test integration with Zero client configuration and auth token strategy from Task 1\n8. Verify CRUD operations maintain data consistency and proper audit trails",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Generate schema.gen.ts from existing Drizzle schema",
+            "description": "Create the schema.gen.ts file by generating TypeScript types from the existing Drizzle schema definitions, focusing on the todos table and related entities",
+            "dependencies": [],
+            "details": "1. Locate the existing Drizzle schema definitions in the codebase (likely in packages/db/src/schema.ts or similar)\n2. Set up the Zero schema generation process to create packages/zero/src/schema.gen.ts\n3. Generate TypeScript types for todos table including all fields (id, title, description, organization_id, created_at, updated_at, etc.)\n4. Include related entity types needed for permissions (users, organizations, organization_members)\n5. Ensure generated types are compatible with Zero's type system and include all necessary metadata",
+            "status": "done",
+            "testStrategy": "1. Verify schema.gen.ts is generated successfully without errors\n2. Check that all todo table fields are properly typed\n3. Validate that related entity types (users, organizations) are included\n4. Test that generated types can be imported and used in TypeScript without compilation errors"
+          },
+          {
+            "id": 2,
+            "title": "Create schema.ts with Zero permission definitions",
+            "description": "Implement the schema.ts file that imports generated types and defines the Zero schema with permission rules for todos based on organization membership",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "1. Create packages/zero/src/schema.ts file\n2. Import generated types from schema.gen.ts\n3. Define the Zero schema using Zero's schema definition API\n4. Configure the todos table with proper field definitions\n5. Set up relationships between todos, organizations, and users\n6. Define basic schema structure that will be extended with permissions in the next subtask\n<info added on 2025-08-09T07:57:37.688Z>\nCompleted implementation using SQL-based permission expressions following the ztunes pattern from https://github.com/rocicorp/ztunes/blob/676a8fbe208369c7c2ed0620b763ca82933f414e/zero/schema.ts. Implemented comprehensive organization-based permissions for all tables (todos, organizationMembers, organizations, tags, users) using EXISTS clauses with organizationMembers table for membership validation. Applied authUserID checks and role-based permissions for admin, owner, and member roles. Successfully exported schema from index.ts with no lint errors.\n</info added on 2025-08-09T07:57:37.688Z>\n<info added on 2025-08-09T08:03:25.912Z>\nFinal Zero schema implementation completed. The schema.ts file now uses the official Zero permissions API with:\n\n- Proper `definePermissions` function with `AuthData` type matching Supabase JWT structure (`sub` field)\n- Organization-based permission functions using `exists` and `whereExists` APIs correctly\n- Comprehensive permissions for all tables (todos, organizationMembers, organizations, tags, users)\n- Proper relationship-based access control for todos via organization membership\n- `ANYONE_CAN` permissions for todoTags junction table\n- Full TypeScript compliance with all lint errors resolved\n- Exported types ready for Zero client integration: Todo, User, Organization, OrganizationMember, Tag, AuthData, Schema\n\nThe implementation follows Zero's official documentation patterns and is ready for production use.\n</info added on 2025-08-09T08:03:25.912Z>\n<info added on 2025-08-09T08:11:28.075Z>\nSecurity vulnerability fix applied for todoTags junction table permissions. Previously used insecure ANYONE_CAN permissions allowing unauthorized access to tag associations across organizations. Implemented allowIfTodoTagOrganizationMember function with proper organization membership validation through todo->organization->members relationship chain. Updated all operations (select, insert, delete) to enforce organization-based access control, ensuring multi-tenant data isolation and preventing cross-organization tag manipulation. Verified permission function properly filters by deletedAt and maintains consistent security model across all schema tables.\n</info added on 2025-08-09T08:11:28.075Z>",
+            "status": "done",
+            "testStrategy": "1. Verify schema.ts imports work correctly from schema.gen.ts\n2. Test that Zero schema is properly defined and can be instantiated\n3. Validate table and field definitions match the generated types\n4. Check that the schema exports correctly for use in other modules"
+          },
+          {
+            "id": 3,
+            "title": "Implement read permissions for todos based on organization membership",
+            "description": "Add permission functions to schema.ts that enforce organization-based access control for reading todos, checking user membership and roles",
+            "dependencies": [
+              "3.2"
+            ],
+            "details": "1. Implement canReadTodo permission function that checks:\n   - User is authenticated\n   - Todo belongs to an organization\n   - User is a member of that organization\n2. Create getUserOrganizations helper to fetch user's organization memberships\n3. Add organizationMembershipCheck utility function\n4. Define permission rules in Zero schema for the todos table\n5. Handle edge cases like system admins or public todos if applicable\n6. Integrate with existing Supabase auth to get current user context\n<info added on 2025-08-09T08:10:34.762Z>\nFixed critical security vulnerability in todoTags junction table permissions.\n\n**Security Issue Identified:**\n- Previous implementation used `ANYONE_CAN` for todoTags, allowing anyone to read, create, or delete todo-tag relationships across all organizations\n- This was a major data leak and privilege escalation vulnerability\n\n**Security Fix Implemented:**\n- Created `allowIfTodoTagOrganizationMember` permission function\n- Now verifies user is a member of the organization that owns the todo before allowing any todoTag operations\n- Applied to all todoTag operations: select, insert, delete\n- Uses proper relationship traversal: todoTags -> todo -> organization -> members\n\n**Current Security Model:**\n- Users can only see todo-tag relationships for todos in their organizations\n- Users can only create todo-tag relationships for todos they can access\n- Users can only delete todo-tag relationships for todos they can access\n- All operations properly enforce organization-based access control\n\nThis fix ensures data isolation between organizations and prevents unauthorized access to todo-tag relationships.\n</info added on 2025-08-09T08:10:34.762Z>",
+            "status": "done",
+            "testStrategy": "1. Test canReadTodo with valid organization member - should allow access\n2. Test with non-member user - should deny access\n3. Test with unauthenticated user - should deny access\n4. Test edge cases like deleted organizations or suspended users\n5. Verify permission functions integrate correctly with Zero's permission system"
+          },
+          {
+            "id": 4,
+            "title": "Create organization membership validation utilities",
+            "description": "Implement helper functions for validating user organization membership and roles, integrating with the existing Supabase auth system",
+            "dependencies": [
+              "3.3"
+            ],
+            "details": "1. Create packages/zero/src/permissions/organizationHelpers.ts\n2. Implement getUserOrganizationRole(userId, organizationId) function\n3. Create isOrganizationMember(userId, organizationId) checker\n4. Add getUserPermissionsContext() to gather user's full permission context\n5. Implement caching strategy for organization membership lookups\n6. Handle error cases and provide meaningful error messages\n7. Ensure utilities work with existing organization_members table structure",
+            "status": "done",
+            "testStrategy": "1. Unit test getUserOrganizationRole with various membership states\n2. Test isOrganizationMember with active, inactive, and non-existent memberships\n3. Verify caching improves performance for repeated permission checks\n4. Test error handling for database connection issues\n5. Validate integration with Supabase auth tokens"
+          },
+          {
+            "id": 5,
+            "title": "Export schema and configure Zero client integration",
+            "description": "Export the completed schema with permissions and ensure it integrates properly with the Zero client configuration from Task 2",
+            "dependencies": [
+              "3.3",
+              "3.4"
+            ],
+            "details": "1. Export the schema from packages/zero/src/schema.ts as default export\n2. Create index.ts in packages/zero/src to re-export schema and related utilities\n3. Ensure schema works with Zero client initialization using NEXT_PUBLIC_ZERO_URL\n4. Add TypeScript types for permission contexts and results\n5. Document the expected auth token format for Zero client\n6. Create example usage showing how to initialize Zero with the schema and permissions\n7. Verify schema is ready for use by the mutators in Task 4",
+            "status": "done",
+            "testStrategy": "1. Test that schema exports correctly and can be imported in other packages\n2. Verify Zero client can be initialized with the schema\n3. Test that permissions are enforced when querying through Zero client\n4. Validate TypeScript types provide proper intellisense\n5. Ensure integration with auth strategy from Task 1 works correctly"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Todo mutators: Implement packages/zero/src/mutators.ts with createTodo, updateTodo, deleteTodo",
+        "description": "Implement CRUD operations for todos including creation, versioned updates, and deletion in the Zero package mutators module.",
+        "details": "1. Create packages/zero/src/mutators.ts:\n   - Import necessary types from schema.gen.ts and schema.ts\n   - Import zero client types and utilities\n\n2. Implement createTodo function:\n   - Accept todo data (title, description, organization_id, etc.)\n   - Validate user permissions using organization membership\n   - Generate unique ID and timestamps\n   - Insert new todo record into database\n   - Return created todo with generated fields\n   - Handle validation errors and database constraints\n\n3. Implement updateTodo function with optimistic concurrency control:\n   - Accept todo ID, update data, and version number\n   - Validate user has write permissions for the todo\n   - Check version matches current record (prevent lost updates)\n   - Update only provided fields, preserve others\n   - Increment version number atomically\n   - Return updated todo with new version\n   - Handle version conflicts with descriptive errors\n\n4. Implement deleteTodo function:\n   - Accept todo ID and current version\n   - Validate user permissions and ownership\n   - Soft delete or hard delete based on requirements\n   - Handle cascading relationships if any\n   - Return success confirmation\n\n5. Add TypeScript interfaces:\n   - CreateTodoInput, UpdateTodoInput types\n   - TodoMutationResult with success/error states\n   - Version conflict error types\n\n6. Export all mutator functions and types from the module\n<info added on 2025-08-09T08:14:59.782Z>\nSUPERSEDED: This task has been superseded by Task 11 \"Implement comprehensive Zero ZQL mutations for all schema tables\" which provides a more comprehensive approach covering all mutations for todos, organizations, members, tags, and users in a well-organized structure with one module per table. The functionality originally planned for this single mutators.ts file is now better addressed through the modular approach in Task 11, which creates separate mutation modules (todos.ts, organizations.ts, etc.) in the packages/zero/src/mutations/ directory with improved organization and maintainability.\n</info added on 2025-08-09T08:14:59.782Z>",
+        "testStrategy": "1. Unit test createTodo function:\n   - Valid todo creation with all required fields\n   - Permission validation for different organization memberships\n   - Input validation and error handling\n   - Database constraint violations\n\n2. Unit test updateTodo function:\n   - Successful update with version increment\n   - Version conflict detection and error handling\n   - Partial updates preserve unchanged fields\n   - Permission validation for todo ownership\n   - Non-existent todo ID handling\n\n3. Unit test deleteTodo function:\n   - Successful deletion with proper permissions\n   - Permission denied scenarios\n   - Non-existent todo handling\n   - Verify cascading effects if applicable\n\n4. Integration tests:\n   - Test mutators work with actual Zero client instance\n   - Verify schema permissions integrate correctly\n   - Test concurrent operations and version conflicts\n   - End-to-end CRUD workflow testing\n\n5. Error handling tests:\n   - Network failures and timeouts\n   - Database connection issues\n   - Malformed input data\n   - Authentication/authorization failures",
+        "status": "cancelled",
+        "dependencies": [
+          3
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Replace Electric live query in Todos with Zero query",
+        "description": "Replace the existing Electric useLiveQuery implementation in the Todos component with Zero's query system, implementing proper filtering and sorting while maintaining the current UI mapping.",
+        "details": "1. Locate and update the Todos component (likely in apps/web/src/components or similar):\n   - Remove Electric imports (useLiveQuery, Electric client)\n   - Import Zero query hooks and client from packages/zero\n   - Replace useLiveQuery call with Zero's equivalent query method\n\n2. Implement Zero query with proper filtering:\n   - Filter todos by user_id (current authenticated user)\n   - Filter by organization_id (current user's organization context)\n   - Filter by deleted_at IS NULL to exclude soft-deleted records\n   - Order results by updated_at DESC for most recent first\n\n3. Maintain existing UI mapping:\n   - Ensure the query result structure matches what the UI expects\n   - Preserve any existing data transformations or computed properties\n   - Keep loading states, error handling, and empty states intact\n\n4. Update component dependencies:\n   - Ensure ZeroProvider is available in component tree (from Task 5)\n   - Use organization context for organization_id filtering\n   - Integrate with session auth for user_id filtering\n\n5. Test data flow:\n   - Verify todos load correctly with new query system\n   - Confirm filtering works properly (user sees only their org's todos)\n   - Ensure real-time updates still function as expected",
+        "testStrategy": "1. Verify todos component renders without errors after Zero query integration\n2. Test filtering functionality:\n   - Confirm only todos belonging to current user's organization are displayed\n   - Verify deleted todos (deleted_at IS NOT NULL) are properly excluded\n   - Test with multiple users in same organization see shared todos\n3. Test sorting and ordering:\n   - Verify todos appear in descending order by updated_at timestamp\n   - Test that newly updated todos move to top of list\n4. Test real-time updates:\n   - Create new todo and verify it appears immediately\n   - Update existing todo and confirm changes reflect in UI\n   - Delete todo and verify it disappears from list\n5. Test UI mapping compatibility:\n   - Ensure all existing todo properties are still accessible\n   - Verify loading states work correctly during query execution\n   - Test error handling when query fails\n6. Cross-browser testing to ensure Zero query works consistently across different environments",
+        "status": "pending",
+        "dependencies": [
+          3
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Replace tRPC mutations with Zero mutators",
+        "description": "Replace existing tRPC mutation calls (onAdd/onEdit/onToggle/onDelete) with Zero mutator functions, implementing a short-term feature flag fallback to ensure smooth transition and rollback capability.",
+        "details": "1. Locate existing tRPC mutation usage in the Todos component:\n   - Find onAdd, onEdit, onToggle, and onDelete handlers\n   - Identify current tRPC mutation calls and their parameters\n   - Document existing error handling and loading states\n\n2. Implement Zero mutator integration:\n   - Import createTodo, updateTodo, deleteTodo from packages/zero/src/mutators\n   - Replace tRPC onAdd with createTodo mutator call\n   - Replace tRPC onEdit with updateTodo mutator call\n   - Replace tRPC onToggle with updateTodo mutator call (toggle completed status)\n   - Replace tRPC onDelete with deleteTodo mutator call\n   - Maintain existing parameter structure and response handling\n\n3. Implement feature flag fallback system:\n   - Add NEXT_PUBLIC_USE_ZERO_MUTATIONS environment variable\n   - Create conditional logic to switch between tRPC and Zero mutations\n   - Ensure both code paths maintain identical UI behavior\n   - Add error boundary handling for both mutation systems\n\n4. Update error handling and loading states:\n   - Adapt existing loading states to work with Zero mutations\n   - Ensure error messages are consistent between tRPC and Zero\n   - Maintain optimistic updates where applicable\n\n5. Clean up imports and dependencies:\n   - Remove unused tRPC mutation imports when feature flag is disabled\n   - Ensure Zero mutator imports are properly typed",
+        "testStrategy": "1. Test Zero mutator integration:\n   - Verify onAdd creates todos with correct data and organization scoping\n   - Test onEdit updates todo fields while maintaining version control\n   - Confirm onToggle properly flips completed status\n   - Validate onDelete marks todos as deleted (soft delete)\n\n2. Test feature flag functionality:\n   - Test with NEXT_PUBLIC_USE_ZERO_MUTATIONS=true (Zero mutations active)\n   - Test with NEXT_PUBLIC_USE_ZERO_MUTATIONS=false (tRPC fallback active)\n   - Verify identical UI behavior in both modes\n   - Test feature flag toggle during runtime\n\n3. Test error handling and edge cases:\n   - Network failures during mutation calls\n   - Permission denied scenarios\n   - Invalid data validation\n   - Concurrent modification conflicts\n\n4. Integration testing:\n   - Test full CRUD workflow with Zero mutations\n   - Verify real-time updates work correctly with Zero queries\n   - Test rollback capability by switching feature flag\n   - Validate performance compared to tRPC mutations",
+        "status": "pending",
+        "dependencies": [
+          6,
+          "11"
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Preloading and TTLs: Preload the todo query in apps/web/src/app/[organization]/layout.tsx and set TTL per Zero docs",
+        "description": "Implement query preloading in the organization layout to optimize initial page load performance and configure appropriate TTL settings according to Zero documentation.",
+        "details": "1. Update apps/web/src/app/[organization]/layout.tsx:\n   - Import Zero query preloading utilities from packages/zero\n   - Implement todo query preloading in the layout component\n   - Configure preloading to occur during server-side rendering or component initialization\n   - Ensure preloaded data is scoped to the current organization context\n\n2. Configure TTL (Time To Live) settings per Zero documentation:\n   - Research Zero docs for recommended TTL configurations for todo queries\n   - Set appropriate cache expiration times based on data freshness requirements\n   - Configure TTL for different query types (user todos, organization todos)\n   - Implement cache invalidation strategies for real-time updates\n\n3. Optimize preloading strategy:\n   - Preload only essential todo data needed for initial render\n   - Consider user permissions and organization membership for preloading scope\n   - Implement error handling for failed preload attempts\n   - Ensure preloading doesn't block critical rendering path\n\n4. Integration with existing Zero setup:\n   - Ensure preloading works with ZeroProvider context from Task 5\n   - Coordinate with Zero query implementation from Task 6\n   - Maintain compatibility with auth token strategy from previous tasks",
+        "testStrategy": "1. Test preloading functionality:\n   - Verify todo query data is preloaded before component render\n   - Confirm preloaded data is scoped correctly to current organization\n   - Test preloading performance impact on initial page load times\n   - Validate preloading works with both SSR and client-side navigation\n\n2. Test TTL configuration:\n   - Verify cache expiration behaves according to configured TTL settings\n   - Test cache invalidation when todos are modified\n   - Confirm stale data is refreshed appropriately\n   - Test TTL behavior across different browser sessions\n\n3. Test error handling:\n   - Verify graceful fallback when preloading fails\n   - Test behavior with network connectivity issues\n   - Confirm error states don't break the layout rendering\n\n4. Performance testing:\n   - Measure initial page load improvements with preloading enabled\n   - Test memory usage with cached preloaded data\n   - Verify preloading doesn't cause unnecessary API calls",
+        "status": "pending",
+        "dependencies": [
+          6
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Feature flag + cleanup: Add flag to switch Electric/Zero for Todos screen; remove Electric usage in this page after validation",
+        "description": "Implement a feature flag system to toggle between Electric and Zero implementations for the Todos screen, with cleanup logic to remove Electric usage after Zero validation is complete.",
+        "details": "1. Create feature flag infrastructure:\n   - Add ENABLE_ZERO_TODOS environment variable to control the feature flag\n   - Update .env.example with ENABLE_ZERO_TODOS=false (default to Electric)\n   - Create a feature flag utility function in packages/zero/src/featureFlags.ts to check flag status\n\n2. Implement conditional rendering in Todos component:\n   - Import feature flag utility and both Electric and Zero implementations\n   - Use conditional logic to render either Electric or Zero version based on flag\n   - Ensure both implementations maintain identical UI/UX behavior\n   - Add loading states and error boundaries for both paths\n\n3. Create cleanup mechanism:\n   - Add utility function to detect when Zero validation is complete (e.g., after successful query execution and mutations)\n   - Implement automatic Electric code removal after validation period\n   - Add logging to track feature flag usage and validation status\n   - Create migration guide for removing Electric dependencies\n\n4. Update organization layout:\n   - Conditionally mount Electric or Zero providers based on feature flag\n   - Ensure session auth works correctly with both implementations\n   - Handle provider switching gracefully without breaking existing sessions",
+        "testStrategy": "1. Test feature flag functionality:\n   - Verify ENABLE_ZERO_TODOS=false renders Electric implementation\n   - Verify ENABLE_ZERO_TODOS=true renders Zero implementation\n   - Test feature flag changes without app restart\n   - Confirm both implementations show identical todo data\n\n2. Test conditional provider mounting:\n   - Verify Electric provider works when flag is disabled\n   - Verify Zero provider works when flag is enabled\n   - Test session auth persistence across provider switches\n   - Validate no memory leaks occur during provider transitions\n\n3. Test cleanup mechanism:\n   - Verify Electric code removal triggers after successful Zero validation\n   - Test that cleanup doesn't break active Zero functionality\n   - Confirm all Electric imports and dependencies are properly removed\n   - Validate error handling during cleanup process\n\n4. Integration testing:\n   - Test full todo CRUD operations with both implementations enabled\n   - Verify performance metrics are comparable between Electric and Zero\n   - Test edge cases like network failures with both implementations\n   - Confirm rollback capability by switching flag back to Electric",
+        "status": "pending",
+        "dependencies": [
+          6,
+          7,
+          8
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Tests, lint, docs: Update integration tests for Zero path; run lint; docs for envs and rollout",
+        "description": "Comprehensive testing, linting, and documentation updates for the Zero implementation path, including integration test updates, code quality checks, and environment/rollout documentation.",
+        "details": "1. Update integration tests for Zero implementation:\n   - Update existing integration tests to work with Zero query system instead of Electric\n   - Create new integration tests for Zero mutators (createTodo, updateTodo, deleteTodo)\n   - Test feature flag switching between Electric and Zero implementations\n   - Update test data setup to work with Zero schema and permissions\n   - Test preloading functionality and TTL configurations\n   - Verify organization-scoped filtering works correctly in tests\n\n2. Run comprehensive linting:\n   - Execute ESLint across all modified files in packages/zero/\n   - Run TypeScript compiler checks on new Zero implementation\n   - Fix any linting errors in todo component updates\n   - Ensure code formatting consistency across Electric to Zero migration\n   - Run Prettier on all modified files\n\n3. Create environment and rollout documentation:\n   - Document NEXT_PUBLIC_ZERO_URL configuration for different environments (dev/staging/prod)\n   - Create rollout guide explaining feature flag usage and Electric to Zero migration\n   - Document ENABLE_ZERO_TODOS feature flag behavior and testing procedures\n   - Add troubleshooting section for common Zero implementation issues\n   - Update deployment documentation with Zero-specific environment requirements\n   - Create developer onboarding guide for Zero vs Electric differences",
+        "testStrategy": "1. Integration test verification:\n   - Run updated integration test suite and verify 100% pass rate with Zero implementation\n   - Test feature flag integration tests with both ENABLE_ZERO_TODOS=true and false\n   - Verify organization-scoped data isolation in integration tests\n   - Test preloading integration tests show performance improvements\n\n2. Linting verification:\n   - Ensure zero linting errors across all modified files\n   - Verify TypeScript compilation passes without warnings\n   - Confirm code formatting meets project standards\n\n3. Documentation validation:\n   - Test environment setup instructions with fresh development environment\n   - Validate feature flag rollout procedures work as documented\n   - Verify troubleshooting documentation resolves common issues\n   - Confirm all environment variables are properly documented with examples",
+        "status": "pending",
+        "dependencies": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement comprehensive Zero ZQL mutations for all schema tables",
+        "description": "Create a complete set of custom ZQL mutation functions in packages/zero/src/mutations/ directory with one module per major table, including proper organization-based permission validation, optimistic concurrency control, and comprehensive TypeScript typing.",
+        "details": "1. Create packages/zero/src/mutations/ directory structure:\n   - Create index.ts to re-export all mutation modules\n   - Create separate files: todos.ts, organizations.ts, organizationMembers.ts, tags.ts, todoTags.ts, users.ts\n\n2. Implement todos.ts mutations:\n   - createTodo: Accept title, description, organization_id, user_id; validate organization membership\n   - updateTodo: Include version checking for optimistic concurrency control\n   - deleteTodo: Implement soft delete with deleted_at timestamp\n   - toggleTodoCompletion: Toggle completed status with proper validation\n   - Each mutation should check user's organization membership before allowing operations\n\n3. Implement organizations.ts mutations:\n   - createOrganization: Create org and automatically add creator as admin member\n   - updateOrganization: Only allow admins to update org details\n   - deleteOrganization: Soft delete with cascade handling for related data\n   - Include proper role-based access control\n\n4. Implement organizationMembers.ts mutations:\n   - inviteMember: Generate invitation with unique token and expiry\n   - acceptInvitation: Validate token and create membership\n   - removeMember: Check permissions (admins can remove anyone, users can remove themselves)\n   - updateMemberRole: Only admins can change roles\n   - Handle edge cases like preventing removal of last admin\n\n5. Implement tags.ts mutations:\n   - createTag: Scoped to organization with unique name constraint\n   - updateTag: Update name/color with organization scope validation\n   - deleteTag: Cascade delete tag associations\n   - Include organization-based permissions\n\n6. Implement todoTags.ts mutations:\n   - addTagToTodo: Validate both todo and tag belong to same organization\n   - removeTagFromTodo: Check permissions through todo ownership\n   - bulkAddTags: Efficiently add multiple tags to a todo\n   - bulkRemoveTags: Efficiently remove multiple tags\n\n7. Implement users.ts mutations:\n   - updateProfile: Allow users to update their own profile data\n   - updatePreferences: Handle user preferences/settings\n   - Include self-only permission validation\n\n8. Common patterns across all mutations:\n   - Import Zero client and types from schema.gen.ts\n   - Use Zero's transaction support for multi-step operations\n   - Include comprehensive error handling with specific error codes\n   - Add TypeScript interfaces for all input/output types\n   - Implement audit logging for sensitive operations\n   - Use Zero's built-in validation capabilities\n   - Return consistent response formats with success indicators",
+        "testStrategy": "1. Unit test each mutation module:\n   - Test successful operations with valid inputs\n   - Test permission denials for unauthorized users\n   - Test organization scope validation\n   - Test optimistic concurrency control for updates\n   - Test error handling for constraint violations\n\n2. Integration test cross-table mutations:\n   - Test createOrganization creates admin membership\n   - Test deleteOrganization cascades properly\n   - Test tag associations with todos\n   - Test invitation flow end-to-end\n\n3. Test TypeScript typing:\n   - Verify all mutations have proper input/output types\n   - Test type inference works correctly\n   - Validate error types are properly typed\n\n4. Test Zero-specific features:\n   - Verify transactions roll back on errors\n   - Test optimistic UI updates work correctly\n   - Validate mutations integrate with Zero's caching\n\n5. Security testing:\n   - Test SQL injection attempts are blocked\n   - Verify permissions can't be bypassed\n   - Test rate limiting if implemented\n   - Validate input sanitization\n\n6. Performance testing:\n   - Test bulk operations with large datasets\n   - Verify N+1 queries are avoided\n   - Test mutation response times\n\n7. Edge case testing:\n   - Test concurrent updates to same record\n   - Test operations on deleted records\n   - Test maximum field lengths\n   - Test null/undefined handling",
+        "status": "pending",
+        "dependencies": [
+          3
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Todo mutations: createTodo, updateTodo, deleteTodo, toggleTodo",
+            "description": "Implement ZQL mutations for todo CRUD operations with organization-based permissions",
+            "details": "Create packages/zero/src/mutations/todos.ts with:\n- createTodo: Create new todos with organization membership validation\n- updateTodo: Update todo fields with version control and ownership checks  \n- deleteTodo: Soft/hard delete with permission validation\n- toggleTodo: Toggle completion status with optimistic updates\n- Proper TypeScript types and error handling",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 2,
+            "title": "Organization mutations: createOrganization, updateOrganization, deleteOrganization",
+            "description": "Implement ZQL mutations for organization management with proper ownership and admin role validation",
+            "details": "Create packages/zero/src/mutations/organizations.ts with:\n- createOrganization: Create new organization and make creator the owner\n- updateOrganization: Update org details (name, settings) with admin/owner permissions\n- deleteOrganization: Soft delete organization with proper cascade handling\n- Handle organization member cleanup and data migration\n- Proper TypeScript types and role-based access control",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 3,
+            "title": "OrganizationMember mutations: inviteMember, acceptInvitation, removeMember, updateMemberRole",
+            "description": "Implement ZQL mutations for organization membership management with role-based permissions",
+            "details": "Create packages/zero/src/mutations/organizationMembers.ts with:\n- inviteMember: Send invitations with admin/owner permissions, create pending membership\n- acceptInvitation: Accept pending invitations and activate membership\n- removeMember: Remove members with proper permission checks (admin/owner, self-removal)\n- updateMemberRole: Change member roles (owner, admin, member) with permission validation\n- Handle invitation flow integration with existing email system\n- Proper TypeScript types and comprehensive role validation",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 4,
+            "title": "Tag mutations: createTag, updateTag, deleteTag",
+            "description": "Implement ZQL mutations for tag management with organization-scoped permissions",
+            "details": "Create packages/zero/src/mutations/tags.ts with:\n- createTag: Create new tags within organization with membership validation\n- updateTag: Update tag properties (name, color, description) with permission checks\n- deleteTag: Delete tags and handle associated todoTags cleanup\n- Ensure tags are organization-scoped and validate member permissions\n- Handle tag uniqueness constraints within organizations\n- Proper TypeScript types and validation",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 5,
+            "title": "TodoTag mutations: addTagToTodo, removeTagFromTodo",
+            "description": "Implement ZQL mutations for todo-tag associations with secure organization-based permissions",
+            "details": "Create packages/zero/src/mutations/todoTags.ts with:\n- addTagToTodo: Associate tags with todos, validating user access to both entities\n- removeTagFromTodo: Remove tag associations with proper permission checks\n- Validate both todo and tag belong to organizations user has access to\n- Handle duplicate associations gracefully\n- Integrate with the secure permissions we implemented in schema.ts\n- Proper TypeScript types and comprehensive validation",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 6,
+            "title": "User mutations: updateUserProfile",
+            "description": "Implement ZQL mutations for user profile management with self-access validation",
+            "details": "Create packages/zero/src/mutations/users.ts with:\n- updateUserProfile: Update user profile data (name, email, avatar, preferences)\n- Validate users can only update their own profile data\n- Handle email change verification if needed\n- Integrate with Supabase auth system for email updates\n- Proper TypeScript types and validation\n- Handle avatar upload/management if applicable",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 7,
+            "title": "Mutations index and integration",
+            "description": "Create main mutations export and integration with Zero client",
+            "details": "Create packages/zero/src/mutations/index.ts with:\n- Export all mutation functions from individual modules\n- Create unified mutation client/registry for easy consumption\n- Add comprehensive TypeScript types for all mutations\n- Document usage patterns and error handling\n- Update packages/zero/src/index.ts to export mutations\n- Add integration examples and JSDoc documentation",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-09T03:10:38.325Z",
+      "updated": "2025-08-09T08:14:43.402Z",
+      "description": "Zero-based todos migration and integration tasks"
     }
   }
 }

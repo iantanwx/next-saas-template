@@ -32,6 +32,9 @@ export const serverConfig = serverSchema.parse(env);
 export const clientSchema = z.object({
   NEXT_PUBLIC_AXIOM_DATASET: z.string().default('supserscale_dev'),
   NEXT_PUBLIC_AXIOM_TOKEN: z.string().default(''),
+  // Zero runtime config
+  NEXT_PUBLIC_ZERO_URL: z.string().default(''),
+  NEXT_PUBLIC_USE_ZERO: z.coerce.boolean().default(false),
 });
 
 export const clientConfig = clientSchema.parse(env);

@@ -57,5 +57,6 @@ export default {
     '@superscale/editor',
     '@superscale/ui',
     '@superscale/pglite',
+    '@superscale/zero',
   ],
 };

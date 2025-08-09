@@ -42,6 +42,8 @@ alwaysApply: true
   - Use server-only keys only in server code (see [server.ts](mdc:packages/lib/src/supabase/server.ts))
 
 - **Do**
+  - Always use `pnpm` for all scripts, including changing `npx` to `pnpm dlx`, and so on.
+  - Use `exports` to expose modules from packages.
   - Keep DB access in `@superscale/crud`; call from tRPC routers
   - Co-locate Zod schemas with procedure handlers and export them for reuse
   - Centralize auth/session access in `@superscale/lib/auth`

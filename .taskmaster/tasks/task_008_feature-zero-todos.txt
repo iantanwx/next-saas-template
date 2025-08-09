@@ -1,0 +1,52 @@
+# Task ID: 8
+# Title: Preloading and TTLs: Preload the todo query in apps/web/src/app/[organization]/layout.tsx and set TTL per Zero docs
+# Status: pending
+# Dependencies: 6
+# Priority: medium
+# Description: Implement query preloading in the organization layout to optimize initial page load performance and configure appropriate TTL settings according to Zero documentation.
+# Details:
+1. Update apps/web/src/app/[organization]/layout.tsx:
+   - Import Zero query preloading utilities from packages/zero
+   - Implement todo query preloading in the layout component
+   - Configure preloading to occur during server-side rendering or component initialization
+   - Ensure preloaded data is scoped to the current organization context
+
+2. Configure TTL (Time To Live) settings per Zero documentation:
+   - Research Zero docs for recommended TTL configurations for todo queries
+   - Set appropriate cache expiration times based on data freshness requirements
+   - Configure TTL for different query types (user todos, organization todos)
+   - Implement cache invalidation strategies for real-time updates
+
+3. Optimize preloading strategy:
+   - Preload only essential todo data needed for initial render
+   - Consider user permissions and organization membership for preloading scope
+   - Implement error handling for failed preload attempts
+   - Ensure preloading doesn't block critical rendering path
+
+4. Integration with existing Zero setup:
+   - Ensure preloading works with ZeroProvider context from Task 5
+   - Coordinate with Zero query implementation from Task 6
+   - Maintain compatibility with auth token strategy from previous tasks
+
+# Test Strategy:
+1. Test preloading functionality:
+   - Verify todo query data is preloaded before component render
+   - Confirm preloaded data is scoped correctly to current organization
+   - Test preloading performance impact on initial page load times
+   - Validate preloading works with both SSR and client-side navigation
+
+2. Test TTL configuration:
+   - Verify cache expiration behaves according to configured TTL settings
+   - Test cache invalidation when todos are modified
+   - Confirm stale data is refreshed appropriately
+   - Test TTL behavior across different browser sessions
+
+3. Test error handling:
+   - Verify graceful fallback when preloading fails
+   - Test behavior with network connectivity issues
+   - Confirm error states don't break the layout rendering
+
+4. Performance testing:
+   - Measure initial page load improvements with preloading enabled
+   - Test memory usage with cached preloaded data
+   - Verify preloading doesn't cause unnecessary API calls

@@ -6,7 +6,7 @@
     "incremental": false,
     "isolatedModules": true,
     "lib": ["es2022", "DOM", "DOM.Iterable"],
-    "module": "es2022",
+    "module": "ES2022",
     "moduleDetection": "force",
     "moduleResolution": "bundler",
     "noUncheckedIndexedAccess": true,

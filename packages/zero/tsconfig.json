@@ -1,0 +1,18 @@
+{
+  "extends": "@superscale/tsconfig/lib.tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "../crud/src/db/schema.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
+
+
