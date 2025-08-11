@@ -31,3 +31,6 @@ export {
 
 // Validators
 export * as validators from './validators';
+
+// DB connection
+export { db } from './db/connection';

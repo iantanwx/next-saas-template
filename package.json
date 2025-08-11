@@ -33,6 +33,8 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@rocicorp/zero",
+      "@rocicorp/zero/pg",
       "@rocicorp/zero-sqlite3",
       "@sentry/cli",
       "@swc/core",

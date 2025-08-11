@@ -5,7 +5,9 @@
   "module": "esnext",
   "exports": {
     ".": "./src/index.ts",
-    "./provider": "./src/provider.tsx"
+    "./provider": "./src/provider.tsx",
+    "./drizzle-adapter": "./src/drizzle-adapter.ts",
+    "./server-mutators": "./src/server-mutators.ts"
   },
   "type": "module",
   "scripts": {

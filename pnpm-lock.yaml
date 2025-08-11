@@ -95,6 +95,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.62.0(react@19.1.1))
+      '@rocicorp/zero':
+        specifier: ^0.22.2025080200
+        version: 0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(typescript@5.9.2)
       '@sentry/nextjs':
         specifier: ^7.120.2
         version: 7.120.4(encoding@0.1.13)(next@15.4.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)(webpack@5.101.0(@swc/core@1.3.101(@swc/helpers@0.5.15)))
@@ -714,7 +717,7 @@ importers:
         version: 16.6.1
       drizzle-zero:
         specifier: ^0.11.0
-        version: 0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2)
+        version: 0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -14085,7 +14088,7 @@ snapshots:
       postgres: 3.4.7
       react: 19.1.1
 
-  drizzle-zero@0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2):
+  drizzle-zero@0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2):
     dependencies:
       '@rocicorp/zero': 0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(typescript@5.9.2)
       commander: 14.0.0
