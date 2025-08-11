@@ -1,0 +1,79 @@
+# Task ID: 12
+# Title: Implement shared authentication utilities for Zero custom mutators
+# Status: pending
+# Dependencies: 3, 11
+# Priority: high
+# Description: Create comprehensive authentication utilities in packages/zero/src/auth.ts following the Rocicorp zbugs pattern, providing functions to validate user permissions, organization membership, and role-based access control for use in both client and server mutators.
+# Details:
+1. Create packages/zero/src/auth.ts with authentication utilities:
+   - Import necessary types from schema.gen.ts and Supabase JWT types
+   - Define AuthContext interface containing user info, JWT claims, and organization data
+   - Implement JWT parsing and validation utilities for Supabase tokens
+
+2. Implement core authentication functions:
+   - hasOrgAccess(userId: string, orgId: string): Promise<boolean> - Check if user has any access to organization
+   - isOrgMember(userId: string, orgId: string): Promise<boolean> - Verify active organization membership
+   - isOrgAdmin(userId: string, orgId: string): Promise<boolean> - Check admin role in organization
+   - getUserOrganizations(userId: string): Promise<Organization[]> - Get all organizations for a user
+   - validateOrgPermission(userId: string, orgId: string, permission: string): Promise<boolean> - Generic permission validator
+
+3. Implement JWT and session utilities:
+   - parseSupabaseJWT(token: string): AuthContext - Extract user and org info from JWT
+   - validateSession(token: string): Promise<boolean> - Verify JWT signature and expiration
+   - getSessionUserId(token: string): string | null - Extract user ID from JWT claims
+   - getSessionOrgId(token: string): string | null - Extract current org context from JWT
+
+4. Create helper functions for mutator integration:
+   - createAuthContext(token: string): Promise<AuthContext> - Build complete auth context
+   - requireOrgAccess(authContext: AuthContext, orgId: string): void - Throw if no access
+   - requireOrgAdmin(authContext: AuthContext, orgId: string): void - Throw if not admin
+   - withAuth<T>(token: string, fn: (auth: AuthContext) => Promise<T>): Promise<T> - Auth wrapper
+
+5. Add TypeScript types and interfaces:
+   - Define Permission enum for different permission levels
+   - Create OrgRole type union ('member' | 'admin' | 'owner')
+   - Define error types for authentication failures
+   - Export all types for use in mutators
+
+6. Implement caching layer for performance:
+   - Cache organization membership lookups with TTL
+   - Cache parsed JWT claims to avoid repeated parsing
+   - Implement cache invalidation on membership changes
+
+# Test Strategy:
+1. Unit test JWT parsing and validation:
+   - Test parseSupabaseJWT with valid Supabase JWT tokens
+   - Test handling of expired tokens and invalid signatures
+   - Verify correct extraction of user ID and organization claims
+   - Test edge cases with missing or malformed claims
+
+2. Test organization membership functions:
+   - Mock database queries for organization_members table
+   - Test hasOrgAccess returns true for valid memberships
+   - Test isOrgMember filters out inactive memberships
+   - Test isOrgAdmin correctly identifies admin roles
+   - Test getUserOrganizations returns all user's organizations
+
+3. Test permission validation:
+   - Test validateOrgPermission with various permission combinations
+   - Verify permission inheritance (admin has member permissions)
+   - Test rejection of invalid permissions or organizations
+   - Test handling of null/undefined inputs
+
+4. Integration test with mutators:
+   - Create sample mutator using requireOrgAccess
+   - Test mutator rejects unauthorized access attempts
+   - Verify auth context is properly passed to mutators
+   - Test withAuth wrapper handles async operations correctly
+
+5. Test caching behavior:
+   - Verify membership lookups are cached appropriately
+   - Test cache expiration after TTL
+   - Ensure cache invalidation works on membership updates
+   - Test performance improvement with cached lookups
+
+6. Error handling tests:
+   - Test appropriate error messages for auth failures
+   - Verify error types can be caught and handled
+   - Test graceful handling of database connection errors
+   - Ensure no sensitive information leaks in error messages

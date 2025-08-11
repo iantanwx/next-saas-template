@@ -1,6 +1,6 @@
 # Task ID: 4
 # Title: Todo mutators: Implement packages/zero/src/mutators.ts with createTodo, updateTodo, deleteTodo
-# Status: pending
+# Status: cancelled
 # Dependencies: 3
 # Priority: high
 # Description: Implement CRUD operations for todos including creation, versioned updates, and deletion in the Zero package mutators module.
@@ -39,6 +39,9 @@
    - Version conflict error types
 
 6. Export all mutator functions and types from the module
+<info added on 2025-08-09T08:14:59.782Z>
+SUPERSEDED: This task has been superseded by Task 11 "Implement comprehensive Zero ZQL mutations for all schema tables" which provides a more comprehensive approach covering all mutations for todos, organizations, members, tags, and users in a well-organized structure with one module per table. The functionality originally planned for this single mutators.ts file is now better addressed through the modular approach in Task 11, which creates separate mutation modules (todos.ts, organizations.ts, etc.) in the packages/zero/src/mutations/ directory with improved organization and maintainability.
+</info added on 2025-08-09T08:14:59.782Z>
 
 # Test Strategy:
 1. Unit test createTodo function:

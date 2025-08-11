@@ -1,6 +1,13 @@
-import { and, desc, eq, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import {
+  and,
+  desc,
+  eq,
+  sql,
+  type InferInsertModel,
+  type InferSelectModel,
+} from 'drizzle-orm';
 import { db } from './db/connection';
-import { todos, todoPriority, todoStatus, tags, todoTags } from './db/schema';
+import { tags, todoPriority, todos, todoStatus, todoTags } from './db/schema';
 
 export type Todo = InferSelectModel<typeof todos>;
 export type InsertTodo = InferInsertModel<typeof todos>;
@@ -27,11 +34,11 @@ export async function create(data: InsertTodo): Promise<Todo> {
       lastEditedBy: data.userId,
     })
     .returning();
-  
+
   if (!todo) {
     throw new Error('Failed to create todo');
   }
-  
+
   return todo;
 }
 
@@ -49,11 +56,14 @@ export async function findById(id: string): Promise<TodoWithTags | null> {
       },
     },
   });
-  
+
   return todo || null;
 }
 
-export async function findByUser(userId: string, organizationId: string): Promise<TodoWithTags[]> {
+export async function findByUser(
+  userId: string,
+  organizationId: string
+): Promise<TodoWithTags[]> {
   return await db.query.todos.findMany({
     where: and(
       eq(todos.userId, userId),
@@ -74,7 +84,9 @@ export async function findByUser(userId: string, organizationId: string): Promis
   });
 }
 
-export async function findByOrganization(organizationId: string): Promise<TodoWithTags[]> {
+export async function findByOrganization(
+  organizationId: string
+): Promise<TodoWithTags[]> {
   return await db.query.todos.findMany({
     where: and(
       eq(todos.organizationId, organizationId),
@@ -143,7 +155,9 @@ export async function update(
     .returning();
 
   if (!todo) {
-    throw new Error('Failed to update todo - version conflict or todo not found');
+    throw new Error(
+      'Failed to update todo - version conflict or todo not found'
+    );
   }
 
   return todo;
@@ -242,21 +256,16 @@ export async function addTagToTodo(
 
   // Check if the todo-tag relationship already exists
   const existingTodoTag = await db.query.todoTags.findFirst({
-    where: and(
-      eq(todoTags.todoId, todoId),
-      eq(todoTags.tagId, tag.id)
-    ),
+    where: and(eq(todoTags.todoId, todoId), eq(todoTags.tagId, tag.id)),
   });
 
   if (!existingTodoTag) {
     // Create the todo-tag relationship
-    await db
-      .insert(todoTags)
-      .values({
-        todoId,
-        tagId: tag.id,
-        createdAt: new Date(),
-      });
+    await db.insert(todoTags).values({
+      todoId,
+      tagId: tag.id,
+      createdAt: new Date(),
+    });
   }
 
   // Return the updated todo with tags
@@ -275,12 +284,7 @@ export async function removeTagFromTodo(
   // Remove the todo-tag relationship
   await db
     .delete(todoTags)
-    .where(
-      and(
-        eq(todoTags.todoId, todoId),
-        eq(todoTags.tagId, tagId)
-      )
-    );
+    .where(and(eq(todoTags.todoId, todoId), eq(todoTags.tagId, tagId)));
 
   // Return the updated todo with tags
   const updatedTodo = await findById(todoId);
@@ -291,7 +295,9 @@ export async function removeTagFromTodo(
   return updatedTodo;
 }
 
-export async function getTagsByOrganization(organizationId: string): Promise<Tag[]> {
+export async function getTagsByOrganization(
+  organizationId: string
+): Promise<Tag[]> {
   return await db.query.tags.findMany({
     where: and(
       eq(tags.organizationId, organizationId),
@@ -324,7 +330,9 @@ export async function softDelete(
     .returning();
 
   if (!todo) {
-    throw new Error('Failed to delete todo - version conflict or todo not found');
+    throw new Error(
+      'Failed to delete todo - version conflict or todo not found'
+    );
   }
 }
 

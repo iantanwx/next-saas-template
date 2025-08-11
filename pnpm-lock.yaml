@@ -258,6 +258,9 @@ importers:
       postgres:
         specifier: ^3.4.4
         version: 3.4.7
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@superscale/tsconfig':
         specifier: workspace:^
@@ -678,9 +681,18 @@ importers:
       '@superscale/crud':
         specifier: workspace:^
         version: link:../crud
+      '@superscale/lib':
+        specifier: workspace:^
+        version: link:../lib
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1)
       next:
         specifier: 'catalog:'
         version: 15.4.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.7
       react:
         specifier: 'catalog:'
         version: 19.1.1

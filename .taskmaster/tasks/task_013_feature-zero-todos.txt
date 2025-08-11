@@ -1,0 +1,85 @@
+# Task ID: 13
+# Title: Refactor mutators to implement server mutators extending client mutators following Rocicorp zbugs pattern
+# Status: pending
+# Dependencies: 11, 12
+# Priority: high
+# Description: Create server-side mutators that extend existing client mutators using the Rocicorp zbugs pattern, implementing authoritative operations with Drizzle adapter while client mutators handle optimistic updates.
+# Details:
+1. Create packages/zero/src/server-mutators.ts following Rocicorp zbugs pattern:
+   - Import existing client mutators from mutators.ts or mutations/*.ts
+   - Import Drizzle adapter and database connection utilities
+   - Import shared auth utilities from auth.ts for permission validation
+   - Define ServerMutatorContext extending client context with server-specific properties
+
+2. Implement server mutator wrapper pattern:
+   - Create wrapServerMutator higher-order function that:
+     * Accepts a client mutator function as input
+     * Returns a server mutator with enhanced authorization and validation
+     * Injects server-side context (DB connection, auth state, etc.)
+     * Handles transaction management for atomic operations
+
+3. Extend each client mutator with server-side logic:
+   - createTodo: Add server-side ID generation, timestamp management, and atomic DB writes
+   - updateTodo: Implement server-side version checking and conflict resolution
+   - deleteTodo: Add cascading delete logic for related records (tags, etc.)
+   - Use Drizzle adapter for all database operations
+
+4. Implement permission validation using shared auth utilities:
+   - Call hasOrgAccess/isOrgMember from auth.ts before executing mutations
+   - Validate user permissions at the server level (since Zero's built-in permissions don't apply)
+   - Return appropriate error responses for unauthorized operations
+   - Log security events for audit trail
+
+5. Handle optimistic update reconciliation:
+   - Server mutators return authoritative state after operations
+   - Include version/timestamp data for client reconciliation
+   - Implement conflict resolution strategies for concurrent updates
+   - Return structured error objects that clients can handle gracefully
+
+6. Add server-specific enhancements:
+   - Implement database transaction support for multi-step operations
+   - Add server-side data validation beyond client validation
+   - Include audit logging for all mutation operations
+   - Implement rate limiting and abuse prevention
+
+7. Export server mutators with proper TypeScript typing:
+   - Create ServerMutators type extending ClientMutators
+   - Export individual server mutator functions
+   - Export a combined serverMutators object for easy integration
+
+# Test Strategy:
+1. Unit test server mutator wrapper:
+   - Test wrapServerMutator correctly extends client mutators
+   - Verify server context is properly injected
+   - Test transaction rollback on errors
+   - Verify auth utilities are called before mutations
+
+2. Test individual server mutators:
+   - Test createTodo with valid and invalid organization permissions
+   - Test updateTodo conflict resolution with concurrent updates
+   - Test deleteTodo cascading behavior
+   - Verify Drizzle adapter is used for all DB operations
+
+3. Test permission validation:
+   - Verify unauthorized users cannot execute mutations
+   - Test organization-scoped access control
+   - Ensure auth.ts utilities are properly integrated
+   - Test error responses for permission failures
+
+4. Test optimistic update reconciliation:
+   - Simulate client-server state divergence
+   - Test version conflict resolution
+   - Verify authoritative server state is returned
+   - Test error object structure for client handling
+
+5. Integration tests:
+   - Test full client-to-server mutation flow
+   - Verify optimistic updates are reconciled correctly
+   - Test transaction atomicity across multiple operations
+   - Validate audit logging functionality
+
+6. Performance tests:
+   - Measure mutation latency with Drizzle operations
+   - Test transaction overhead
+   - Verify rate limiting doesn't impact normal usage
+   - Test concurrent mutation handling

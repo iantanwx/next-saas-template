@@ -4,13 +4,13 @@ export * as todos from './todo';
 export * as users from './user';
 
 // Export specific functions for convenience
-export { 
-  addTagToTodo, 
-  removeTagFromTodo, 
-  getTagsByOrganization, 
+export {
+  addTagToTodo,
+  removeTagFromTodo,
+  getTagsByOrganization,
   findOrCreateTag,
   type TodoWithTags,
-  type Tag 
+  type Tag,
 } from './todo';
 
 // Export schema enums and types
@@ -28,3 +28,6 @@ export {
   tags,
   todoTags,
 } from './db/schema';
+
+// Validators
+export * as validators from './validators';

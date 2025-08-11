@@ -24,15 +24,6 @@ export type AuthData = {
 };
 
 // Simple permission functions following the exact pattern from Zero docs
-const allowIfTodoCreator = (
-  authData: AuthData,
-  { cmp }: ExpressionBuilder<Schema, 'todos'>
-) => cmp('userId', authData.sub);
-
-const allowIfSelfMember = (
-  authData: AuthData,
-  { cmp }: ExpressionBuilder<Schema, 'organizationMembers'>
-) => cmp('userId', authData.sub);
 
 const allowIfSelfUser = (
   authData: AuthData,
@@ -102,18 +93,11 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
     todos: {
       row: {
         select: [allowIfInOrganization],
-        insert: [allowIfInOrganization],
-        update: {
-          preMutation: [allowIfTodoCreator],
-          postMutation: [allowIfTodoCreator],
-        },
-        delete: [allowIfTodoCreator],
       },
     },
     organizationMembers: {
       row: {
         select: [allowIfOrgMember],
-        delete: [allowIfSelfMember],
       },
     },
     organizations: {
@@ -124,29 +108,17 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
     tags: {
       row: {
         select: [allowIfInTagOrganization],
-        insert: [allowIfInTagOrganization],
-        update: {
-          preMutation: [allowIfInTagOrganization],
-          postMutation: [allowIfInTagOrganization],
-        },
-        delete: [allowIfInTagOrganization],
       },
     },
     users: {
       row: {
         select: [allowIfSelfUser],
-        update: {
-          preMutation: [allowIfSelfUser],
-          postMutation: [allowIfSelfUser],
-        },
       },
     },
     // todoTags junction table - secure organization-based permissions
     todoTags: {
       row: {
         select: [allowIfTodoTagOrganizationMember],
-        insert: [allowIfTodoTagOrganizationMember],
-        delete: [allowIfTodoTagOrganizationMember],
       },
     },
   } satisfies PermissionsConfig<AuthData, Schema>;

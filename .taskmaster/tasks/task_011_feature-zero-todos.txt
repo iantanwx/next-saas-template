@@ -1,7 +1,7 @@
 # Task ID: 11
 # Title: Implement comprehensive Zero ZQL mutations for all schema tables
 # Status: pending
-# Dependencies: 3, 4
+# Dependencies: 3
 # Priority: high
 # Description: Create a complete set of custom ZQL mutation functions in packages/zero/src/mutations/ directory with one module per major table, including proper organization-based permission validation, optimistic concurrency control, and comprehensive TypeScript typing.
 # Details:
@@ -178,4 +178,16 @@ Create packages/zero/src/mutations/index.ts with:
 - Document usage patterns and error handling
 - Update packages/zero/src/index.ts to export mutations
 - Add integration examples and JSDoc documentation
+
+## 8. Read permissions: implement Zero definePermissions for query-time auth [done]
+### Dependencies: None
+### Description: Implement organization-based read (select) permissions using Zero's permission system so queries are enforced, following the ztunes example (see https://github.com/rocicorp/ztunes/blob/676a8fbe208369c7c2ed0620b763ca82933f414e/zero/schema.ts?plain=1#L28). Update packages/zero/src/schema.ts to apply select permissions for todos, organizations, tags, users, and todoTags consistent with org membership. Keep writes enforced by custom mutators; permissions here are for reads only.
+### Details:
+
+
+## 9. Shared Zod validators in @superscale/crud [pending]
+### Dependencies: None
+### Description: Create reusable Zod schemas in packages/crud (e.g., src/validators/) for core entities (todo, tag, organization, organizationMember, userProfile). Replace ad-hoc validations in zero mutators (e.g., validateTodoTitle/description) by importing these validators. Export types from the Zod schemas for use across apps (tRPC, mutators, UI forms). Add zod as a dependency to @superscale/crud and re-export validators via @superscale/crud.
+### Details:
+
 

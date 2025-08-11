@@ -1,7 +1,7 @@
 # Task ID: 7
 # Title: Replace tRPC mutations with Zero mutators
 # Status: pending
-# Dependencies: 4, 6
+# Dependencies: 6, 11
 # Priority: high
 # Description: Replace existing tRPC mutation calls (onAdd/onEdit/onToggle/onDelete) with Zero mutator functions, implementing a short-term feature flag fallback to ensure smooth transition and rollback capability.
 # Details:

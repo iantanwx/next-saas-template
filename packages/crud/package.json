@@ -26,7 +26,8 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "drizzle-orm": "catalog:",
-    "postgres": "^3.4.4"
+    "postgres": "^3.4.4",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@superscale/tsconfig": "workspace:^",
