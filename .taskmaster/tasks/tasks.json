@@ -1134,12 +1134,58 @@
         "description": "Replace the existing Electric useLiveQuery implementation in the Todos component with Zero's query system, implementing proper filtering and sorting while maintaining the current UI mapping.",
         "details": "1. Locate and update the Todos component (likely in apps/web/src/components or similar):\n   - Remove Electric imports (useLiveQuery, Electric client)\n   - Import Zero query hooks and client from packages/zero\n   - Replace useLiveQuery call with Zero's equivalent query method\n\n2. Implement Zero query with proper filtering:\n   - Filter todos by user_id (current authenticated user)\n   - Filter by organization_id (current user's organization context)\n   - Filter by deleted_at IS NULL to exclude soft-deleted records\n   - Order results by updated_at DESC for most recent first\n\n3. Maintain existing UI mapping:\n   - Ensure the query result structure matches what the UI expects\n   - Preserve any existing data transformations or computed properties\n   - Keep loading states, error handling, and empty states intact\n\n4. Update component dependencies:\n   - Ensure ZeroProvider is available in component tree (from Task 5)\n   - Use organization context for organization_id filtering\n   - Integrate with session auth for user_id filtering\n\n5. Test data flow:\n   - Verify todos load correctly with new query system\n   - Confirm filtering works properly (user sees only their org's todos)\n   - Ensure real-time updates still function as expected",
         "testStrategy": "1. Verify todos component renders without errors after Zero query integration\n2. Test filtering functionality:\n   - Confirm only todos belonging to current user's organization are displayed\n   - Verify deleted todos (deleted_at IS NOT NULL) are properly excluded\n   - Test with multiple users in same organization see shared todos\n3. Test sorting and ordering:\n   - Verify todos appear in descending order by updated_at timestamp\n   - Test that newly updated todos move to top of list\n4. Test real-time updates:\n   - Create new todo and verify it appears immediately\n   - Update existing todo and confirm changes reflect in UI\n   - Delete todo and verify it disappears from list\n5. Test UI mapping compatibility:\n   - Ensure all existing todo properties are still accessible\n   - Verify loading states work correctly during query execution\n   - Test error handling when query fails\n6. Cross-browser testing to ensure Zero query works consistently across different environments",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           3
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Ensure Zero provider context is mounted and organizationId is available",
+            "description": "Verify `Z` provider is mounted at an appropriate level (root/org layout). Pass resolved organizationId from layout to Todos component to avoid client-side lookups. Provider should gracefully no-op if auth/env missing.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 2,
+            "title": "Replace Electric hook with Zero useQuery in Todos",
+            "description": "Remove Electric client/hooks and implement Zero useQuery from @rocicorp/zero/react to fetch todos with filters: organizationId match, deletedAt IS NULL; order by updatedAt DESC. Keep result shape compatible with current UI.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 3,
+            "title": "Preserve loading/empty/error states; no-op if provider inactive",
+            "description": "Maintain existing UX states during query. If `Z` provider or auth/env are absent (per pass-through provider), render safe placeholder and avoid client lookups.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 4,
+            "title": "Remove Electric artifacts and keep minimal surface changes",
+            "description": "Delete Electric-specific imports and clients in Todos components. Avoid deep refactors; keep props/state shapes stable; adapt only query hook and result mapping.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 5,
+            "title": "Manual verification of live updates, filters and ordering",
+            "description": "Verify: org-based filtering, deletedAt excluded, updatedAt DESC ordering. Confirm live updates: create/update/delete reflect immediately. Ensure UI mapping compatibility.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          }
+        ]
       },
       {
         "id": 7,
@@ -1288,7 +1334,7 @@
             "title": "Shared Zod validators in @superscale/crud",
             "description": "Create reusable Zod schemas in packages/crud (e.g., src/validators/) for core entities (todo, tag, organization, organizationMember, userProfile). Replace ad-hoc validations in zero mutators (e.g., validateTodoTitle/description) by importing these validators. Export types from the Zod schemas for use across apps (tRPC, mutators, UI forms). Add zod as a dependency to @superscale/crud and re-export validators via @superscale/crud.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "parentTaskId": 11
           }
@@ -1300,7 +1346,7 @@
         "description": "Create comprehensive authentication utilities in packages/zero/src/auth.ts following the Rocicorp zbugs pattern, providing functions to validate user permissions, organization membership, and role-based access control for use in both client and server mutators.",
         "details": "1. Create packages/zero/src/auth.ts with authentication utilities:\n   - Import necessary types from schema.gen.ts and Supabase JWT types\n   - Define AuthContext interface containing user info, JWT claims, and organization data\n   - Implement JWT parsing and validation utilities for Supabase tokens\n\n2. Implement core authentication functions:\n   - hasOrgAccess(userId: string, orgId: string): Promise<boolean> - Check if user has any access to organization\n   - isOrgMember(userId: string, orgId: string): Promise<boolean> - Verify active organization membership\n   - isOrgAdmin(userId: string, orgId: string): Promise<boolean> - Check admin role in organization\n   - getUserOrganizations(userId: string): Promise<Organization[]> - Get all organizations for a user\n   - validateOrgPermission(userId: string, orgId: string, permission: string): Promise<boolean> - Generic permission validator\n\n3. Implement JWT and session utilities:\n   - parseSupabaseJWT(token: string): AuthContext - Extract user and org info from JWT\n   - validateSession(token: string): Promise<boolean> - Verify JWT signature and expiration\n   - getSessionUserId(token: string): string | null - Extract user ID from JWT claims\n   - getSessionOrgId(token: string): string | null - Extract current org context from JWT\n\n4. Create helper functions for mutator integration:\n   - createAuthContext(token: string): Promise<AuthContext> - Build complete auth context\n   - requireOrgAccess(authContext: AuthContext, orgId: string): void - Throw if no access\n   - requireOrgAdmin(authContext: AuthContext, orgId: string): void - Throw if not admin\n   - withAuth<T>(token: string, fn: (auth: AuthContext) => Promise<T>): Promise<T> - Auth wrapper\n\n5. Add TypeScript types and interfaces:\n   - Define Permission enum for different permission levels\n   - Create OrgRole type union ('member' | 'admin' | 'owner')\n   - Define error types for authentication failures\n   - Export all types for use in mutators\n\n6. Implement caching layer for performance:\n   - Cache organization membership lookups with TTL\n   - Cache parsed JWT claims to avoid repeated parsing\n   - Implement cache invalidation on membership changes",
         "testStrategy": "1. Unit test JWT parsing and validation:\n   - Test parseSupabaseJWT with valid Supabase JWT tokens\n   - Test handling of expired tokens and invalid signatures\n   - Verify correct extraction of user ID and organization claims\n   - Test edge cases with missing or malformed claims\n\n2. Test organization membership functions:\n   - Mock database queries for organization_members table\n   - Test hasOrgAccess returns true for valid memberships\n   - Test isOrgMember filters out inactive memberships\n   - Test isOrgAdmin correctly identifies admin roles\n   - Test getUserOrganizations returns all user's organizations\n\n3. Test permission validation:\n   - Test validateOrgPermission with various permission combinations\n   - Verify permission inheritance (admin has member permissions)\n   - Test rejection of invalid permissions or organizations\n   - Test handling of null/undefined inputs\n\n4. Integration test with mutators:\n   - Create sample mutator using requireOrgAccess\n   - Test mutator rejects unauthorized access attempts\n   - Verify auth context is properly passed to mutators\n   - Test withAuth wrapper handles async operations correctly\n\n5. Test caching behavior:\n   - Verify membership lookups are cached appropriately\n   - Test cache expiration after TTL\n   - Ensure cache invalidation works on membership updates\n   - Test performance improvement with cached lookups\n\n6. Error handling tests:\n   - Test appropriate error messages for auth failures\n   - Verify error types can be caught and handled\n   - Test graceful handling of database connection errors\n   - Ensure no sensitive information leaks in error messages",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           3,
           11
@@ -1314,7 +1360,7 @@
         "description": "Create server-side mutators that extend existing client mutators using the Rocicorp zbugs pattern, implementing authoritative operations with Drizzle adapter while client mutators handle optimistic updates.",
         "details": "1. Create packages/zero/src/server-mutators.ts following Rocicorp zbugs pattern:\n   - Import existing client mutators from mutators.ts or mutations/*.ts\n   - Import Drizzle adapter and database connection utilities\n   - Import shared auth utilities from auth.ts for permission validation\n   - Define ServerMutatorContext extending client context with server-specific properties\n\n2. Implement server mutator wrapper pattern:\n   - Create wrapServerMutator higher-order function that:\n     * Accepts a client mutator function as input\n     * Returns a server mutator with enhanced authorization and validation\n     * Injects server-side context (DB connection, auth state, etc.)\n     * Handles transaction management for atomic operations\n\n3. Extend each client mutator with server-side logic:\n   - createTodo: Add server-side ID generation, timestamp management, and atomic DB writes\n   - updateTodo: Implement server-side version checking and conflict resolution\n   - deleteTodo: Add cascading delete logic for related records (tags, etc.)\n   - Use Drizzle adapter for all database operations\n\n4. Implement permission validation using shared auth utilities:\n   - Call hasOrgAccess/isOrgMember from auth.ts before executing mutations\n   - Validate user permissions at the server level (since Zero's built-in permissions don't apply)\n   - Return appropriate error responses for unauthorized operations\n   - Log security events for audit trail\n\n5. Handle optimistic update reconciliation:\n   - Server mutators return authoritative state after operations\n   - Include version/timestamp data for client reconciliation\n   - Implement conflict resolution strategies for concurrent updates\n   - Return structured error objects that clients can handle gracefully\n\n6. Add server-specific enhancements:\n   - Implement database transaction support for multi-step operations\n   - Add server-side data validation beyond client validation\n   - Include audit logging for all mutation operations\n   - Implement rate limiting and abuse prevention\n\n7. Export server mutators with proper TypeScript typing:\n   - Create ServerMutators type extending ClientMutators\n   - Export individual server mutator functions\n   - Export a combined serverMutators object for easy integration",
         "testStrategy": "1. Unit test server mutator wrapper:\n   - Test wrapServerMutator correctly extends client mutators\n   - Verify server context is properly injected\n   - Test transaction rollback on errors\n   - Verify auth utilities are called before mutations\n\n2. Test individual server mutators:\n   - Test createTodo with valid and invalid organization permissions\n   - Test updateTodo conflict resolution with concurrent updates\n   - Test deleteTodo cascading behavior\n   - Verify Drizzle adapter is used for all DB operations\n\n3. Test permission validation:\n   - Verify unauthorized users cannot execute mutations\n   - Test organization-scoped access control\n   - Ensure auth.ts utilities are properly integrated\n   - Test error responses for permission failures\n\n4. Test optimistic update reconciliation:\n   - Simulate client-server state divergence\n   - Test version conflict resolution\n   - Verify authoritative server state is returned\n   - Test error object structure for client handling\n\n5. Integration tests:\n   - Test full client-to-server mutation flow\n   - Verify optimistic updates are reconciled correctly\n   - Test transaction atomicity across multiple operations\n   - Validate audit logging functionality\n\n6. Performance tests:\n   - Measure mutation latency with Drizzle operations\n   - Test transaction overhead\n   - Verify rate limiting doesn't impact normal usage\n   - Test concurrent mutation handling",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           11,
           12
@@ -1325,7 +1371,7 @@
     ],
     "metadata": {
       "created": "2025-08-09T03:10:38.325Z",
-      "updated": "2025-08-11T02:46:33.873Z",
+      "updated": "2025-08-11T06:23:04.525Z",
       "description": "Zero-based todos migration and integration tasks"
     }
   }

@@ -1,32 +1,21 @@
 'use client';
 
-import { useLiveQuery } from '@electric-sql/pglite-react';
+import { useQuery, useZero } from '@rocicorp/zero/react';
 import type { UserWithMemberships } from '@superscale/crud/types';
-import { usePGlite } from '@superscale/pglite';
-import { DBStatus } from '@superscale/pglite/provider';
 import { t } from '@superscale/trpc/client';
+import type { Schema, Todo as ZTodo } from '@superscale/zero';
 import { useCallback, useMemo } from 'react';
-import TodoList from './todo-list';
 import type { TaskFormValues } from './todo-form';
 import type { Task } from './todo-item';
+import TodoList from './todo-list';
 
 type Props = {
   user: UserWithMemberships;
 };
 
 export function Todos({ user }: Props) {
-  const { status } = usePGlite();
-
   const userId = user.id;
   const organizationId = user.memberships?.[0]?.organization.id;
-
-  if (status !== DBStatus.Ready) {
-    return (
-      <div className="p-4 text-muted-foreground text-sm">
-        Initializing local DB…
-      </div>
-    );
-  }
 
   if (!organizationId) {
     return (
@@ -61,18 +50,38 @@ function TodoListContainer({
   userId: string;
   organizationId: string;
 }) {
-  // Live query to keep UI synced
-  const query = `SELECT id, title, description, completed, priority, status, due_date, created_at, updated_at, version
-          FROM todos WHERE user_id = '${userId}' AND organization_id = '${organizationId}'
-          AND deleted_at IS NULL
-          ORDER BY updated_at DESC`;
-  const live = useLiveQuery(query);
+  // Zero live query (filter by org and user to preserve existing semantics)
+  const z = useZero<Schema>();
+  const query = useMemo(
+    () =>
+      z.query.todos
+        .where('organizationId', organizationId)
+        .where('userId', userId)
+        .where('deletedAt', 'IS', null)
+        .orderBy('updatedAt', 'desc'),
+    [z, organizationId, userId]
+  );
+  const [zeroTodos] = useQuery(query);
 
   const rows: TodoRow[] = useMemo(() => {
-    if (!live) return [];
-    const possible = live as unknown as TodoRow[] | { rows?: TodoRow[] };
-    return Array.isArray(possible) ? possible : (possible.rows ?? []);
-  }, [live]);
+    const arr = (zeroTodos ?? []) as readonly ZTodo[];
+    return arr.map((r) => ({
+      id: r.id,
+      title: r.title,
+      description: r.description ?? null,
+      completed: Boolean(r.completed),
+      priority: (r.priority ?? 'medium') as 'low' | 'medium' | 'high',
+      status: (r.status ?? 'pending') as
+        | 'pending'
+        | 'in_progress'
+        | 'completed'
+        | 'cancelled',
+      due_date: r.dueDate ? new Date(r.dueDate).toISOString() : null,
+      created_at: r.createdAt ? new Date(r.createdAt).toISOString() : null,
+      updated_at: r.updatedAt ? new Date(r.updatedAt).toISOString() : null,
+      version: r.version ?? '1',
+    }));
+  }, [zeroTodos]);
 
   // Mutations
   const createMutation = t.todo.create.useMutation();
@@ -122,7 +131,7 @@ function TodoListContainer({
         description: values.notes.trim() || undefined,
         priority: values.priority,
         dueDate: values.dueDate ?? null,
-        // TODO: Re-implement tags with new schema after Zero migration  
+        // TODO: Re-implement tags with new schema after Zero migration
         // tags: values.tags,
         completed: task.completed,
         status: task.completed ? 'completed' : 'pending',

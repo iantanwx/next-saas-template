@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-const DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION = '__default__';
-
 export const serverSchema = z.object({
   // App
   NODE_ENV: z
