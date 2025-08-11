@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@rocicorp/zero':
+      specifier: ^0.22.2025080200
+      version: 0.22.2025080200
     '@supabase/supabase-js':
       specifier: 2.54.0
       version: 2.54.0
@@ -96,7 +99,7 @@ importers:
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.62.0(react@19.1.1))
       '@rocicorp/zero':
-        specifier: ^0.22.2025080200
+        specifier: 'catalog:'
         version: 0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(typescript@5.9.2)
       '@sentry/nextjs':
         specifier: ^7.120.2
@@ -257,7 +260,10 @@ importers:
         version: 2.2.2
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1)
+        version: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(@types/react@19.1.9)(pg@8.16.3)(postgres@3.4.7)(react@19.1.1)
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       postgres:
         specifier: ^3.4.4
         version: 3.4.7
@@ -271,6 +277,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 22.17.1
+      '@types/pg':
+        specifier: ^8.15.5
+        version: 8.15.5
       dotenv:
         specifier: 'catalog:'
         version: 16.6.1
@@ -417,7 +426,7 @@ importers:
         version: link:../lib
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1)
+        version: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(@types/react@19.1.9)(pg@8.16.3)(postgres@3.4.7)(react@19.1.1)
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -689,7 +698,7 @@ importers:
         version: link:../lib
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1)
+        version: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(@types/react@19.1.9)(pg@8.16.3)(postgres@3.4.7)(react@19.1.1)
       next:
         specifier: 'catalog:'
         version: 15.4.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -717,7 +726,7 @@ importers:
         version: 16.6.1
       drizzle-zero:
         specifier: ^0.11.0
-        version: 0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2)
+        version: 0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(@types/react@19.1.9)(pg@8.16.3)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -4901,6 +4910,9 @@ packages:
   '@types/pg-pool@2.0.6':
     resolution: {integrity: sha512-TaAUE5rq2VQYxab5Ts7WZhKNmuN78Q6PiFonTDdpbx8a1H0M1vhy3rhiMjl+e2iHmogyMw7jZF4FrE6eJUy5HQ==}
 
+  '@types/pg@8.15.5':
+    resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
+
   '@types/pg@8.6.1':
     resolution: {integrity: sha512-1Kc4oAGzAl7uqUStZCDvaLFqZrW9qWSjXOmBfdgyBP5La7Us6Mg4GBvRlSoaZMhQF/zSj1C8CtKMBkoiT8eL8w==}
 
@@ -7316,6 +7328,12 @@ packages:
   peberminta@0.9.0:
     resolution: {integrity: sha512-XIxfHpEuSJbITd1H3EeQwpcZbTLHc+VVr8ANI9t5sit565tsI4/xK3KWTUFE2e6QiangUkh3B0jihzmGnNrRsQ==}
 
+  pg-cloudflare@1.2.7:
+    resolution: {integrity: sha512-YgCtzMH0ptvZJslLM1ffsY4EuGaU0cx4XSdXLRFae8bPP4dS5xL1tNB3k2o/N64cHJpwU7dxKli/nZ2lUa5fLg==}
+
+  pg-connection-string@2.9.1:
+    resolution: {integrity: sha512-nkc6NpDcvPVpZXxrreI/FOtX3XemeLl8E0qFr6F2Lrm/I8WOnaWNhIPK2Z7OHpw7gh5XJThi6j6ppgNoaT1w4w==}
+
   pg-format-fix@1.0.5:
     resolution: {integrity: sha512-HcXVy9Zk4kn87P0+U9XSxGtenNyknbPB87NreixSBk0lYJy89u+d/zQbS+f/aTTxABQ/B6FH1KdBB5EsGzRS2w==}
     engines: {node: '>=4.0'}
@@ -7324,12 +7342,29 @@ packages:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
     engines: {node: '>=4.0.0'}
 
+  pg-pool@3.10.1:
+    resolution: {integrity: sha512-Tu8jMlcX+9d8+QVzKIvM/uJtp07PKr82IUOYEphaWcoBhIYkoHpLXN3qO59nAI11ripznDsEzEv8nUxBVWajGg==}
+    peerDependencies:
+      pg: '>=8.0'
+
   pg-protocol@1.10.3:
     resolution: {integrity: sha512-6DIBgBQaTKDJyxnXaLiLR8wBpQQcGWuAESkRBX/t6OwA8YsqP+iVSiond2EDy6Y/dsGk8rh/jtax3js5NeV7JQ==}
 
   pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
     engines: {node: '>=4'}
+
+  pg@8.16.3:
+    resolution: {integrity: sha512-enxc1h0jA/aq5oSDMvqyW3q89ra6XIIDZgCX9vkMrnz5DFTw/Ny3Li2lFQ+pt3L6MCgm/5o2o8HW9hiJji+xvw==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      pg-native: '>=3.0.1'
+    peerDependenciesMeta:
+      pg-native:
+        optional: true
+
+  pgpass@1.0.5:
+    resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -13225,6 +13260,12 @@ snapshots:
     dependencies:
       '@types/pg': 8.6.1
 
+  '@types/pg@8.15.5':
+    dependencies:
+      '@types/node': 24.2.1
+      pg-protocol: 1.10.3
+      pg-types: 2.2.0
+
   '@types/pg@8.6.1':
     dependencies:
       '@types/node': 24.2.1
@@ -14079,20 +14120,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1):
+  drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(@types/react@19.1.9)(pg@8.16.3)(postgres@3.4.7)(react@19.1.1):
     optionalDependencies:
       '@electric-sql/pglite': 0.3.7
       '@opentelemetry/api': 1.9.0
-      '@types/pg': 8.6.1
+      '@types/pg': 8.15.5
       '@types/react': 19.1.9
+      pg: 8.16.3
       postgres: 3.4.7
       react: 19.1.1
 
-  drizzle-zero@0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2):
+  drizzle-zero@0.11.1(@rocicorp/zero@0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(typescript@5.9.2))(drizzle-orm@0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(@types/react@19.1.9)(pg@8.16.3)(postgres@3.4.7)(react@19.1.1))(prettier@3.6.2):
     dependencies:
       '@rocicorp/zero': 0.22.2025080200(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(typescript@5.9.2)
       commander: 14.0.0
-      drizzle-orm: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(@types/react@19.1.9)(postgres@3.4.7)(react@19.1.1)
+      drizzle-orm: 0.38.4(@electric-sql/pglite@0.3.7)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(@types/react@19.1.9)(pg@8.16.3)(postgres@3.4.7)(react@19.1.1)
       jsonc-parser: 3.3.1
       ts-morph: 26.0.0
     optionalDependencies:
@@ -15968,9 +16010,18 @@ snapshots:
 
   peberminta@0.9.0: {}
 
+  pg-cloudflare@1.2.7:
+    optional: true
+
+  pg-connection-string@2.9.1: {}
+
   pg-format-fix@1.0.5: {}
 
   pg-int8@1.0.1: {}
+
+  pg-pool@3.10.1(pg@8.16.3):
+    dependencies:
+      pg: 8.16.3
 
   pg-protocol@1.10.3: {}
 
@@ -15981,6 +16032,20 @@ snapshots:
       postgres-bytea: 1.0.0
       postgres-date: 1.0.7
       postgres-interval: 1.2.0
+
+  pg@8.16.3:
+    dependencies:
+      pg-connection-string: 2.9.1
+      pg-pool: 3.10.1(pg@8.16.3)
+      pg-protocol: 1.10.3
+      pg-types: 2.2.0
+      pgpass: 1.0.5
+    optionalDependencies:
+      pg-cloudflare: 1.2.7
+
+  pgpass@1.0.5:
+    dependencies:
+      split2: 4.2.0
 
   picocolors@1.1.1: {}
 

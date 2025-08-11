@@ -30,8 +30,8 @@ export type Task = {
   priority: Priority;
   dueDate: string | null;
   tags: string[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string | null;
+  updatedAt: string | null;
 };
 
 export type TaskItemProps = {

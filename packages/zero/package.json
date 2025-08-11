@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "zero:start": "zero-cache-dev",
+    "zero:start": "zero-cache-dev -p ./src/schema.ts",
     "zero:generate": "drizzle-zero generate -s ../crud/src/db/schema.ts -o src/schema.gen.ts"
   },
   "keywords": [],

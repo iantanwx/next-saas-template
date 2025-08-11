@@ -1,4 +1,5 @@
 import type { Transaction } from '@rocicorp/zero';
+import type { ServerTransaction } from '@rocicorp/zero/pg';
 import { assert } from '@superscale/lib/utils/assert';
 import { must } from '@superscale/lib/utils/must';
 import type { AuthData, Schema } from './schema';
@@ -12,7 +13,7 @@ export function ensureUser(auth: AuthData): string {
 }
 
 export async function assertOrgMember(
-  tx: Transaction<Schema>,
+  tx: Transaction<Schema> | ServerTransaction<Schema, unknown>,
   userId: string,
   organizationId: string
 ): Promise<void> {
@@ -25,7 +26,7 @@ export async function assertOrgMember(
 }
 
 export async function isOrgAdmin(
-  tx: Transaction<Schema>,
+  tx: Transaction<Schema> | ServerTransaction<Schema, unknown>,
   userId: string,
   organizationId: string
 ): Promise<boolean> {
@@ -39,7 +40,7 @@ export async function isOrgAdmin(
 }
 
 export async function assertOrgAdmin(
-  tx: Transaction<Schema>,
+  tx: Transaction<Schema> | ServerTransaction<Schema, unknown>,
   userId: string,
   organizationId: string
 ): Promise<void> {
@@ -48,7 +49,7 @@ export async function assertOrgAdmin(
 }
 
 export async function assertCanWriteTodo(
-  tx: Transaction<Schema>,
+  tx: Transaction<Schema> | ServerTransaction<Schema, unknown>,
   userId: string,
   todoId: string
 ): Promise<void> {

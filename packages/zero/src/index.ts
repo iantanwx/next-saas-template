@@ -28,6 +28,7 @@ export type {
   AddTagToTodoInput,
   RemoveTagFromTodoInput,
 } from './mutators';
+export type { Mutators } from './mutators';
 
 // Also export the generated schema for reference
 export { schema as generatedSchema } from './schema.gen';

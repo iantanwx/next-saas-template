@@ -91,12 +91,11 @@ export default function TodoList({
     out.sort((a, b) => {
       const dir = sortDir === 'asc' ? 1 : -1;
       switch (sortKey) {
-        case 'createdAt':
-          return (
-            (new Date(a.createdAt).getTime() -
-              new Date(b.createdAt).getTime()) *
-            dir
-          );
+        case 'createdAt': {
+          const ac = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const bc = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return (ac - bc) * dir;
+        }
         case 'dueDate': {
           const ad = a.dueDate
             ? new Date(a.dueDate).getTime()
@@ -322,7 +321,15 @@ export default function TodoList({
         }}
         title="Edit task"
         submitLabel="Save changes"
-        initialTask={editingTask ?? undefined}
+        initialTask={
+          editingTask
+            ? {
+                ...editingTask,
+                createdAt: editingTask.createdAt ?? undefined,
+                updatedAt: editingTask.updatedAt ?? undefined,
+              }
+            : undefined
+        }
         onSubmit={handleEdit}
       />
 

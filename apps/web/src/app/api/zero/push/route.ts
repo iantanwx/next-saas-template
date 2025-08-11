@@ -1,22 +1,32 @@
-import { NextResponse, type NextRequest } from 'next/server';
 import type { JSONValue } from '@rocicorp/zero';
 import { PushProcessor, ZQLDatabase } from '@rocicorp/zero/pg';
-import { schema as zeroSchema } from '@superscale/zero';
-import { createServerMutators } from '@superscale/zero/server-mutators';
-import { DrizzleConnection } from '@superscale/zero/drizzle-adapter';
 import { db } from '@superscale/crud';
-import { getCurrentSession } from '@superscale/lib/auth/session';
+import { createClient } from '@superscale/lib/supabase/server';
+import { schema as zeroSchema } from '@superscale/zero';
+import { DrizzleConnection } from '@superscale/zero/drizzle-adapter';
+import { createServerMutators } from '@superscale/zero/server-mutators';
+import { type NextRequest, NextResponse } from 'next/server';
 
 async function handler(req: NextRequest) {
   const json = (await req.json().catch(() => ({}))) as JSONValue;
-
-  // Supabase session for auth
-  const { user, session } = await getCurrentSession();
-  if (!user || !session)
+  const jwt = req.headers.get('authorization');
+  if (!jwt) {
+    console.error('No JWT provided');
     return new NextResponse('Unauthorized', { status: 401 });
-  const auth = { sub: user.id, email: user.email ?? undefined };
+  }
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getUser(
+    jwt.replace('Bearer ', '')
+  );
+  if (error) {
+    console.error('Error getting user: ', error);
+    return new NextResponse('Unauthorized', { status: 401 });
+  }
 
-  const mutators = createServerMutators(auth);
+  const mutators = createServerMutators({
+    sub: data.user.id,
+    email: data.user.email,
+  });
   const processor = new PushProcessor(
     new ZQLDatabase(new DrizzleConnection(db), zeroSchema)
   );
@@ -24,4 +34,4 @@ async function handler(req: NextRequest) {
   return NextResponse.json(res);
 }
 
-export { handler as POST, handler as GET };
+export { handler as POST };

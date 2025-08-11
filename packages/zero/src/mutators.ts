@@ -1,7 +1,7 @@
 import type { CustomMutatorDefs, Transaction } from '@rocicorp/zero';
-import { assertCanWriteTodo, assertOrgMember, ensureUser } from './auth';
+import * as validators from '@superscale/crud/validators';
+import { ensureUser } from './auth';
 import type { AuthData, Schema } from './schema';
-import { validators } from '@superscale/crud';
 
 // Input types for our mutators
 export interface CreateTodoInput {
@@ -9,7 +9,7 @@ export interface CreateTodoInput {
   description?: string;
   priority?: 'low' | 'medium' | 'high';
   organizationId: string;
-  dueDate?: string; // ISO string date
+  dueDate?: number | null; // Unix ms timestamp
   estimatedHours?: number;
   assignedUserId?: string;
 }
@@ -20,7 +20,7 @@ export interface UpdateTodoInput {
   description?: string;
   priority?: 'low' | 'medium' | 'high';
   status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  dueDate?: string; // ISO string date
+  dueDate?: number | null; // Unix ms timestamp
   estimatedHours?: number;
   assignedUserId?: string;
   completed?: boolean;
@@ -85,12 +85,13 @@ function buildUpdateData(
     setStatusFields(updateData, input.status, input.completed);
   }
   if (input.dueDate !== undefined) {
-    updateData.dueDate =
-      typeof input.dueDate === 'string'
-        ? input.dueDate
-          ? new Date(input.dueDate).getTime()
-          : null
-        : (input.dueDate as unknown as number | null);
+    if (typeof input.dueDate === 'number' || input.dueDate === null) {
+      updateData.dueDate = input.dueDate;
+    } else if (typeof input.dueDate === 'string') {
+      updateData.dueDate = input.dueDate
+        ? new Date(input.dueDate).getTime()
+        : null;
+    }
   }
   if (input.estimatedHours !== undefined) {
     updateData.estimatedHours = input.estimatedHours;
@@ -117,13 +118,11 @@ export function createMutators(authData?: AuthData) {
        */
       create: async (tx: Transaction<Schema>, input: CreateTodoInput) => {
         const userId = validateAuthUser(authData);
-        const parsedCreate = validators.todo.createTodoInputSchema.parse(input);
+        const parsedCreate = validators.todo.createTodoSchema.parse(input);
 
         if (!input.organizationId) {
           throw new Error('Organization ID is required');
         }
-
-        await assertOrgMember(tx, userId, parsedCreate.organizationId);
 
         const now = Date.now();
         const todoId = crypto.randomUUID();
@@ -155,10 +154,8 @@ export function createMutators(authData?: AuthData) {
           throw new Error('Todo ID is required');
         }
 
-        await assertCanWriteTodo(tx, userId, input.id);
-
         // Validate/normalize fields via Zod
-        const parsed = validators.todo.updateTodoInputSchema.parse(input);
+        const parsed = validators.todo.updateTodoSchema.parse(input);
         const updateData = buildUpdateData(parsed, userId);
 
         await tx.mutate.todos.update({
@@ -177,8 +174,6 @@ export function createMutators(authData?: AuthData) {
           throw new Error('Todo ID is required');
         }
 
-        await assertCanWriteTodo(tx, userId, input.id);
-
         const now = Date.now();
         await tx.mutate.todos.update({
           id: input.id,
@@ -193,7 +188,7 @@ export function createMutators(authData?: AuthData) {
        * Add a tag to a todo
        */
       addTag: async (tx: Transaction<Schema>, input: AddTagToTodoInput) => {
-        const userId = validateAuthUser(authData);
+        validateAuthUser(authData);
 
         if (!input.todoId || !input.tagName || !input.organizationId) {
           throw new Error(
@@ -205,14 +200,7 @@ export function createMutators(authData?: AuthData) {
           throw new Error('Tag name must be 50 characters or less');
         }
 
-        await assertOrgMember(tx, userId, input.organizationId);
-
-        const todoRow = await tx.query.todos.where('id', input.todoId).one();
-        if (!todoRow) throw new Error('Todo not found');
-        if (todoRow.organizationId !== input.organizationId) {
-          throw new Error('Forbidden: mismatched organization');
-        }
-        await assertCanWriteTodo(tx, userId, input.todoId);
+        // Server mutators will enforce auth. Client performs optimistic write.
 
         const tagId = crypto.randomUUID();
         const todoTagId = crypto.randomUUID();
@@ -243,13 +231,11 @@ export function createMutators(authData?: AuthData) {
         tx: Transaction<Schema>,
         input: RemoveTagFromTodoInput
       ) => {
-        const userId = validateAuthUser(authData);
+        validateAuthUser(authData);
 
         if (!input.todoId || !input.tagId) {
           throw new Error('Todo ID and tag ID are required');
         }
-
-        await assertCanWriteTodo(tx, userId, input.todoId);
 
         const todoTag = await tx.query.todoTags
           .where('todoId', input.todoId)
@@ -262,3 +248,5 @@ export function createMutators(authData?: AuthData) {
     },
   } as const satisfies CustomMutatorDefs<Schema>;
 }
+
+export type Mutators = ReturnType<typeof createMutators>;

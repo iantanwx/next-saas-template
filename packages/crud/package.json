@@ -5,8 +5,10 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./db/*": "./src/db/*.ts",
     "./types": "./src/types.ts",
-    "./schema": "./src/db/schema.ts"
+    "./schema": "./src/db/schema.ts",
+    "./validators": "./src/validators/index.ts"
   },
   "scripts": {
     "supabase": "supabase",
@@ -26,12 +28,14 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "drizzle-orm": "catalog:",
+    "pg": "^8.16.3",
     "postgres": "^3.4.4",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@superscale/tsconfig": "workspace:^",
     "@types/node": "catalog:",
+    "@types/pg": "^8.15.5",
     "dotenv": "catalog:",
     "drizzle-kit": "^0.31.4",
     "supabase": "2.33.9",
