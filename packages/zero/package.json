@@ -13,6 +13,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "zero:start": "zero-cache-dev -p ./src/schema.ts",
+    "zero:clean": "rm -f /tmp/superscale.db",
     "zero:generate": "drizzle-zero generate -s ../crud/src/db/schema.ts -o src/schema.gen.ts"
   },
   "keywords": [],

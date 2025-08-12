@@ -64,7 +64,9 @@ export default function OrganizationStep({ user, setLoading }: Props) {
           organizationName: organization,
           completedOnboarding: true,
         });
+        // Navigate to the org and refresh so server components re-run and Zero provider gets fresh session/memberships
         router.push(`/${org.slug}`);
+        router.refresh();
         return;
       } finally {
         setLoading(false);

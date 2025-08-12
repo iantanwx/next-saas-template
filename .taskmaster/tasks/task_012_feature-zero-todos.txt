@@ -1,6 +1,6 @@
 # Task ID: 12
 # Title: Implement shared authentication utilities for Zero custom mutators
-# Status: pending
+# Status: done
 # Dependencies: 3, 11
 # Priority: high
 # Description: Create comprehensive authentication utilities in packages/zero/src/auth.ts following the Rocicorp zbugs pattern, providing functions to validate user permissions, organization membership, and role-based access control for use in both client and server mutators.

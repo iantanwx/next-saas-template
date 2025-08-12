@@ -1,6 +1,6 @@
 # Task ID: 6
 # Title: Replace Electric live query in Todos with Zero query
-# Status: pending
+# Status: done
 # Dependencies: 3
 # Priority: high
 # Description: Replace the existing Electric useLiveQuery implementation in the Todos component with Zero's query system, implementing proper filtering and sorting while maintaining the current UI mapping.
@@ -51,31 +51,31 @@
 6. Cross-browser testing to ensure Zero query works consistently across different environments
 
 # Subtasks:
-## 1. Ensure Zero provider context is mounted and organizationId is available [pending]
+## 1. Ensure Zero provider context is mounted and organizationId is available [done]
 ### Dependencies: None
 ### Description: Verify `Z` provider is mounted at an appropriate level (root/org layout). Pass resolved organizationId from layout to Todos component to avoid client-side lookups. Provider should gracefully no-op if auth/env missing.
 ### Details:
 
 
-## 2. Replace Electric hook with Zero useQuery in Todos [pending]
+## 2. Replace Electric hook with Zero useQuery in Todos [done]
 ### Dependencies: None
 ### Description: Remove Electric client/hooks and implement Zero useQuery from @rocicorp/zero/react to fetch todos with filters: organizationId match, deletedAt IS NULL; order by updatedAt DESC. Keep result shape compatible with current UI.
 ### Details:
 
 
-## 3. Preserve loading/empty/error states; no-op if provider inactive [pending]
+## 3. Preserve loading/empty/error states; no-op if provider inactive [done]
 ### Dependencies: None
 ### Description: Maintain existing UX states during query. If `Z` provider or auth/env are absent (per pass-through provider), render safe placeholder and avoid client lookups.
 ### Details:
 
 
-## 4. Remove Electric artifacts and keep minimal surface changes [pending]
+## 4. Remove Electric artifacts and keep minimal surface changes [done]
 ### Dependencies: None
 ### Description: Delete Electric-specific imports and clients in Todos components. Avoid deep refactors; keep props/state shapes stable; adapt only query hook and result mapping.
 ### Details:
 
 
-## 5. Manual verification of live updates, filters and ordering [pending]
+## 5. Manual verification of live updates, filters and ordering [done]
 ### Dependencies: None
 ### Description: Verify: org-based filtering, deletedAt excluded, updatedAt DESC ordering. Confirm live updates: create/update/delete reflect immediately. Ensure UI mapping compatibility.
 ### Details:

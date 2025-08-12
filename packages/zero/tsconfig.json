@@ -7,7 +7,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.d.ts",
-    "../crud/src/db/schema.ts",
+    "../crud/src/db/schema.ts"
   ],
   "exclude": [
     "node_modules",

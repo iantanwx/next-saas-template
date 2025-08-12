@@ -1193,7 +1193,7 @@
         "description": "Replace existing tRPC mutation calls (onAdd/onEdit/onToggle/onDelete) with Zero mutator functions, implementing a short-term feature flag fallback to ensure smooth transition and rollback capability.",
         "details": "1. Locate existing tRPC mutation usage in the Todos component:\n   - Find onAdd, onEdit, onToggle, and onDelete handlers\n   - Identify current tRPC mutation calls and their parameters\n   - Document existing error handling and loading states\n\n2. Implement Zero mutator integration:\n   - Import createTodo, updateTodo, deleteTodo from packages/zero/src/mutators\n   - Replace tRPC onAdd with createTodo mutator call\n   - Replace tRPC onEdit with updateTodo mutator call\n   - Replace tRPC onToggle with updateTodo mutator call (toggle completed status)\n   - Replace tRPC onDelete with deleteTodo mutator call\n   - Maintain existing parameter structure and response handling\n\n3. Implement feature flag fallback system:\n   - Add NEXT_PUBLIC_USE_ZERO_MUTATIONS environment variable\n   - Create conditional logic to switch between tRPC and Zero mutations\n   - Ensure both code paths maintain identical UI behavior\n   - Add error boundary handling for both mutation systems\n\n4. Update error handling and loading states:\n   - Adapt existing loading states to work with Zero mutations\n   - Ensure error messages are consistent between tRPC and Zero\n   - Maintain optimistic updates where applicable\n\n5. Clean up imports and dependencies:\n   - Remove unused tRPC mutation imports when feature flag is disabled\n   - Ensure Zero mutator imports are properly typed",
         "testStrategy": "1. Test Zero mutator integration:\n   - Verify onAdd creates todos with correct data and organization scoping\n   - Test onEdit updates todo fields while maintaining version control\n   - Confirm onToggle properly flips completed status\n   - Validate onDelete marks todos as deleted (soft delete)\n\n2. Test feature flag functionality:\n   - Test with NEXT_PUBLIC_USE_ZERO_MUTATIONS=true (Zero mutations active)\n   - Test with NEXT_PUBLIC_USE_ZERO_MUTATIONS=false (tRPC fallback active)\n   - Verify identical UI behavior in both modes\n   - Test feature flag toggle during runtime\n\n3. Test error handling and edge cases:\n   - Network failures during mutation calls\n   - Permission denied scenarios\n   - Invalid data validation\n   - Concurrent modification conflicts\n\n4. Integration testing:\n   - Test full CRUD workflow with Zero mutations\n   - Verify real-time updates work correctly with Zero queries\n   - Test rollback capability by switching feature flag\n   - Validate performance compared to tRPC mutations",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           6,
           "11"
@@ -1205,14 +1205,24 @@
         "id": 8,
         "title": "Preloading and TTLs: Preload the todo query in apps/web/src/app/[organization]/layout.tsx and set TTL per Zero docs",
         "description": "Implement query preloading in the organization layout to optimize initial page load performance and configure appropriate TTL settings according to Zero documentation.",
-        "details": "1. Update apps/web/src/app/[organization]/layout.tsx:\n   - Import Zero query preloading utilities from packages/zero\n   - Implement todo query preloading in the layout component\n   - Configure preloading to occur during server-side rendering or component initialization\n   - Ensure preloaded data is scoped to the current organization context\n\n2. Configure TTL (Time To Live) settings per Zero documentation:\n   - Research Zero docs for recommended TTL configurations for todo queries\n   - Set appropriate cache expiration times based on data freshness requirements\n   - Configure TTL for different query types (user todos, organization todos)\n   - Implement cache invalidation strategies for real-time updates\n\n3. Optimize preloading strategy:\n   - Preload only essential todo data needed for initial render\n   - Consider user permissions and organization membership for preloading scope\n   - Implement error handling for failed preload attempts\n   - Ensure preloading doesn't block critical rendering path\n\n4. Integration with existing Zero setup:\n   - Ensure preloading works with ZeroProvider context from Task 5\n   - Coordinate with Zero query implementation from Task 6\n   - Maintain compatibility with auth token strategy from previous tasks",
+        "details": "1. Update apps/web/src/app/[organization]/layout.tsx:\n   - Import Zero query preloading utilities from packages/zero\n   - Implement todo query preloading in the layout component\n   - Configure preloading to occur during server-side rendering or component initialization\n   - Ensure preloaded data is scoped to the current organization context\n\n2. Configure TTL (Time To Live) settings per Zero documentation:\n   - Research Zero docs for recommended TTL configurations for todo queries\n   - Set appropriate cache expiration times based on data freshness requirements\n   - Configure TTL for different query types (user todos, organization todos)\n   - Implement cache invalidation strategies for real-time updates\n\n3. Optimize preloading strategy:\n   - Preload only essential todo data needed for initial render\n   - Consider user permissions and organization membership for preloading scope\n   - Implement error handling for failed preload attempts\n   - Ensure preloading doesn't block critical rendering path\n\n4. Integration with existing Zero setup:\n   - Ensure preloading works with ZeroProvider context from Task 5\n   - Coordinate with Zero query implementation from Task 6\n   - Maintain compatibility with auth token strategy from previous tasks\n<info added on 2025-08-11T23:43:32.470Z>\n5. Preload related users for instant names/avatars:\n   - Implement todos query preload with ttl: '5m' configuration\n   - Preload organization members and their user data using z.query.organizationMembers.where('organizationId', orgId).related('user').preload({ttl:'5m'})\n   - Alternative approach: preload only users referenced by current todos for a narrower dataset\n   - Implement safe no-op behavior when Zero is inactive to prevent errors during fallback scenarios\n   - Ensure user data preloading coordinates with todo preloading for optimal performance\n   - Cache user avatar and name data with same TTL as todo data to maintain consistency\n</info added on 2025-08-11T23:43:32.470Z>",
         "testStrategy": "1. Test preloading functionality:\n   - Verify todo query data is preloaded before component render\n   - Confirm preloaded data is scoped correctly to current organization\n   - Test preloading performance impact on initial page load times\n   - Validate preloading works with both SSR and client-side navigation\n\n2. Test TTL configuration:\n   - Verify cache expiration behaves according to configured TTL settings\n   - Test cache invalidation when todos are modified\n   - Confirm stale data is refreshed appropriately\n   - Test TTL behavior across different browser sessions\n\n3. Test error handling:\n   - Verify graceful fallback when preloading fails\n   - Test behavior with network connectivity issues\n   - Confirm error states don't break the layout rendering\n\n4. Performance testing:\n   - Measure initial page load improvements with preloading enabled\n   - Test memory usage with cached preloaded data\n   - Verify preloading doesn't cause unnecessary API calls",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           6
         ],
         "priority": "medium",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Reinstate FK constraints: todos.userId -> users.id (and related)",
+            "description": "Restore DB FK constraints between todos and users removed for Electric/PGlite; ensures referential integrity for preloading related users.",
+            "details": "1) Confirm prior FK removal via git history\n2) Drizzle migration: add FK todos.userId -> users.id (ON DELETE RESTRICT unless backfill needed)\n3) Clean up orphans before enabling FKs\n4) Validate Zero path and update tests\n5) Document change\n",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 8
+          }
+        ]
       },
       {
         "id": 9,
@@ -1371,7 +1381,7 @@
     ],
     "metadata": {
       "created": "2025-08-09T03:10:38.325Z",
-      "updated": "2025-08-11T06:23:04.525Z",
+      "updated": "2025-08-12T06:17:53.609Z",
       "description": "Zero-based todos migration and integration tasks"
     }
   }

@@ -50,3 +50,16 @@
    - Measure initial page load improvements with preloading enabled
    - Test memory usage with cached preloaded data
    - Verify preloading doesn't cause unnecessary API calls
+
+# Subtasks:
+## 1. Reinstate FK constraints: todos.userId -> users.id (and related) [pending]
+### Dependencies: None
+### Description: Restore DB FK constraints between todos and users removed for Electric/PGlite; ensures referential integrity for preloading related users.
+### Details:
+1) Confirm prior FK removal via git history
+2) Drizzle migration: add FK todos.userId -> users.id (ON DELETE RESTRICT unless backfill needed)
+3) Clean up orphans before enabling FKs
+4) Validate Zero path and update tests
+5) Document change
+
+

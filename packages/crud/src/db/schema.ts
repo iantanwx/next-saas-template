@@ -51,6 +51,7 @@ export const users = pgTable(
 
 export const usersRelations = relations(users, ({ many }) => ({
   memberships: many(organizationMembers),
+  todos: many(todos),
 }));
 
 export const organizations = pgTable(
@@ -230,13 +231,20 @@ export const todos = pgTable(
     dueDate: timestamp('due_date'),
     priority: todoPriority('priority').notNull().default('medium'),
     status: todoStatus('status').notNull().default('pending'),
-    // Remove FK constraints for local-first architecture
-    userId: uuid('user_id').notNull(),
-    organizationId: text('organization_id').notNull(),
+    userId: uuid('user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, {
+        onDelete: 'cascade',
+      }),
     // For optimistic locking and conflict resolution
     version: text('version').notNull().default('1'),
     // For real-time collaboration
-    lastEditedBy: uuid('last_edited_by'),
+    lastEditedBy: uuid('last_edited_by').references(() => users.id, {
+      onDelete: 'set null',
+    }),
     lastEditedAt: timestamp('last_edited_at'),
   },
   (table) => [
@@ -246,6 +254,7 @@ export const todos = pgTable(
     index('todos_due_date_idx').on(table.dueDate),
     index('todos_priority_idx').on(table.priority),
     index('todos_completed_idx').on(table.completed),
+    // Composite FK intentionally omitted to allow deleting org memberships without blocking on todos
   ]
 );
 

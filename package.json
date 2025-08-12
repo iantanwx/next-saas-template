@@ -7,6 +7,7 @@
     "dev:web": "pnpm --filter=@superscale/web dev",
     "dev:email": "pnpm --filter=@superscale/email dev",
     "zero:start": "pnpm --filter=@superscale/zero zero:start",
+    "zero:clean": "pnpm --filter=@superscale/zero zero:clean",
     "zero:generate": "pnpm --filter=@superscale/zero zero:generate",
     "supabase:start": "pnpm --filter=@superscale/crud supabase:start",
     "supabase:stop": "pnpm --filter=@superscale/crud supabase:stop",

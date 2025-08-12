@@ -315,7 +315,7 @@ export const schema = {
                 },
                 "userId": {
                     "type": "string",
-                    "optional": false,
+                    "optional": true,
                     "customType": null as unknown as ZeroCustomType<ZeroSchema, "todos", "userId">,
                     "serverName": "user_id"
                 },
@@ -474,7 +474,8 @@ export const schema = {
             "organization": [{ "sourceField": ["organizationId"], "destField": ["id"], "destSchema": "organizations", "cardinality": "one" }]
         },
         "users": {
-            "memberships": [{ "sourceField": ["id"], "destField": ["userId"], "destSchema": "organizationMembers", "cardinality": "many" }]
+            "memberships": [{ "sourceField": ["id"], "destField": ["userId"], "destSchema": "organizationMembers", "cardinality": "many" }],
+            "todos": [{ "sourceField": ["id"], "destField": ["userId"], "destSchema": "todos", "cardinality": "many" }]
         }
     }
 } as const;
