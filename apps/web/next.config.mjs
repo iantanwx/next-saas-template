@@ -56,7 +56,6 @@ export default {
     '@superscale/email',
     '@superscale/editor',
     '@superscale/ui',
-    '@superscale/pglite',
     '@superscale/zero',
   ],
 };

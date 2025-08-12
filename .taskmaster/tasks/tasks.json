@@ -1271,8 +1271,8 @@
             "id": 1,
             "title": "Todo mutations: createTodo, updateTodo, deleteTodo, toggleTodo",
             "description": "Implement ZQL mutations for todo CRUD operations with organization-based permissions",
-            "details": "Create packages/zero/src/mutations/todos.ts with:\n- createTodo: Create new todos with organization membership validation\n- updateTodo: Update todo fields with version control and ownership checks  \n- deleteTodo: Soft/hard delete with permission validation\n- toggleTodo: Toggle completion status with optimistic updates\n- Proper TypeScript types and error handling",
-            "status": "pending",
+            "details": "Create packages/zero/src/mutations/todos.ts with:\n- createTodo: Create new todos with organization membership validation\n- updateTodo: Update todo fields with version control and ownership checks  \n- deleteTodo: Soft/hard delete with permission validation\n- toggleTodo: Toggle completion status with optimistic updates\n- Proper TypeScript types and error handling\n<info added on 2025-08-12T07:54:13.239Z>\nVerification completed - todo mutations are fully implemented and operational across the application stack. Client mutators in packages/zero/src/mutators.ts provide todo.create, todo.update, and todo.delete with Zod validation and tag linking. Server mutators in packages/zero/src/server-mutators.ts add authoritative organization membership and write permission checks. UI implementation in apps/web/src/app/[organization]/components/todos.tsx uses z.mutate.todo.update for toggle functionality. No separate toggleTodo mutator needed as toggle behavior is handled through the update mutation by setting completion status fields.\n</info added on 2025-08-12T07:54:13.239Z>",
+            "status": "done",
             "dependencies": [],
             "parentTaskId": 11
           },
@@ -1307,8 +1307,8 @@
             "id": 5,
             "title": "TodoTag mutations: addTagToTodo, removeTagFromTodo",
             "description": "Implement ZQL mutations for todo-tag associations with secure organization-based permissions",
-            "details": "Create packages/zero/src/mutations/todoTags.ts with:\n- addTagToTodo: Associate tags with todos, validating user access to both entities\n- removeTagFromTodo: Remove tag associations with proper permission checks\n- Validate both todo and tag belong to organizations user has access to\n- Handle duplicate associations gracefully\n- Integrate with the secure permissions we implemented in schema.ts\n- Proper TypeScript types and comprehensive validation",
-            "status": "pending",
+            "details": "Create packages/zero/src/mutations/todoTags.ts with:\n- addTagToTodo: Associate tags with todos, validating user access to both entities\n- removeTagFromTodo: Remove tag associations with proper permission checks\n- Validate both todo and tag belong to organizations user has access to\n- Handle duplicate associations gracefully\n- Integrate with the secure permissions we implemented in schema.ts\n- Proper TypeScript types and comprehensive validation\n<info added on 2025-08-12T07:56:29.624Z>\nVerification confirms that TodoTag mutations are already implemented through existing todo CRUD operations. Client mutators in packages/zero/src/mutators.ts handle tag associations via todo.update diffing tagIds and provide optional todo.addTag/removeTag for optimistic UX. Server mutators in packages/zero/src/server-mutators.ts validate organization membership and handle tagIds in todo.create/update operations. UI layer resolves tag names to IDs and uses the update path for all tag operations. Dedicated todoTags.add/remove endpoints are unnecessary as the functionality is comprehensively covered through the existing todo mutation system with proper permissions and validation.\n</info added on 2025-08-12T07:56:29.624Z>",
+            "status": "done",
             "dependencies": [],
             "parentTaskId": 11
           },
@@ -1417,7 +1417,7 @@
     ],
     "metadata": {
       "created": "2025-08-09T03:10:38.325Z",
-      "updated": "2025-08-12T07:50:46.428Z",
+      "updated": "2025-08-12T07:56:30.089Z",
       "description": "Zero-based todos migration and integration tasks"
     }
   }
