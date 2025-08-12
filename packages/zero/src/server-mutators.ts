@@ -48,6 +48,59 @@ export function createServerMutators(auth: AuthData | undefined) {
         return base.todo.removeTag(tx as unknown as Transaction<Schema>, input);
       },
     },
+    tags: {
+      async create(
+        tx: ServerTransaction<Schema, DrizzleTransaction>,
+        input: {
+          id?: string;
+          name: string;
+          color?: string;
+          organizationId: string;
+        }
+      ) {
+        const userId = auth?.sub;
+        if (!userId) throw new Error('Unauthenticated');
+        await assertOrgMember(tx, userId, input.organizationId);
+        // enforce org-unique name (case-insensitive handled by DB unique)
+        const now = Date.now();
+        await tx.mutate.tags.insert({
+          id: input.id ?? crypto.randomUUID(),
+          name: input.name.trim(),
+          color: input.color ?? null,
+          organizationId: input.organizationId,
+          createdAt: now,
+          updatedAt: now,
+        });
+      },
+      async update(
+        tx: ServerTransaction<Schema, DrizzleTransaction>,
+        input: { id: string; name?: string; color?: string }
+      ) {
+        const userId = auth?.sub;
+        if (!userId) throw new Error('Unauthenticated');
+        // fetch tag to validate org
+        const tag = await tx.query.tags.where('id', input.id).one();
+        if (!tag) throw new Error('Tag not found');
+        await assertOrgMember(tx, userId, tag.organizationId);
+        await tx.mutate.tags.update({
+          id: input.id,
+          name: input.name?.trim(),
+          color: input.color ?? undefined,
+          updatedAt: Date.now(),
+        });
+      },
+      async delete(
+        tx: ServerTransaction<Schema, DrizzleTransaction>,
+        input: { id: string }
+      ) {
+        const userId = auth?.sub;
+        if (!userId) throw new Error('Unauthenticated');
+        const tag = await tx.query.tags.where('id', input.id).one();
+        if (!tag) return;
+        await assertOrgMember(tx, userId, tag.organizationId);
+        await tx.mutate.tags.delete({ id: input.id });
+      },
+    },
   } as const satisfies CustomMutatorDefs<
     ServerTransaction<Schema, DrizzleTransaction>
   >;

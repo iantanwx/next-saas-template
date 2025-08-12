@@ -8,7 +8,8 @@
     "./db/*": "./src/db/*.ts",
     "./types": "./src/types.ts",
     "./schema": "./src/db/schema.ts",
-    "./validators": "./src/validators/index.ts"
+    "./validators": "./src/validators/index.ts",
+    "./validators/*": "./src/validators/*.ts"
   },
   "scripts": {
     "supabase": "supabase",

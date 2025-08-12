@@ -1,13 +1,21 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@superscale/ui/components/alert-dialog';
+import { Button } from '@superscale/ui/components/button';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@superscale/ui/components/card';
-import { Button } from '@superscale/ui/components/button';
 import { Input } from '@superscale/ui/components/input';
 import { Label } from '@superscale/ui/components/label';
 import {
@@ -18,19 +26,11 @@ import {
   SelectItem,
 } from '@superscale/ui/components/select';
 import { Separator } from '@superscale/ui/components/separator';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@superscale/ui/components/alert-dialog';
 import { Plus, Search, Trash2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import type { Priority } from './todo-form';
 import TaskForm, { type TaskFormValues } from './todo-form';
 import TaskItem, { type Task } from './todo-item';
-import type { Priority } from './todo-form';
 
 type StatusFilter = 'all' | 'active' | 'completed';
 type PriorityFilter = 'all' | 'low' | 'medium' | 'high';
@@ -43,12 +43,14 @@ export default function TodoList({
   onEdit,
   onToggle,
   onDelete,
+  organizationId,
 }: {
   tasks: Task[];
   onAdd: (values: TaskFormValues) => void;
   onEdit: (task: Task, values: TaskFormValues) => void;
   onToggle: (id: string, checked: boolean) => void;
   onDelete: (id: string) => void;
+  organizationId: string;
 }) {
   const [localTasks, setLocalTasks] = useState<Task[]>(tasks);
   const [search, setSearch] = useState('');
@@ -310,6 +312,7 @@ export default function TodoList({
         title="Add task"
         submitLabel="Add task"
         onSubmit={handleAdd}
+        organizationId={organizationId}
       />
 
       {/* Edit */}
@@ -331,6 +334,7 @@ export default function TodoList({
             : undefined
         }
         onSubmit={handleEdit}
+        organizationId={organizationId}
       />
 
       {/* Confirm clear completed */}

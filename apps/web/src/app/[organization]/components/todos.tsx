@@ -39,6 +39,7 @@ function TodoListContainer({
   const query = useMemo(
     () =>
       z.query.todos
+        .related('todoTags', (q) => q.related('tag'))
         .where('organizationId', organizationId)
         .where('userId', userId)
         .where('deletedAt', 'IS', null)
@@ -46,39 +47,59 @@ function TodoListContainer({
     [z, organizationId, userId]
   );
   const [zeroTodos] = useQuery(query);
-  const tasks = zeroTodos.map<Task>((r) => ({
-    id: r.id,
-    title: r.title,
-    notes: r.description ?? '',
-    completed: Boolean(r.completed),
-    priority: (r.priority ?? 'medium') as 'low' | 'medium' | 'high',
-    status: (r.status ?? 'pending') as
-      | 'pending'
-      | 'in_progress'
-      | 'completed'
-      | 'cancelled',
-    tags: [], // TODO: Fetch tags separately after Zero migration
-    dueDate: r.dueDate ? new Date(r.dueDate).toISOString() : null,
-    createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : null,
-    updatedAt: r.updatedAt ? new Date(r.updatedAt).toISOString() : null,
-    version: r.version ?? '1',
-  }));
+  type ZeroTodoWithRelations = {
+    id: string;
+    title: string;
+    description?: string | null;
+    completed?: boolean | null;
+    priority?: 'low' | 'medium' | 'high' | null;
+    status?: 'pending' | 'in_progress' | 'completed' | 'cancelled' | null;
+    dueDate?: number | null;
+    createdAt?: number | null;
+    updatedAt?: number | null;
+    version?: string | null;
+    todoTags?: Array<{ tag?: { name?: string | null } | null }>;
+  };
+  const tasks = (zeroTodos as unknown as ZeroTodoWithRelations[]).map<Task>(
+    (r) => ({
+      id: r.id,
+      title: r.title,
+      notes: r.description ?? '',
+      completed: Boolean(r.completed),
+      priority: (r.priority ?? 'medium') as 'low' | 'medium' | 'high',
+      status: (r.status ?? 'pending') as
+        | 'pending'
+        | 'in_progress'
+        | 'completed'
+        | 'cancelled',
+      tags: (r.todoTags ?? [])
+        .map((tt) => tt?.tag?.name)
+        .filter((n: unknown): n is string => typeof n === 'string'),
+      dueDate: r.dueDate ? new Date(r.dueDate).toISOString() : null,
+      createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : null,
+      updatedAt: r.updatedAt ? new Date(r.updatedAt).toISOString() : null,
+      version: r.version ?? '1',
+    })
+  );
 
-  function onAdd(values: TaskFormValues) {
+  async function onAdd(values: TaskFormValues) {
     const title = values.title.trim();
     if (!title) return;
+    const tagIds = await resolveTagIds(values.tags, organizationId, z);
     z.mutate.todo.create({
       title,
       description: values.notes.trim() || undefined,
       priority: values.priority,
       dueDate: values.dueDate ? values.dueDate.getTime() : undefined,
       organizationId,
+      tagIds,
     });
   }
 
-  function onEdit(task: Task, values: TaskFormValues) {
+  async function onEdit(task: Task, values: TaskFormValues) {
     const row = tasks.find((r) => r.id === task.id);
     if (!row) return;
+    const tagIds = await resolveTagIds(values.tags, organizationId, z);
     z.mutate.todo.update({
       id: task.id,
       title: values.title.trim(),
@@ -87,6 +108,7 @@ function TodoListContainer({
       dueDate: values.dueDate ? values.dueDate.getTime() : undefined,
       completed: task.completed,
       status: task.completed ? 'completed' : 'pending',
+      tagIds,
     });
   }
 
@@ -114,7 +136,39 @@ function TodoListContainer({
         onEdit={onEdit}
         onToggle={onToggle}
         onDelete={onDelete}
+        organizationId={organizationId}
       />
     </div>
   );
+}
+
+async function resolveTagIds(
+  names: string[],
+  organizationId: string,
+  z: ReturnType<typeof useZero<Schema, Mutators>>
+): Promise<string[]> {
+  const trimmed = Array.from(
+    new Set(names.map((n) => n.trim()).filter(Boolean))
+  );
+  const existing = await z.query.tags
+    .where('organizationId', organizationId)
+    .run();
+  const byName = new Map(existing.map((t) => [t.name.toLowerCase(), t]));
+  const ids: string[] = [];
+  for (const name of trimmed) {
+    const lower = name.toLowerCase();
+    const found = byName.get(lower);
+    if (found) {
+      ids.push(found.id);
+    } else {
+      const write = z.mutate.tags.create({ name, organizationId });
+      await write.server;
+      const latest = await z.query.tags
+        .where('organizationId', organizationId)
+        .where('name', name)
+        .one();
+      if (latest) ids.push(latest.id);
+    }
+  }
+  return ids;
 }

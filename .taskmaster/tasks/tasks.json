@@ -1299,7 +1299,7 @@
             "title": "Tag mutations: createTag, updateTag, deleteTag",
             "description": "Implement ZQL mutations for tag management with organization-scoped permissions",
             "details": "Create packages/zero/src/mutations/tags.ts with:\n- createTag: Create new tags within organization with membership validation\n- updateTag: Update tag properties (name, color, description) with permission checks\n- deleteTag: Delete tags and handle associated todoTags cleanup\n- Ensure tags are organization-scoped and validate member permissions\n- Handle tag uniqueness constraints within organizations\n- Proper TypeScript types and validation",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "parentTaskId": 11
           },
@@ -1347,6 +1347,42 @@
             "status": "done",
             "dependencies": [],
             "parentTaskId": 11
+          },
+          {
+            "id": 10,
+            "title": "Org tags: query + preload in provider",
+            "description": "Load all tags for the current organization to support tag selection and reconciliation when editing todos. Preload with TTL to avoid cold fetches.",
+            "details": "- Query: z.query.tags.where('organizationId', orgId).preload({ ttl: '5m' }) in Zero provider init (or layout)\n- Expose tags via a small hook/context for the Todos form\n- Ensure safe no-op when Zero disabled",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 11,
+            "title": "Tag mutator: create org tag",
+            "description": "Server mutator to create a tag scoped to an organization with membership validation and unique name per org.",
+            "details": "- Add tags.create in server mutators (already in place)\n- Validate org membership and trim/name length\n- Handle org-unique constraint gracefully",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 12,
+            "title": "Save todo tags by id on edit/create",
+            "description": "When saving a todo, resolve tag names -> ids (find or create per org), then upsert todoTags for the todo (add missing links, remove stale).",
+            "details": "- On create: resolve input.tags names to tag ids (find-or-create), then insert todoTags\n- On update: diff existing todoTags vs requested; insert missing, delete removed\n- Do logic in server mutator using ZQL with membership checks",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 13,
+            "title": "Tag picker in todo form: searchable multi-select",
+            "description": "Add searchable tag picker to `todo-form.tsx` using Popover+Command (shadcn) to select existing org tags or create new names. Selected tags show as chips; enter/comma adds current input.",
+            "details": "- Hook: useOrgTags(orgId) with Zero useQuery; optionally preload in provider\n- UI: Command inside Popover; debounce filter; keyboard navigation\n- Behavior: choosing suggestion adds to values.tags; if none, show Create 'query' option to append raw name\n- Validation: trim, dedupe, max length\n- Integrate with name→id resolve before save",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
           }
         ]
       },
@@ -1381,7 +1417,7 @@
     ],
     "metadata": {
       "created": "2025-08-09T03:10:38.325Z",
-      "updated": "2025-08-12T06:17:53.609Z",
+      "updated": "2025-08-12T07:50:46.428Z",
       "description": "Zero-based todos migration and integration tasks"
     }
   }

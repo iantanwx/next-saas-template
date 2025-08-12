@@ -12,6 +12,7 @@ export interface CreateTodoInput {
   dueDate?: number | null; // Unix ms timestamp
   estimatedHours?: number;
   assignedUserId?: string;
+  tagIds?: string[];
 }
 
 export interface UpdateTodoInput {
@@ -24,6 +25,7 @@ export interface UpdateTodoInput {
   estimatedHours?: number;
   assignedUserId?: string;
   completed?: boolean;
+  tagIds?: string[];
 }
 
 export interface DeleteTodoInput {
@@ -142,6 +144,18 @@ export function createMutators(authData?: AuthData) {
           lastEditedBy: userId,
           completed: false,
         });
+
+        // Link tags by id if provided
+        if (input.tagIds && input.tagIds.length > 0) {
+          for (const tagId of Array.from(new Set(input.tagIds))) {
+            await tx.mutate.todoTags.insert({
+              id: crypto.randomUUID(),
+              todoId,
+              tagId,
+              createdAt: now,
+            });
+          }
+        }
       },
 
       /**
@@ -162,6 +176,32 @@ export function createMutators(authData?: AuthData) {
           id: input.id,
           ...updateData,
         });
+
+        // Update tag links if provided
+        if (input.tagIds) {
+          const current = await tx.query.todoTags
+            .where('todoId', input.id)
+            .run();
+          const currentIds = new Set(current.map((tt) => tt.tagId));
+          const desired = new Set(input.tagIds);
+          // Add missing
+          for (const tagId of desired) {
+            if (!currentIds.has(tagId)) {
+              await tx.mutate.todoTags.insert({
+                id: crypto.randomUUID(),
+                todoId: input.id,
+                tagId,
+                createdAt: Date.now(),
+              });
+            }
+          }
+          // Remove stale
+          for (const tt of current) {
+            if (!desired.has(tt.tagId)) {
+              await tx.mutate.todoTags.delete({ id: tt.id });
+            }
+          }
+        }
       },
 
       /**
@@ -244,6 +284,28 @@ export function createMutators(authData?: AuthData) {
         if (!todoTag) return;
 
         await tx.mutate.todoTags.delete({ id: todoTag.id });
+      },
+    },
+    tags: {
+      create: async (
+        tx: Transaction<Schema>,
+        input: {
+          id?: string;
+          name: string;
+          organizationId: string;
+          color?: string;
+        }
+      ) => {
+        validateAuthUser(authData);
+        const now = Date.now();
+        await tx.mutate.tags.insert({
+          id: input.id ?? crypto.randomUUID(),
+          name: input.name.trim(),
+          organizationId: input.organizationId,
+          color: input.color ?? null,
+          createdAt: now,
+          updatedAt: now,
+        });
       },
     },
   } as const satisfies CustomMutatorDefs<Schema>;

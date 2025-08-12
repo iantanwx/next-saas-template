@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from '@superscale/ui/components/dialog';
 import { Input } from '@superscale/ui/components/input';
+import { TagPicker } from './tag-picker';
 import { Label } from '@superscale/ui/components/label';
 import { Textarea } from '@superscale/ui/components/textarea';
 import {
@@ -25,7 +26,7 @@ import {
   SelectValue,
 } from '@superscale/ui/components/select';
 import { Calendar } from '@superscale/ui/components/calendar';
-import { CalendarIcon, Tag, X } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 export type Priority = 'low' | 'medium' | 'high';
 export type Task = {
@@ -67,6 +68,7 @@ export default function TaskForm({
   onSubmit = () => {},
   submitLabel = 'Save',
   title = 'Task',
+  organizationId,
 }: {
   open?: boolean;
   onOpenChange?: (v: boolean) => void;
@@ -74,6 +76,7 @@ export default function TaskForm({
   onSubmit?: (values: TaskFormValues) => void;
   submitLabel?: string;
   title?: string;
+  organizationId?: string;
 }) {
   const [values, setValues] = useState<TaskFormValues>(() =>
     toValuesFromTask(initialTask)
@@ -98,9 +101,7 @@ export default function TaskForm({
     setTagInput('');
   }
 
-  function removeTag(t: string) {
-    setValues((v) => ({ ...v, tags: v.tags.filter((x) => x !== t) }));
-  }
+  // Tag removal handled inside TagPicker
 
   const isValid = useMemo(() => values.title.trim().length > 0, [values.title]);
 
@@ -143,7 +144,7 @@ export default function TaskForm({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <div className="grid gap-2">
               <Label>Priority</Label>
               <Select
@@ -194,58 +195,17 @@ export default function TaskForm({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="tag-input">Tags</Label>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Tag className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="tag-input"
-                    placeholder="Add tag then press Enter or comma"
-                    className="pl-8"
-                    value={tagInput}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setTagInput(e.target.value)
-                    }
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      if (e.key === 'Enter' || e.key === ',') {
-                        e.preventDefault();
-                        addTagFromInput();
-                      }
-                    }}
-                  />
-                </div>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={addTagFromInput}
-                >
-                  Add
-                </Button>
-              </div>
+              <Label>Tags</Label>
+              <TagPicker
+                organizationId={organizationId}
+                value={values.tags}
+                onChange={(tags) => setValues((v) => ({ ...v, tags }))}
+                inputValue={tagInput}
+                setInputValue={setTagInput}
+                onAddFromInput={addTagFromInput}
+              />
             </div>
           </div>
-
-          {values.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {values.tags.map((t) => (
-                <span
-                  key={t}
-                  className="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs bg-muted"
-                  aria-label={`Tag ${t}`}
-                >
-                  {t}
-                  <button
-                    type="button"
-                    className="rounded-full p-0.5 hover:bg-background"
-                    aria-label={t}
-                    onClick={() => removeTag(t)}
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
         </div>
 
         <DialogFooter className="gap-2">

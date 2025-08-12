@@ -1,6 +1,6 @@
 # Task ID: 8
 # Title: Preloading and TTLs: Preload the todo query in apps/web/src/app/[organization]/layout.tsx and set TTL per Zero docs
-# Status: pending
+# Status: done
 # Dependencies: 6
 # Priority: medium
 # Description: Implement query preloading in the organization layout to optimize initial page load performance and configure appropriate TTL settings according to Zero documentation.
@@ -27,6 +27,15 @@
    - Ensure preloading works with ZeroProvider context from Task 5
    - Coordinate with Zero query implementation from Task 6
    - Maintain compatibility with auth token strategy from previous tasks
+<info added on 2025-08-11T23:43:32.470Z>
+5. Preload related users for instant names/avatars:
+   - Implement todos query preload with ttl: '5m' configuration
+   - Preload organization members and their user data using z.query.organizationMembers.where('organizationId', orgId).related('user').preload({ttl:'5m'})
+   - Alternative approach: preload only users referenced by current todos for a narrower dataset
+   - Implement safe no-op behavior when Zero is inactive to prevent errors during fallback scenarios
+   - Ensure user data preloading coordinates with todo preloading for optimal performance
+   - Cache user avatar and name data with same TTL as todo data to maintain consistency
+</info added on 2025-08-11T23:43:32.470Z>
 
 # Test Strategy:
 1. Test preloading functionality:
@@ -52,7 +61,7 @@
    - Verify preloading doesn't cause unnecessary API calls
 
 # Subtasks:
-## 1. Reinstate FK constraints: todos.userId -> users.id (and related) [pending]
+## 1. Reinstate FK constraints: todos.userId -> users.id (and related) [done]
 ### Dependencies: None
 ### Description: Restore DB FK constraints between todos and users removed for Electric/PGlite; ensures referential integrity for preloading related users.
 ### Details:

@@ -33,12 +33,22 @@ export function Z({ children, user, server, session }: ZeroProviderProps) {
         email: user.email ?? undefined,
       }),
       init: async (z: Zero<Schema, Mutators>) => {
+        // Preload user memberships
         z.query.users.related('memberships').preload();
+
+        const orgId = user.memberships[0]?.organizationId;
+        if (!orgId) return;
+
+        // Preload org tags for tag picker
+        z.query.tags.where('organizationId', orgId).preload({ ttl: '5m' });
+
+        // Preload first 100 todos for the org for snappy initial render
         z.query.todos
+          .where('organizationId', orgId)
           .where('deletedAt', 'IS', null)
-          .where('userId', user.id)
           .orderBy('updatedAt', 'desc')
-          .preload();
+          .limit(100)
+          .preload({ ttl: '5m' });
       },
     }),
     [user.id, user.email, server, session.access_token]

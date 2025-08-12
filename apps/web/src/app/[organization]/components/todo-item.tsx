@@ -65,7 +65,7 @@ export default function TaskItem({
   return (
     <li
       className={cn(
-        'group flex items-start gap-3 rounded-lg border p-3 hover:bg-muted/50 transition-colors',
+        'group flex items-start gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50',
         task.completed && 'opacity-75'
       )}
     >
@@ -81,7 +81,7 @@ export default function TaskItem({
         />
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <h3
@@ -144,7 +144,7 @@ export default function TaskItem({
               className={cn(
                 'inline-flex items-center gap-1 rounded-full border px-2 py-1',
                 overdue
-                  ? 'border-rose-200 text-rose-600 bg-rose-50'
+                  ? 'bg-rose-50 text-rose-600 border-rose-200'
                   : 'border-transparent bg-muted'
               )}
             >
@@ -156,7 +156,7 @@ export default function TaskItem({
           {task.tags.map((t) => (
             <span
               key={t}
-              className="inline-flex items-center gap-1 rounded-full border px-2 py-1 bg-muted"
+              className="inline-flex items-center gap-1 rounded-full border bg-muted px-2 py-1"
             >
               <TagIcon className="h-3.5 w-3.5" />
               {t}
